@@ -1,5 +1,8 @@
 package de.thm.swtp.information_portal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -32,8 +35,11 @@ private final QuestionRepository questionRepository;
 		// TODO Auto-generated method stub
 		
 		
-		
+	List<Question> myList = new ArrayList<Question>();
 	String tags[] = {"1","2"};
+		myList = questionRepository.findAll();
+		Question question = myList.get(0);
+		System.out.println(question.getContent());
 		questionRepository.save(new Question("Java", "Java ist cool", tags, new Long(12)));
 	}
 
