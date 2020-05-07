@@ -1,0 +1,1 @@
+spring:  data:    mongodb:      uri: mongodb+srv://${USERNAME}:${PASSWORD}@cluster0-vtmhv.mongodb.net/swtp_info_dev?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true
