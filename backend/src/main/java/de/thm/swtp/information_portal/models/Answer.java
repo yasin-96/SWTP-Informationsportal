@@ -9,32 +9,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Document(collection = "questions")
-
-public class Question {
+@Document(collation ="answers")
+public class Answer {
 	
 	@Id
 	private String id;
-	
-	private String header;
-	
 	private String content;
-	
-	//private User frageSteller;
-	
-	private String[] tags;
-	
-	private List<Answer> antworten;
-	
+	private int rating;
+	//private Question questionId;
 	private Long timeStamp;
+	//private List<Answer> comments;
 	
-	public Question(String header,String content,String[] tags, Long timeStamp) {
-		this.header = header;
+	public Answer(String content, int rating,Long timeStamp) {
 		this.content = content;
-		this.tags = tags;
+		this.rating = rating;
 		this.timeStamp = timeStamp;
 	}
+	
 }
