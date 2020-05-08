@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Question;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 
@@ -28,9 +29,13 @@ public class QuestionService {
 		return questionRepository.findAll();
 	}
 	
+	/*public List<Optional<Answer>> findAnswers(Question question){
+		
+	}*/
 	
 	
-	public Question postQuestion(@RequestBody Question question) {
+	
+	public Question postQuestion(Question question) {
 		return questionRepository.save(question);
 	}
 	

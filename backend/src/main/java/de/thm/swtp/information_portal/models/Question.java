@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "questions")
+@Document(collection = "question")
 
 public class Question {
 	
@@ -36,5 +36,9 @@ public class Question {
 		this.content = content;
 		this.tags = tags;
 		this.timeStamp = timeStamp;
+	}
+	
+	public Question(String id) {
+		this.id = id;
 	}
 }
