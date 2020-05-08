@@ -16,28 +16,32 @@ import lombok.NoArgsConstructor;
 
 public class Question {
 	
+	// UUID for every question
 	@Id
 	private String id;
 	
+	// the question asked by any person
 	private String header;
-	
+
+	// a more detailed description of the question asked
 	private String content;
 	
 	//private User frageSteller;
 	
+	// keywords for this question
 	private String[] tags;
 	
-	private List<Answer> antworten;
-	
+	// save currentdate in unix timestamp 
 	private Long timeStamp;
 	
 	public Question(String header,String content,String[] tags, Long timeStamp) {
 		this.header = header;
 		this.content = content;
 		this.tags = tags;
-		this.timeStamp = timeStamp;
+		this.timeStamp = Instant.now().getEpochSecond();
 	}
 	
+	// TODO: kann das nicht raus -> lombok ?
 	public Question(String id) {
 		this.id = id;
 	}
