@@ -26,9 +26,6 @@ public class Question {
 	//private User frageSteller;
 	
 	private String[] tags;
-	
-	private List<Answer> antworten;
-	
 	private Long timeStamp;
 	
 	public Question(String header,String content,String[] tags, Long timeStamp) {

@@ -22,6 +22,7 @@ public class Answer {
 	private int rating;
 	
 	private String question;
+	//private Question questionId
 	private Long timeStamp;
 	//private List<Answer> comments;
 	
