@@ -22,18 +22,16 @@ public class QuestionService {
 	
 	@Autowired
 	private QuestionRepository questionRepository;
-	//private List<Question> questions = new ArrayList<Question>();
+
+	
+	public List<Optional<Question>> findByTags(String tags){
+		return questionRepository.findByTags(tags);
+	}
 	
 
 	public List<Question> getAllQuestions(){
 		return questionRepository.findAll();
 	}
-	
-	/*public List<Optional<Answer>> findAnswers(Question question){
-		
-	}*/
-	
-	
 	
 	public Question postQuestion(Question question) {
 		return questionRepository.save(question);

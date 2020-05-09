@@ -36,7 +36,6 @@ public class Answer {
 	private String questionId;
 
 	//save currentdate in unix timestamp 
-
 	private Long timeStamp;
 	
 	public Answer(String content, int rating, String question) {
