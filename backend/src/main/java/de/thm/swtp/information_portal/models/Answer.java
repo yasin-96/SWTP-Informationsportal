@@ -13,14 +13,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-// @Document(collection ="answer")
 
 public class Answer {
 	
-	// UUID for every answer
-	// @Id
-	// private String id;
-
 	//the answer to the question
 	private String content;
 
@@ -28,19 +23,16 @@ public class Answer {
 	private int rating;
 
 	// the given answer to the question based on this id
-	// private String question;
-
-	private List<Comment> comments;
-
 
 	//save currentdate in unix timestamp 
 	private Long timeStamp;
 	
-	public Answer(String content, List<Comment> comments, int rating) {
+	
+
+	public Answer(String content, int rating) {
+
 		this.content = content;
 		this.rating = rating;
-		// this.question = question;
-		this.comments = comments;
 		this.timeStamp = Instant.now().getEpochSecond();
 	}
 }

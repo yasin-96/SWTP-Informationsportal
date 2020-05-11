@@ -1,14 +1,11 @@
 package de.thm.swtp.information_portal.repositories;
 
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import de.thm.swtp.information_portal.models.Answer;
-import de.thm.swtp.information_portal.models.Question;
+import de.thm.swtp.information_portal.models.Answers;
 
-public interface AnswerRepository extends MongoRepository<Answer, String> {
+public interface AnswerRepository extends MongoRepository<Answers, String> {
 
-	//public List<Optional<Answer>> findByQuestion(String question);
+
 }
