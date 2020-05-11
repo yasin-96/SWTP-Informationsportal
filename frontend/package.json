@@ -4,12 +4,17 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve:local": "dotenv -e .env.local vue-cli-service serve --mode local",
+    "serve:dev": "dotenv -e .env.development vue-cli-service serve --mode development",
+    "serve:prod": "dotenv -e .env.production vue-cli-service serve --mode production",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "dotenv-cli": "^3.1.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vuetify": "^2.2.11",
