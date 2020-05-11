@@ -69,9 +69,21 @@ export default {
 
     async getAllQuestions(){
         try {
-            let serverResponse = await clien.get(); 
+            let serverResponse = await client.get("/allQuestions"); 
+            return serverResponse.data;
         } catch (error) {
-            
+            console.error("No Data: ", error);
+            return -1;
+        }
+    },
+
+    async getAllAnswersToQuestions(questionId) {
+        try {
+            let serverResponse = await client.get("/answersByQuestionId", questionId); 
+            return serverResponse.data;
+        } catch (error) {
+            console.error("No Data: ", error);
+            return -1;
         }
     }
 
