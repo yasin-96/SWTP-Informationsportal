@@ -22,5 +22,9 @@ public class AnswerService {
 		return answerRepository.save(answerList);
 	}
 	
+	public Optional<Answers> findByQuestionId(String id) {
+		return answerRepository.findById(id);
+	}
+	
 
 }
