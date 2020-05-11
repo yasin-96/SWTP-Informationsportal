@@ -1,18 +1,18 @@
 package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Document(collection = "question")
 
 public class Question {
@@ -32,6 +32,7 @@ public class Question {
 	// keywords for this question
 	private String[] tags;
 
+	//save currentdate in unix timestamp 
 	private Long timeStamp;
 	
 	public Question(String header,String content,String[] tags, Long timeStamp) {
