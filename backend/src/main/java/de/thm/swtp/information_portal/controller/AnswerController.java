@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +29,8 @@ public class AnswerController {
 	@PostMapping("/answer")
 	public ResponseEntity<Answer> postAnswer(@RequestBody Answer answerBody) throws URISyntaxException{
 		Answer answer = answerService.postAnswer(answerBody);
-		return ResponseEntity.created(new URI("/api/answer" + answer.getId())).body(answer);
+		return new ResponseEntity<>(HttpStatus.OK);
+		// return ResponseEntity.created(new URI("/api/answer" + answer.getId())).body(answer);
 	}
 	
 	@GetMapping("/question/{id}/answers")

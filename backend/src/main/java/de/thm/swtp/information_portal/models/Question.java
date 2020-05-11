@@ -1,6 +1,7 @@
 package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -29,16 +30,20 @@ public class Question {
 	
 	//private User frageSteller;
 	
+	private List<Answer> answers;
+
+
 	// keywords for this question
 	private String[] tags;
 
 	//save currentdate in unix timestamp 
 	private Long timeStamp;
 	
-	public Question(String header,String content,String[] tags, Long timeStamp) {
+	public Question(String header, String content, String[] tags, List<Answer> answers) {
 		this.header = header;
 		this.content = content;
 		this.tags = tags;
+		this.answers = answers;
 		this.timeStamp = Instant.now().getEpochSecond();
 	}
 	
