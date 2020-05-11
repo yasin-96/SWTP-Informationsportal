@@ -1,6 +1,8 @@
 package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,7 +22,7 @@ public class Question {
 	// UUID for every question
 	@Id
 	private String id;
-	
+
 	// the question asked by any person
 	private String header;
 
@@ -28,14 +30,15 @@ public class Question {
 	private String content;
 	
 	//private User frageSteller;
-	
+
 	// keywords for this question
 	private String[] tags;
 
 	//save currentdate in unix timestamp 
 	private Long timeStamp;
 	
-	public Question(String header,String content,String[] tags, Long timeStamp) {
+	public Question(String header, String content, String[] tags) {
+		this.id = UUID.randomUUID().toString();
 		this.header = header;
 		this.content = content;
 		this.tags = tags;

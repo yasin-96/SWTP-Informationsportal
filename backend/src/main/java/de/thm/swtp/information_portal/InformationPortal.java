@@ -1,7 +1,12 @@
 package de.thm.swtp.information_portal;
 
+
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
+
 
 @SpringBootApplication
 public class InformationPortal  {
@@ -11,4 +16,3 @@ public class InformationPortal  {
 }
 
 
-	

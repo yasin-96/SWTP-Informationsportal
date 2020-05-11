@@ -34,12 +34,12 @@ public class QuestionController {
 		return questionSerice.getAllQuestions();
 	}
 	
+	
 	@GetMapping("/questionById")
 	public ResponseEntity<Question> getQuestion(@RequestBody String id){
 		Optional<Question> question = questionSerice.getQuestion(id);
 		ResponseEntity<Question> quest = question.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return quest;
-		
 	}
 	
 	@GetMapping("/questionTags")
