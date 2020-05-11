@@ -2,6 +2,7 @@ package de.thm.swtp.information_portal.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,9 @@ public class AnswerController {
 	
 	@GetMapping("/answersByQuestionId")
 	public ResponseEntity<Answers> getAnswers(@RequestBody String id ){
+		System.out.println(id);
 		Optional<Answers> answers = answerService.findByQuestionId(id);
+		System.out.println(answers.toString());
 		ResponseEntity<Answers> answRes = answers.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return answRes;
 	}
