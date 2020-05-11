@@ -33,8 +33,8 @@ public class AnswerController {
 		// return ResponseEntity.created(new URI("/api/answer" + answer.getId())).body(answer);
 	}
 	
-	@GetMapping("/question/{id}/answers")
-	public List<Optional<Answer>> findByQuestion(@PathVariable String id){
-		return answerService.findByQuestion(id);
-	}
+	// @GetMapping("/question/{id}/answers")
+	// public List<Optional<Answer>> findByQuestion(@PathVariable String id){
+	// 	return answerService.findByQuestion(id);
+	// }
 }
