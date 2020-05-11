@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,8 @@ public class AnswerController {
 	}
 	
 	@GetMapping("/answersByQuestionId")
-	public ResponseEntity<Answers> getAnswers(@RequestBody String id ){
-		System.out.println(id);
-		Optional<Answers> answers = answerService.findByQuestionId(id);
-		System.out.println(answers.toString());
+	public ResponseEntity<Answers> getAnswers(@RequestBody Map<String, String> id ){
+		Optional<Answers> answers = answerService.findByQuestionId(id.get( "id"));
 		ResponseEntity<Answers> answRes = answers.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return answRes;
 	}

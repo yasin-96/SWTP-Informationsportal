@@ -3,6 +3,7 @@ package de.thm.swtp.information_portal.controller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -36,15 +37,15 @@ public class QuestionController {
 	
 	
 	@GetMapping("/questionById")
-	public ResponseEntity<Question> getQuestion(@RequestBody String id){
-		Optional<Question> question = questionSerice.getQuestion(id);
+	public ResponseEntity<Question> getQuestion(@RequestBody Map<String, String> id){
+		Optional<Question> question = questionSerice.getQuestion(id.get("id"));
 		ResponseEntity<Question> quest = question.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return quest;
 	}
 	
 	@GetMapping("/questionTags")
-	public List<Optional<Question>> findByTag(@RequestBody String tag){
-		return questionSerice.findByTags(tag);
+	public List<Optional<Question>> findByTag(@RequestBody Map<String, String> tag){
+		return questionSerice.findByTags(tag.get("id"));
 	}
 	
 	@PostMapping("/newQuestion")
