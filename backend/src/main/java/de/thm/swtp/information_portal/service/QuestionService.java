@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Question;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 
@@ -21,16 +22,18 @@ public class QuestionService {
 	
 	@Autowired
 	private QuestionRepository questionRepository;
-	//private List<Question> questions = new ArrayList<Question>();
+
+	
+	public List<Optional<Question>> findByTags(String tags){
+		return questionRepository.findByTags(tags);
+	}
 	
 
 	public List<Question> getAllQuestions(){
 		return questionRepository.findAll();
 	}
 	
-	
-	
-	public Question postQuestion(@RequestBody Question question) {
+	public Question postQuestion(Question question) {
 		return questionRepository.save(question);
 	}
 	

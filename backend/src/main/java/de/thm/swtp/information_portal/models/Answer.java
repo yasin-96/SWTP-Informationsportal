@@ -4,7 +4,6 @@ import java.time.Instant;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
@@ -13,34 +12,30 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-@Document(collection = "question")
+@Document(collection ="answer")
 
-public class Question {
+public class Answer {
 	
-	// UUID for every question
+	// UUID for every answer
 	@Id
 	private String id;
-	
-	// the question asked by any person
-	private String header;
 
-	// a more detailed description of the question asked
+	//the answer to the question
 	private String content;
-	
-	//private User frageSteller;
-	
-	// keywords for this question
-	private String[] tags;
+
+	//how good was the answer as counter
+	private int rating;
+
+	// the given answer to the question based on this id
+	private String question;
 
 	//save currentdate in unix timestamp 
 	private Long timeStamp;
 	
-	public Question(String header,String content,String[] tags, Long timeStamp) {
-		this.header = header;
+	public Answer(String content, int rating, String question) {
 		this.content = content;
-		this.tags = tags;
+		this.rating = rating;
+		this.question = question;
 		this.timeStamp = Instant.now().getEpochSecond();
 	}
-	
-	
 }
