@@ -10,5 +10,5 @@ import de.thm.swtp.information_portal.models.Question;
 
 public interface AnswerRepository extends MongoRepository<Answer, String> {
 
-	public List<Optional<Answer>> findByQuestion(String question);
+	//public List<Optional<Answer>> findByQuestion(String question);
 }

@@ -22,8 +22,9 @@ public class AnswerService {
 		return answerRepository.save(answer);
 	}
 	
+	/*
 	public List<Optional<Answer>> findByQuestion(String question){
 		return answerRepository.findByQuestion(question);
 		
-	}
+	}*/
 }

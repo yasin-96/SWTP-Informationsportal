@@ -36,7 +36,7 @@ public class Answer {
 	//save currentdate in unix timestamp 
 	private Long timeStamp;
 	
-	public Answer(String content, List<Comment> comments, int rating, String question) {
+	public Answer(String content, List<Comment> comments, int rating) {
 		this.content = content;
 		this.rating = rating;
 		// this.question = question;
