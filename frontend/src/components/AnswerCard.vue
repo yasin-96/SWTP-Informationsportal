@@ -33,11 +33,6 @@
       <v-card-text>
         <v-content>
           <p>
-            <label class="headline font-weight-bold font-weight-black font-italic changeMouse" @click="goToQuestion()"> 
-              {{ qHeader }}
-            </label>
-          </p>
-          <p>
             <label>
               {{ qContent }}
             </label>
@@ -50,12 +45,17 @@
         <v-list-item class="grow">
           <v-row
             align="center"
-            justify="end"
+            justify="start"
           >
-            <v-icon class="mr-1" color="blue">
+            <v-icon class="mr-1" color="green">
               mdi-thumb-up
             </v-icon>
-            <span class="subheading mr-2">256</span>
+            <span class="subheading mr-2">15</span>
+
+            <v-icon class="mr-1" color="red">
+              mdi-thumb-down
+            </v-icon>
+            <span class="subheading mr-2">5</span>
           </v-row>
         </v-list-item>
       </v-card-actions>
@@ -63,64 +63,40 @@
       <v-divider></v-divider>
 
       <v-container v-if="qTags.length">
-         <v-chip-group
-            multiple
-            show-arrows
-            active-class="primary--text"
-          >
-            <v-chip v-for="tag in qTags" :key="tag" 
-              class="ma-2 caption"
-              label
-              color="brown lighten-2"
-              text-color="white"
-            >
-              {{ tag }}
-            </v-chip>
-          </v-chip-group>
+          <Comment />
       </v-container>
     </v-card>
   </v-container>
 </template>
 
 <script>
+
+import Comment from "@/components/Comment"
+
 export default {
-  name: "QuestionCard",
-  props: {
-    qId: {
-      type: String,
-          default: "",
-          length: 24
-    },
-    qHeader:{
-      type: String,
-      default: ""
-    },
-    qContent: {
-        type: String, 
-        default: ""
-    },
-    qTags: {
-        type: Array,
-        default: Array
-    },
-    qDate: {
-        type: String,
-        default: ""
-    }
-  }, 
-  data: () => ({
-      //
-  }),
-  methods: {
-    goToQuestion() {
-      this.$router.push(`/question/${this.$props.qId}`)
-    }
-  }
+    name: "AnswerCard",
+    components: { Comment },
+    props: {
+        
+        aContent: {
+            type: String,
+            default: ""
+        },
+        aRating: {
+            type: Number,
+            default: 0
+        },
+        aDate: {
+            type: String,
+            default: ""
+        }
+    }, 
+    data: () => ({
+        //
+    }),
 }
 </script>
 
 <style>
-.changeMouse {
-    cursor: pointer;
-}
+
 </style>
