@@ -9,6 +9,10 @@ export default new Vuex.Store({
   state: {
     allQuestions: {},
 
+    allAnswers: {},
+
+    allComments: {}
+
   },
   mutations: {
     SET_ALL_QUESTIONS(state, data){
@@ -19,6 +23,16 @@ export default new Vuex.Store({
       })
 
       state.allQuestions = data;
+    },
+
+    SET_ALL_ANSWERS(state, data) {
+      console.log("SET_ALL_ANSWERS");
+
+      Object.keys(data).forEach((d) => {
+        data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      });
+
+      state.allAnswers = data;
     }
   },
   actions: {
@@ -34,8 +48,19 @@ export default new Vuex.Store({
       } catch(error) {
         console.error("act_getAllQuestions: ", error);
       }
+    },
 
-      
+    async act_getAllAnswers( { commit }, questionId) {
+      console.log("act_getAllAnswers")
+      let response = {};
+      try {
+        response = await RestCalls.getAllAnswersToQuestions(query);
+
+        commit("SET_ALL_ANSWERS", response);
+
+      } catch(error) {
+        console.error("act_getAllQuestions: ", error.error);
+      }
     }
   },
   modules: {}

@@ -78,11 +78,13 @@ export default {
     },
 
     async getAllAnswersToQuestions(questionId) {
+
+        console.warn(questionId);
         try {
-            let serverResponse = await client.get("/answersByQuestionId", questionId); 
+            let serverResponse = await client.get(`/answersByQuestionId/${questionId}`); 
             return serverResponse.data;
         } catch (error) {
-            console.error("No Data: ", error);
+            console.error("No Data: ", error.error);
             return -1;
         }
     }
