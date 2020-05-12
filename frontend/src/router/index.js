@@ -1,24 +1,37 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "@/views/Home.vue";
+import ShowAllQuestions from "@/views/ShowAllQuestions.vue";
+import ShowOneQuestion from "@/views/ShowOneQuestion.vue";
+import About from "@/views/About.vue";
+import NotFound from "@/views/NotFound.vue";
+// import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home
+    path: "/questions",
+    name: "Questions",
+    component: ShowAllQuestions
+  },
+  {
+    path: "/question/:id",
+    name: "ShowOneQuestion",
+    component: ShowOneQuestion,
+    props: true
   },
   {
     path: "/about",
     name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import("../views/About.vue")
+    component: About
+  },
+  {
+    path: '*',
+    name: '404',
+    component: NotFound
   }
+  
 ];
 
 const router = new VueRouter({
