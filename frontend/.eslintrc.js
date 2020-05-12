@@ -2,10 +2,18 @@ module.exports = {
   extends: [
     // add more generic rulesets here, such as:
     // 'eslint:recommended',
-    'plugin:vue/vue3-recommended'
+    // 'plugin:prettier/recommended',
+    'plugin:vue/vue3-recommended',
   ],
   rules: {
-    // override/add rules settings here, such as:
-    // 'vue/no-unused-vars': 'error'
+    'vue/no-parsing-error': [
+      'error',
+      {
+        'nested-comment': false
+      }
+    ],
+    'no-useless-escape': 0,
+    'no-console': 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }
