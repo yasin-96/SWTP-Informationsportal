@@ -27,7 +27,7 @@ public class AnswerController {
 	@PostMapping("/answer")
 	public ResponseEntity<Answers> postAnswer(@RequestBody Answers answerList) throws URISyntaxException{
 		Answers answers = answerService.postAnswer(answerList);
-		return ResponseEntity.created(new URI("/api/answer" + answers.getId())).body(answers);
+		return ResponseEntity.created(new URI("/api/answerByQuestionId" + answers.getId())).body(answers);
 	}
 	
 	@GetMapping("/answersByQuestionId/{id}")

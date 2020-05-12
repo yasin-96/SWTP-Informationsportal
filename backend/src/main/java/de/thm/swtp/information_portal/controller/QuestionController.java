@@ -49,6 +49,6 @@ public class QuestionController {
 	@PostMapping("/newQuestion")
 	public ResponseEntity<Question> postQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException{
 		Question question = questionSerice.postQuestion(questionBody);
-		return ResponseEntity.created(new URI("/api/question" + question.getId())).body(question);
+		return ResponseEntity.created(new URI("/api/questionById" + question.getId())).body(question);
 	}
 }
