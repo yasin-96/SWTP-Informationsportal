@@ -22,4 +22,8 @@ public class CommentService {
 	public Optional<Comments> findByAnswerId(String id) {
 		return commentRepository.findById(id);
 	}
+	
+	public Comments postComments(Comments comments) {
+		return commentRepository.save(comments);
+	}
 }
