@@ -22,8 +22,7 @@ import { mapState, mapActions } from 'vuex';
 export default {
   name: "ShowAllQuestions",
   components: {
-    QuestionCard,
-    AnswerCard
+    QuestionCard
   },
   beforeMount: async function() {
     try {
@@ -33,8 +32,8 @@ export default {
     } 
   },
   computed: {
-    ...mapActions(['act_getAllQuestions', 'act_getAllAnswers']),
-    ...mapState(['allQuestions', 'allAnswers']),
+    ...mapActions(['act_getAllQuestions',]),
+    ...mapState(['allQuestions']),
   },
 };
 </script>

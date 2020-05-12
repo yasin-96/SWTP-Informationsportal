@@ -27,11 +27,10 @@
               </v-list-item-subtitle>
           </v-list-item-content>
         </span>
-        <v-divider inset></v-divider>
       </v-card-title>
       
       <v-card-text>
-        <v-content>
+        <v-container class="pl-3 pt-2 pr-3">
           <p>
             <label class="headline font-weight-bold font-weight-black font-italic changeMouse" @click="goToQuestion()"> 
               {{ qHeader }}
@@ -42,28 +41,15 @@
               {{ qContent }}
             </label>
           </p>
-        </v-content>
+        </v-container>
       </v-card-text>
       
+      <v-divider></v-divider>
+
 
       <v-card-actions>
         <v-list-item class="grow">
-          <v-row
-            align="center"
-            justify="end"
-          >
-            <v-icon class="mr-1" color="blue">
-              mdi-thumb-up
-            </v-icon>
-            <span class="subheading mr-2">256</span>
-          </v-row>
-        </v-list-item>
-      </v-card-actions>
-
-      <v-divider></v-divider>
-
-      <v-container v-if="qTags.length">
-         <v-chip-group
+          <v-chip-group
             multiple
             show-arrows
             active-class="primary--text"
@@ -77,7 +63,17 @@
               {{ tag }}
             </v-chip>
           </v-chip-group>
-      </v-container>
+          <v-row
+            align="center"
+            justify="end"
+          >
+            <v-icon class="mr-1" color="blue">
+              mdi-thumb-up
+            </v-icon>
+            <span class="subheading mr-2">256</span>
+          </v-row>
+        </v-list-item>
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -106,14 +102,14 @@ export default {
     qDate: {
         type: String,
         default: ""
-    }
+    },
   }, 
   data: () => ({
       //
   }),
   methods: {
     goToQuestion() {
-      this.$router.push(`/question/${this.$props.qId}`)
+      this.$router.push(`/question/${this.$props.qId}`);
     }
   }
 }

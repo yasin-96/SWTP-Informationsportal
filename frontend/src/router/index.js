@@ -1,29 +1,27 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "@/views/Home.vue";
-import ShowAllQuestions from "@/views/ShowAllQuestions.vue";
-import ShowOneQuestion from "@/views/ShowOneQuestion.vue";
-import About from "@/views/About.vue";
-import NotFound from "@/views/NotFound.vue";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import ShowAllQuestions from '@/views/ShowAllQuestions.vue';
+import ShowOneQuestion from '@/views/ShowOneQuestion.vue';
+import About from '@/views/About.vue';
+import NotFound from '@/views/NotFound.vue';
 // import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/questions",
-    name: "Questions",
+    path: '/questions',
+    name: 'Questions',
     component: ShowAllQuestions
   },
   {
-    path: "/question/:id",
-    name: "ShowOneQuestion",
+    path: '/question/:id',
+    name: 'ShowOneQuestion',
     component: ShowOneQuestion,
-    props: true
   },
   {
-    path: "/about",
-    name: "About",
+    path: '/about',
+    name: 'About',
     component: About
   },
   {
@@ -31,11 +29,11 @@ const routes = [
     name: '404',
     component: NotFound
   }
-  
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
+  // eslint-disable-next-line no-undef
   base: process.env.BASE_URL,
   routes
 });

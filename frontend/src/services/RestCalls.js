@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import axios from 'axios';
 import http from 'http';
 
@@ -5,7 +6,6 @@ import http from 'http';
 let isDebugEnabled = process.env.VUE_APP_API_STATE === 'dev' ? true : false;
 console.log('process.env.VUE_APP_API_STATE: ' + process.env.VUE_APP_API_STATE);
 console.warn('isDebugEnabled: ' + isDebugEnabled);
-
 
 /**
  * Defines Information about server
@@ -19,26 +19,30 @@ console.warn('isDebugEnabled: ' + isDebugEnabled);
  * @param {string} softwareDevelopState - Gives me the information under which status the server is running. (production or development)
  */
 const serverConfig = {
-    apiProtocol: process.env.VUE_APP_API_PROTOCOL,
-    apiServer: process.env.VUE_APP_API_SERVER,
-    apiPort: process.env.VUE_APP_API_PORT,
-    apiInterface: process.env.VUE_APP_API_INTERFACE,
-    apiUrl: process.env.VUE_APP_API_URL,
-    apiAddress: process.env.VUE_APP_API_URL,
-    softwareDevelopState: process.env.VUE_APP_API_STATE
+  apiProtocol: process.env.VUE_APP_API_PROTOCOL,
+  apiServer: process.env.VUE_APP_API_SERVER,
+  apiPort: process.env.VUE_APP_API_PORT,
+  apiInterface: process.env.VUE_APP_API_INTERFACE,
+  apiUrl: process.env.VUE_APP_API_URL,
+  apiAddress: process.env.VUE_APP_API_URL,
+  softwareDevelopState: process.env.VUE_APP_API_STATE
 };
 
 /* Set: Axios Instance
  * These are the properties for axios given with to send requests.
  */
 const client = new axios.create({
-    baseURL: serverConfig.apiAddress,
-    httpAgent: new http.Agent({ keepAlive: true }),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    }
+  baseURL: serverConfig.apiAddress,
+  httpAgent: new http.Agent({ keepAlive: true }),
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
 });
+
+
+const cancelToken = axios.CancelToken;
+const source = cancelToken.source();
 
 
 /*
@@ -46,59 +50,95 @@ const client = new axios.create({
  * Depending on the start process. These are different under dev and prod.
  */
 switch (serverConfig.softwareDevelopState) {
-    case 'dev':
-      isDebugEnabled = true;
-      console.log(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.apiAddress} .`);
-      break;
-  
-    case 'release':
-      isDebugEnabled = false;
-      console.log(`REST-API is addressed PRODUCTIVELY at the address: ${serverConfig.apiAddress} angesprochen.`);
-      break;
-  
-    default:
-      isDebugEnabled = false;
-      console.error('No <state> selected! Please do not use Frontend productively and contact the responsible developer immediately!');
-      serverConfig.apiAddress = '';
-      break;
+  case 'dev':
+    isDebugEnabled = true;
+    console.log(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.apiAddress} .`);
+    break;
+
+  case 'release':
+    isDebugEnabled = false;
+    console.log(`REST-API is addressed PRODUCTIVELY at the address: ${serverConfig.apiAddress} angesprochen.`);
+    break;
+
+  default:
+    isDebugEnabled = false;
+    console.error('No <state> selected! Please do not use Frontend productively and contact the responsible developer immediately!');
+    serverConfig.apiAddress = '';
+    break;
 }
-
-
 
 export default {
 
-    async getAllQuestions(){
-        try {
-            let serverResponse = await client.get("/allQuestions"); 
-            return serverResponse.data;
-        } catch (error) {
-            console.error("No Data: ", error);
-            return -1;
-        }
-    },
-
-    async getAllAnswersToQuestions(questionId) {
-
-        console.warn(questionId);
-        try {
-            let serverResponse = await client.get(`/answersByQuestionId/${questionId}`); 
-            return serverResponse.data;
-        } catch (error) {
-            console.error("No Data: ", error.error);
-            return -1;
-        }
-    },
-
-    async getAllCommentsToAnswers(questionId) {
-
-        console.warn(questionId);
-        try {
-            let serverResponse = await client.get(`/commentsByAnswerId/${questionId}`); 
-            return serverResponse.data;
-        } catch (error) {
-            console.error("No Data: ", error.error);
-            return -1;
-        }
+  async getOneQuestion(qId) {
+    console.warn(qId);
+    try {
+      let serverResponse = await client.get(`/questionById/${qId}`, {
+        cancelToken: source.token
+      });
+      source.cancel('Request finished: getOneQuestion()');
+      return serverResponse.data;
+    } catch (error) {
+      
+      if(client.isCancel(thrown)){
+        console.log('Request canceled', thrown.message);
+        source.cancel('getOneQuestion() canceled');
+      }
+      console.error('No Data: ', error);
+      return -1;
     }
+  },
 
-}
+  async getAllQuestions() {
+    try {
+      let serverResponse = await client.get('/allQuestions', {
+        cancelToken: source.token
+      });
+      source.cancel('Request finished:');
+
+      return serverResponse.data;
+    } catch (error) {
+      if(client.isCancel(thrown)){
+        console.log('Request canceled', thrown.message);
+      }
+      console.error('No Data: ', error.data);
+      source.cancel('Operati on canceled by the user.');
+      return -1;
+    }
+  },
+
+  async getAllAnswersToQuestions(questionId) {
+    console.info("getAllAnswersToQuestions():",questionId);
+    try {
+      let serverResponse = await client.get(`/answersByQuestionId/${questionId}`, {
+        cancelToken: source.token
+      });
+      source.cancel('Request finished:');
+      return serverResponse.data;
+    } catch (error) {
+      if(client.isCancel(thrown)){
+        console.log('Request canceled: getAllAnswersToQuestions', thrown.message);
+        source.cancel('Request canceled: getAllAnswersToQuestions');
+      }
+      console.error('No Data: ', error.data);
+      return -1;
+    }
+  },
+
+  async getAllCommentsToAnswers(questionId) {
+    try {
+      let serverResponse = await client.get(`/commentsByAnswerId/${questionId}`);
+      source.cancel('Request finished:');
+
+      return serverResponse.data;
+    } catch (error) {
+      if(client.isCancel(thrown)){
+        console.log('Request canceled: getAllCommentsToAnswers()', thrown.message);
+        source.cancel('Request canceled: getAllCommentsToAnswers()');
+      }
+      console.error('No Data: ', error.data);
+      return -1;
+    }
+  }
+
+  
+};
