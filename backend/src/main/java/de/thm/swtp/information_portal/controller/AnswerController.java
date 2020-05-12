@@ -2,15 +2,13 @@ package de.thm.swtp.information_portal.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +30,9 @@ public class AnswerController {
 		return ResponseEntity.created(new URI("/api/answer" + answers.getId())).body(answers);
 	}
 	
-	@GetMapping("/answersByQuestionId")
-	public ResponseEntity<Answers> getAnswers(@RequestBody Map<String, String> id ){
-		Optional<Answers> answers = answerService.findByQuestionId(id.get( "id"));
+	@GetMapping("/answersByQuestionId/{id}")
+	public ResponseEntity<Answers> getAnswers(@PathVariable String id ){
+		Optional<Answers> answers = answerService.findByQuestionId(id);
 		ResponseEntity<Answers> answRes = answers.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return answRes;
 	}
