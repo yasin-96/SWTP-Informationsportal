@@ -32,7 +32,7 @@ export default {
     AnswerCard
   },
   beforeMount: async function() {
-    this.paramId = String(this.$route.params.id).toString()
+    this.paramId = String(this.$route.params.id).toString();
     try {
       await this.$store.dispatch('act_getOneQuestion', this.paramId);
       await this.$store.dispatch('act_getAllAnswers', this.paramId);
