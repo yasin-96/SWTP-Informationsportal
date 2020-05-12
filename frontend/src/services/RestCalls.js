@@ -40,10 +40,8 @@ const client = new axios.create({
   }
 });
 
-
 const cancelToken = axios.CancelToken;
 const source = cancelToken.source();
-
 
 /*
  * Returns the information under which address the backend is to be delivered.
@@ -68,18 +66,15 @@ switch (serverConfig.softwareDevelopState) {
 }
 
 export default {
-
   async getOneQuestion(qId) {
     console.warn(qId);
     try {
       let serverResponse = await client.get(`/questionById/${qId}`, {
-        cancelToken: source.token 
+        cancelToken: source.token
       });
-      source.cancel('Request finished: getOneQuestion()');
       return serverResponse.data;
     } catch (error) {
-      
-      if(axios.isCancel(error)){
+      if (axios.isCancel(error)) {
         console.log('Request canceled', error.message);
         source.cancel('getOneQuestion() canceled');
       }
@@ -89,16 +84,14 @@ export default {
   },
 
   async getAllQuestions() {
-    console.info("getAllQuestions()");
+    console.info('getAllQuestions()');
     try {
       let serverResponse = await client.get('/allQuestions', {
         cancelToken: source.token
       });
-      source.cancel('Request finished:');
-
       return serverResponse.data;
     } catch (error) {
-      if(axios.isCancel(error)){
+      if (axios.isCancel(error)) {
         console.log('Request canceled', error.message);
       }
       console.error('No Data: ', error.data);
@@ -108,7 +101,7 @@ export default {
   },
 
   async getAllAnswersToQuestions(questionId) {
-    console.info("getAllAnswersToQuestions():",questionId);
+    console.info('getAllAnswersToQuestions():', questionId);
     try {
       let serverResponse = await client.get(`/answersByQuestionId/${questionId}`, {
         cancelToken: source.token
@@ -116,7 +109,7 @@ export default {
       source.cancel('Request finished:');
       return serverResponse.data;
     } catch (error) {
-      if(axios.isCancel(error)){
+      if (axios.isCancel(error)) {
         console.log('Request canceled: getAllAnswersToQuestions', error.message);
         source.cancel('Request canceled: getAllAnswersToQuestions');
       }
@@ -126,14 +119,14 @@ export default {
   },
 
   async getAllCommentsToAnswers(qId) {
-    console.info("getAllCommentsToAnswers()", qId);
+    console.info('getAllCommentsToAnswers()', qId);
     try {
       let serverResponse = await client.get(`/commentsByAnswerId/${qId}`);
       source.cancel('Request finished:');
 
       return serverResponse.data;
     } catch (error) {
-      if(axios.isCancel(error)){
+      if (axios.isCancel(error)) {
         console.log('Request canceled: getAllCommentsToAnswers()', error.message);
         source.cancel('Request canceled: getAllCommentsToAnswers()');
       }
@@ -141,6 +134,4 @@ export default {
       return -1;
     }
   }
-
-  
 };

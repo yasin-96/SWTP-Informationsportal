@@ -1,5 +1,5 @@
 <template>
- <v-container>
+ <v-container v-if="allQuestions.length">
    <v-row>
      <v-col v-for="quest in allQuestions" :key="quest.id">
       <QuestionCard 
@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     ...mapActions(['act_getAllQuestions',]),
-    ...mapState(['allQuestions']),
+    ...mapState(['allQuestions'])
   },
 };
 </script>

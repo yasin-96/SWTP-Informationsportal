@@ -11,7 +11,7 @@ export default new Vuex.Store({
     allAnswers: {},
     allComments: {},
 
-    oneQuestion: {},
+    oneQuestion: {}
   },
   mutations: {
     SET_ALL_QUESTIONS(state, data) {
@@ -27,9 +27,9 @@ export default new Vuex.Store({
     SET_ALL_ANSWERS(state, data) {
       console.log('SET_ALL_ANSWERS');
 
-      Object.keys(data).forEach((d) => {
-        data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-      });
+      // Object.keys(data).forEach((d) => {
+      //   data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      // });
 
       state.allAnswers = data;
     },
@@ -37,9 +37,9 @@ export default new Vuex.Store({
     SET_ALL_COMMENTS(state, data) {
       console.log('SET_ALL_COMMENTS');
 
-      Object.keys(data).forEach((d) => {
-        data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-      });
+      // Object.keys(data).forEach((d) => {
+      //   data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      // });
 
       state.allComments = data;
     },
@@ -50,10 +50,9 @@ export default new Vuex.Store({
       data.timeStamp = convertUnixTimeStampToString(data.timeStamp);
 
       state.oneQuestion = data;
-    },
+    }
   },
   actions: {
-
     async act_getOneQuestion({ commit }, questionId) {
       console.log('act_getOneQuestion');
       let response = {};
@@ -76,7 +75,7 @@ export default new Vuex.Store({
 
         commit('SET_ALL_QUESTIONS', response);
       } catch (error) {
-        console.error('act_getAllQuestions: ', error);
+        console.error('act_getAllQuestions: ', error.error);
       }
     },
 
@@ -102,10 +101,16 @@ export default new Vuex.Store({
       } catch (error) {
         console.error('act_getAllComments: ', error.error);
       }
+    }
+  },
+  getters: {
+    getListWithAnswers: (state) => {
+      return state.allAnswers.listOfAnswers;
     },
 
-
-    
+    getListWithComments: (state) =>{
+      return state.allComments.comments;
+    }
 
   },
   modules: {}

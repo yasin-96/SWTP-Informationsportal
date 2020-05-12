@@ -3,10 +3,11 @@
     <v-app-bar
       color="#7fba25"
       dark
+      class="overflow-hidden"
     >
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      <v-toolbar-title class="display-1 justify-center"> Informationsportal</v-toolbar-title>
+      <v-toolbar-title class="display-1"> Informationsportal</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -15,21 +16,22 @@
       </v-btn>
 
       <template v-slot:extension>
-        <v-tabs align->
-          <v-tab>Startseite</v-tab>
+        <v-tabs>
+          <v-spacer></v-spacer>
+          <v-tab @click="goToLink('questions')">
+            <v-icon>
+              mdi-home
+            </v-icon>
+              Startseite
+          </v-tab>
+          <v-tab @click="goToLink('notification')">
+            Mitteilungen</v-tab>
+          <v-spacer></v-spacer>
         </v-tabs>
-      </template>
+      </template> 
     </v-app-bar>
   </nav>
 </template>
-
-<script>
-  export default {
-    data: () => ({
-
-    }),
-  }
-</script>
 
 <script>
   export default {
@@ -37,6 +39,11 @@
     data: () => ({
 
     }),
+    methods: {
+      goToLink(link){
+        this.$router.push(`/${link}`);
+      }
+    }
   }
 </script>
 

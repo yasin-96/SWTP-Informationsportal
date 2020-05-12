@@ -2,8 +2,9 @@ module.exports = {
   extends: [
     // add more generic rulesets here, such as:
     // 'eslint:recommended',
-    // 'plugin:prettier/recommended',
+    'plugin:prettier/recommended',
     'plugin:vue/vue3-recommended',
+    "plugin:vue/recommended"
   ],
   rules: {
     'vue/no-parsing-error': [
@@ -14,6 +15,7 @@ module.exports = {
     ],
     'no-useless-escape': 0,
     'no-console': 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    
   }
 }
