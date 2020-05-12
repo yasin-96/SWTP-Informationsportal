@@ -87,6 +87,18 @@ export default {
             console.error("No Data: ", error.error);
             return -1;
         }
+    },
+
+    async getAllCommentsToAnswers(questionId) {
+
+        console.warn(questionId);
+        try {
+            let serverResponse = await client.get(`/commentsByAnswerId/${questionId}`); 
+            return serverResponse.data;
+        } catch (error) {
+            console.error("No Data: ", error.error);
+            return -1;
+        }
     }
 
 }

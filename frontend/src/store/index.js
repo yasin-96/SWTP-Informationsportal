@@ -8,11 +8,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     allQuestions: {},
-
     allAnswers: {},
+    allComments: {},
 
-    allComments: {}
-
+    oneQuestion:{},
+    oneAnswers:{},
+    oneComments:{},
   },
   mutations: {
     SET_ALL_QUESTIONS(state, data){
@@ -33,7 +34,50 @@ export default new Vuex.Store({
       });
 
       state.allAnswers = data;
-    }
+    },
+
+    SET_ALL_COMMENTS(state, data) {
+      console.log("SET_ALL_COMMENTS");
+
+      Object.keys(data).forEach((d) => {
+        data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      });
+
+      state.allComments = data;
+    },
+
+    SET_ONE_QUESTION(state, data){
+      console.log("SET_ONE_QUESTION");
+
+      // Object.keys(data).forEach((d) => {
+      //     data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      // })
+
+      state.oneQuestion = data;
+    },
+
+    SET_ONE_ANSWER(state, data) {
+      console.log("SET_ONE_ANSWER");
+
+      // Object.keys(data).forEach((d) => {
+      //   data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      // });
+
+      state.oneAnswers = data;
+    },
+
+    SET_ONE_COMMENT(state, data) {
+      console.log("SET_ONE_COMMENT");
+
+      Object.keys(data).forEach((d) => {
+        data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      });
+
+      state.oneComments = data;
+    },
+
+
+
   },
   actions: {
     async act_getAllQuestions( { commit }) {
@@ -59,7 +103,21 @@ export default new Vuex.Store({
         commit("SET_ALL_ANSWERS", response);
 
       } catch(error) {
-        console.error("act_getAllQuestions: ", error.error);
+        console.error("act_getAllAnswers: ", error.error);
+      }
+    },
+
+
+    async act_getAllComments( { commit }, questionId) {
+      console.log("act_getAllComments")
+      let response = {};
+      try {
+        response = await RestCalls.getAllCommentsToAnswers(query);
+
+        commit("SET_ALL_COMMENTS", response);
+
+      } catch(error) {
+        console.error("act_getAllComments: ", error.error);
       }
     }
   },
