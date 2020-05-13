@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.thm.swtp.information_portal.models.Comments;
 import de.thm.swtp.information_portal.service.CommentService;
 
+@CrossOrigin(origins="*")
 @RequestMapping("/api")
 @RestController
 public class CommentController {
@@ -26,13 +27,13 @@ public class CommentController {
 	@Autowired
 	private CommentService commentService;
 	
-	@CrossOrigin(origins = "http://localhost:8080")
+	
 	@GetMapping("/allComments")
 	public List<Comments> findAllComments(){
 		return commentService.findAllComments();
 	}
 
-	@CrossOrigin(origins = "http://localhost:8080")
+	
 	@GetMapping("/commentsByAnswerId/{id}")
 	public ResponseEntity<Comments> findByAnswerId(@PathVariable String id){
 		Optional<Comments> comments = commentService.findByAnswerId(id);
@@ -40,7 +41,7 @@ public class CommentController {
 		return resComments;
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
+	
 	@PostMapping("/newComments")
 	public ResponseEntity<Comments> postComments(@RequestBody Comments commentsBody) throws URISyntaxException{
 		Comments comments = commentService.postComments(commentsBody);
