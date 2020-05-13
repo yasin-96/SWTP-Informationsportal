@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +28,10 @@ public class AnswerController {
 	@PostMapping("/answer")
 	public ResponseEntity<Answers> postAnswer(@RequestBody Answers answerList) throws URISyntaxException{
 		Answers answers = answerService.postAnswer(answerList);
-		return ResponseEntity.created(new URI("/api/answerByQuestionId" + answers.getId())).body(answers);
+		return ResponseEntity.created(new URI("/api/answer" + answers.getId())).body(answers);
 	}
 	
+	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping("/answersByQuestionId/{id}")
 	public ResponseEntity<Answers> getAnswers(@PathVariable String id ){
 		Optional<Answers> answers = answerService.findByQuestionId(id);

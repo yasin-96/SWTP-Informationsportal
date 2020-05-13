@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,24 +29,25 @@ public class QuestionController {
 	@Autowired
 	private QuestionService questionSerice;
 	
+	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping("/allQuestions")
 	public List<Question> getAllQuestions() {
 		return questionSerice.getAllQuestions();
 	}
 	
-	
+	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping("/questionById/{id}")
 	public ResponseEntity<Question> getQuestion(@PathVariable String id){
 		Optional<Question> question = questionSerice.getQuestion(id);
 		ResponseEntity<Question> quest = question.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return quest;
 	}
-	
+	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping("/questionTags/{tag}")
 	public List<Optional<Question>> findByTag(@PathVariable String tag){
 		return questionSerice.findByTags(tag);
 	}
-	
+	@CrossOrigin(origins = "http://localhost:8080")
 	@PostMapping("/newQuestion")
 	public ResponseEntity<Question> postQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException{
 		Question question = questionSerice.postQuestion(questionBody);
