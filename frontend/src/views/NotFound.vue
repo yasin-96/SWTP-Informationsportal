@@ -70,7 +70,4 @@ export default {
 </script>
 
 <style>
-.404Error{
-  background: '@/assets/404/2703.jpg';
-}
 </style>
