@@ -20,6 +20,7 @@ import de.thm.swtp.information_portal.service.AnswerService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class AnswerController {
 
 	@Autowired
@@ -31,7 +32,7 @@ public class AnswerController {
 		return ResponseEntity.created(new URI("/api/answer" + answers.getId())).body(answers);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
+	
 	@GetMapping("/answersByQuestionId/{id}")
 	public ResponseEntity<Answers> getAnswers(@PathVariable String id ){
 		Optional<Answers> answers = answerService.findByQuestionId(id);
