@@ -26,10 +26,11 @@ export default new Vuex.Store({
 
     SET_ALL_ANSWERS(state, data) {
       console.log('SET_ALL_ANSWERS');
-
-      // Object.keys(data).forEach((d) => {
-      //   data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-      // });
+      
+      data.listOfAnswers.forEach((d) => {
+        console.log("DATA D", d);
+        d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
+      });
 
       state.allAnswers = data;
     },
@@ -37,8 +38,11 @@ export default new Vuex.Store({
     SET_ALL_COMMENTS(state, data) {
       console.log('SET_ALL_COMMENTS');
 
-      // Object.keys(data).forEach((d) => {
-      //   data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      console.log("SET",data)
+      console.log("SET comments", data.comments);
+      // Object.keys(data.comments).forEach((d) => {
+        
+        // data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
       // });
 
       state.allComments = data;
@@ -108,10 +112,9 @@ export default new Vuex.Store({
       return state.allAnswers.listOfAnswers;
     },
 
-    getListWithComments: (state) =>{
+    getListWithComments: (state) => {
       return state.allComments.comments;
     }
-
   },
   modules: {}
 });

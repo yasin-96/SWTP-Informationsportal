@@ -24,7 +24,7 @@ export default {
   components: {
     QuestionCard
   },
-  beforeMount: async function() {
+  async beforeMount() {
     try {
       await this.$store.dispatch('act_getAllQuestions')
     } catch(error) {

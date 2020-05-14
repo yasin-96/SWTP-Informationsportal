@@ -6,6 +6,8 @@
       min-width="200"
       max-height="400"
     >
+
+      <!-- Information about user & creation date -->
       <v-card-title>
         <v-icon
           large
@@ -29,6 +31,7 @@
         </span>
       </v-card-title>
       
+      <!-- Question header with content -->
       <v-card-text>
         <v-container class="pl-3 pt-2 pr-3">
           <p>
@@ -46,7 +49,7 @@
       
       <v-divider></v-divider>
 
-
+      <!-- Show all Tags from Question and its rating -->
       <v-card-actions>
         <v-list-item class="grow">
           <v-chip-group
@@ -74,6 +77,7 @@
           </v-row>
         </v-list-item>
       </v-card-actions>
+
     </v-card>
   </v-container>
 </template>
@@ -105,9 +109,11 @@ export default {
     },
   }, 
   data: () => ({
-      //
   }),
   methods: {
+    /**
+     * By clicking on the title of a question, a page is called up and all information is provided.
+     */
     goToQuestion() {
       this.$router.push(`/question/${this.$props.qId}`);
     }

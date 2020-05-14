@@ -69,52 +69,35 @@ export default {
   async getOneQuestion(qId) {
     console.warn(qId);
     try {
-      let serverResponse = await client.get(`/questionById/${qId}`, {
-        cancelToken: source.token
-      });
+      let serverResponse = await client.get(`/questionById/${qId}`);
       return serverResponse.data;
     } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log('Request canceled', error.message);
-        source.cancel('getOneQuestion() canceled');
-      }
       console.error('No Data: ', error);
-      return -1;
+      return null;
     }
   },
 
   async getAllQuestions() {
     console.info('getAllQuestions()');
     try {
-      let serverResponse = await client.get('/allQuestions', {
-        cancelToken: source.token
-      });
+      let serverResponse = await client.get('/allQuestions');
       return serverResponse.data;
     } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log('Request canceled', error.message);
-      }
       console.error('No Data: ', error.data);
       source.cancel('Operati on canceled by the user.');
-      return -1;
+      return null;
     }
   },
 
   async getAllAnswersToQuestions(questionId) {
     console.info('getAllAnswersToQuestions():', questionId);
     try {
-      let serverResponse = await client.get(`/answersByQuestionId/${questionId}`, {
-        cancelToken: source.token
-      });
-      source.cancel('Request finished:');
+      let serverResponse = await client.get(`/answersByQuestionId/${questionId}`);
+      console.log("getAllAnswersToQuestions:", serverResponse);
       return serverResponse.data;
     } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log('Request canceled: getAllAnswersToQuestions', error.message);
-        source.cancel('Request canceled: getAllAnswersToQuestions');
-      }
       console.error('No Data: ', error.data);
-      return -1;
+      return null;
     }
   },
 
@@ -122,16 +105,10 @@ export default {
     console.info('getAllCommentsToAnswers()', qId);
     try {
       let serverResponse = await client.get(`/commentsByAnswerId/${qId}`);
-      source.cancel('Request finished:');
-
       return serverResponse.data;
     } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log('Request canceled: getAllCommentsToAnswers()', error.message);
-        source.cancel('Request canceled: getAllCommentsToAnswers()');
-      }
       console.error('No Data: ', error.data);
-      return -1;
+      return null;
     }
   }
 };

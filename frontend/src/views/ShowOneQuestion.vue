@@ -1,7 +1,8 @@
 <template>
   <v-container>
-    <v-row v-if="oneQuestion">
-      <v-col>
+    <!-- <v-row v-if="oneQuestion && isQuestionAreLoaded"> -->
+    <v-row>
+      <v-col cols="12">
         <QuestionCard 
           :qId="oneQuestion.id" 
           :qHeader="oneQuestion.header" 
@@ -9,12 +10,19 @@
           :qTags="oneQuestion.tags" 
           :qDate="oneQuestion.timeStamp"
         />
+
+        <!-- 
+            By clicking on the title of a question, a page is called up and all information is provided.
+            All answers and comments made. 
+        -->
+        <v-container v-if="allAnswers && areAnswersLoaded">
+          <v-content v-for="(aa, i) in allAnswers.listOfAnswers" :key="i">
+              <AnswerCard :id="paramId" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" />
+          </v-content>
+        </v-container>
       </v-col>
+       <v-row >
     </v-row>
-    <v-row v-if="allAnswers && allAnswers.listOfAnswers">
-      <v-col v-for="aa in allAnswers.listOfAnswers" :key="aa">
-        <AnswerCard :id="paramId" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" />
-      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -31,8 +39,12 @@ export default {
     QuestionCard,
     AnswerCard
   },
-  beforeMount: async function() {
+  async beforeMount() {
+
+    //read id from url
     this.paramId = JSON.parse(JSON.stringify(this.$route.params.id));
+
+    //load data
     try {
       await this.$store.dispatch('act_getOneQuestion', this.paramId);
       await this.$store.dispatch('act_getAllAnswers', this.paramId);
@@ -41,6 +53,8 @@ export default {
     }
   },
   data: () => ({
+    isQuestionAreLoaded: false,
+    areAnswersLoaded: false,
     paramId: ""
   }),
   computed: {
@@ -48,5 +62,25 @@ export default {
     ...mapState(['oneQuestion', 'allAnswers']),
     ...mapGetters(['getListWithAnswers'])
   },
+  watch: {
+    
+    
+    oneQuestion() {
+      if( this.oneQuestion && !this.oneQuestion) {
+        this.isQuestionAreLoaded = true
+      } else{
+        this.isQuestionAreLoaded = false
+      }
+    },
+    
+    allAnswers(){
+      if(this.allAnswers.listOfAnswers && this.allAnswers.listOfAnswers.length > 0){
+        this.areAnswersLoaded = true;
+      } else {
+        this.areAnswersLoaded = false;
+      }
+    }
+
+  }
 };
 </script>

@@ -10,6 +10,11 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/',
+    name: 'Questions',
+    component: ShowAllQuestions
+  },
+  {
     path: '/questions',
     name: 'Questions',
     component: ShowAllQuestions
