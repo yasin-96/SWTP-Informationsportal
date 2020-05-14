@@ -1,4 +1,3 @@
-/* eslint-disable vue/component-tags-order */
 <template>
   <v-container>
     <v-row v-if="getListWithComments">
@@ -20,7 +19,7 @@ export default {
   beforeMount: async function() {
     try {
       await this.$store.dispatch('act_getAllComments', this.paramId);
-    } catch(error){
+    } catch (error) {
       console.error(error.error);
     }
   },
@@ -49,7 +48,7 @@ export default {
     ...mapActions(['act_getAllComments']),
     ...mapState(['allComments']),
     ...mapGetters(['getListWithComments'])
-  },
+  }
 };
 </script>
 

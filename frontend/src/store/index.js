@@ -108,10 +108,9 @@ export default new Vuex.Store({
       return state.allAnswers.listOfAnswers;
     },
 
-    getListWithComments: (state) =>{
+    getListWithComments: (state) => {
       return state.allComments.comments;
     }
-
   },
   modules: {}
 });
