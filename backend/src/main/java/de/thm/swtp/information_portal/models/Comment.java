@@ -21,6 +21,6 @@ public class Comment {
         this.content = content;
         this.userName = userName;
         this.rating = rating;
-        this.timestamp = Instant.now().getEpochSecond();
+        this.timestamp = Instant.now().getEpochSecond()*1000;
     }
 }
