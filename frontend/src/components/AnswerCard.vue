@@ -54,11 +54,122 @@
       
       <!-- Area for all Comments -->
       <v-container>
-          <v-row>
-              <v-col> 
+        <v-timeline dense clipped>
+          <v-timeline-item
+            class="white--text mb-12"
+            color="orange"
+            large
+          >
+            <template v-slot:icon>
+              <span>UN</span>
+            </template>
+            <v-text-field
+              v-model="input"
+              hide-details
+              flat
+              label="Neuer Kommentar ..."
+              @keydown.enter="comment"
+            >
+              <template v-slot:append>
+                <v-btn
+                  class="mx-0"
+                  depressed
+                  @click="comment"
+                >
+                  Post
+                </v-btn>
+              </template>
+            </v-text-field>
+          </v-timeline-item>
+
+        
+          <v-timeline-item
+            class="mb-2"
+            icon="mdi-comment-account"
+          >
+            <v-row justify="space-between">
+              <v-col>
+                <Comment 
+                  :cContent="asd"
+                  :cUserName="asd"
+                  :cRating="3"
+                  :cDate="asdad"
+                />
               </v-col>
-          </v-row>
+            </v-row>
+          </v-timeline-item>
+
+          <v-timeline-item
+            class="mb-2"
+            icon="mdi-comment-account"
+          >
+            <v-row justify="space-between">
+              <v-col>
+                <Comment 
+                  :cContent="asd"
+                  :cUserName="asd"
+                  :cRating="3"
+                  :cDate="asdad"
+                />
+              </v-col>
+            </v-row>
+          </v-timeline-item>
+
+          <v-timeline-item
+            class="mb-2"
+            icon="mdi-comment-account"
+          >
+            <v-row justify="space-between">
+              <v-col>
+                <Comment 
+                  :cContent="asd"
+                  :cUserName="asd"
+                  :cRating="3"
+                  :cDate="asdad"
+                />
+              </v-col>
+            </v-row>
+          </v-timeline-item>
+
+          <v-timeline-item
+            class="mb-2"
+            icon="mdi-comment-account"
+          >
+            <v-row justify="space-between">
+              <v-col>
+                <Comment 
+                  :cContent="asd"
+                  :cUserName="asd"
+                  :cRating="3"
+                  :cDate="asdad"
+                />
+              </v-col>
+            </v-row>
+          </v-timeline-item>
+
+          <v-timeline-item
+            class="mb-2"
+            icon="mdi-comment-account"
+          >
+            <v-row justify="space-between">
+              <v-col>
+                <Comment 
+                  :cContent="asd"
+                  :cUserName="asd"
+                  :cRating="3"
+                  :cDate="asdad"
+                />
+              </v-col>
+            </v-row>
+          </v-timeline-item>
+
+
+
+        </v-timeline>
       </v-container>
+
+
+
     </v-card>
   </v-container>
 </template>

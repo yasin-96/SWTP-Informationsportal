@@ -6,6 +6,14 @@
       <v-toolbar-title class="display-1"> Informationsportal</v-toolbar-title>
 
       <v-spacer></v-spacer>
+       <!-- <v-text-field
+          v-model="input"
+          hide-details
+          flat
+          solo-inverted
+          label="Suche ..."
+        >
+      </v-text-field> -->
       <v-btn icon>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>

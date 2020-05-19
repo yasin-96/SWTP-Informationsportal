@@ -40,7 +40,6 @@ export default {
     AnswerCard
   },
   async beforeMount() {
-
     //read id from url
     this.paramId = JSON.parse(JSON.stringify(this.$route.params.id));
 
