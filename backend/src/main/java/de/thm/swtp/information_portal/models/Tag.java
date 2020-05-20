@@ -1,0 +1,34 @@
+package de.thm.swtp.information_portal.models;
+
+import java.time.Instant;
+import java.util.UUID;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+@NoArgsConstructor
+@Data
+@Getter
+@Setter
+@Document(collection = "tag")
+public class Tag {
+	
+	private String id;
+	
+	private String name;
+	
+	private Long timeStamp;
+
+	public Tag(String name) {
+		this.id = UUID.randomUUID().toString();
+		this.name = name;
+		this.timeStamp = Instant.now().getEpochSecond()*1000;
+	}
+	
+}

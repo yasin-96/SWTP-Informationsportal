@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Document(collection = "question")
-
 public class Question {
 	
 	// UUID for every question
@@ -42,7 +41,7 @@ public class Question {
 		this.header = header;
 		this.content = content;
 		this.tags = tags;
-		this.timeStamp = Instant.now().getEpochSecond();
+		this.timeStamp = Instant.now().getEpochSecond()*1000;
 	}
 	
 	
