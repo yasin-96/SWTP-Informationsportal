@@ -31,12 +31,12 @@ public class Question {
 	//private User frageSteller;
 
 	// keywords for this question
-	private String[] tags;
+	private List<Tag> tags;
 
 	//save currentdate in unix timestamp 
 	private Long timeStamp;
 	
-	public Question(String header, String content, String[] tags) {
+	public Question(String header, String content, List<Tag> tags) {
 		this.id = UUID.randomUUID().toString();
 		this.header = header;
 		this.content = content;
