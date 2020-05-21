@@ -3,7 +3,6 @@ package de.thm.swtp.information_portal.controller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -20,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.thm.swtp.information_portal.models.Question;
+import de.thm.swtp.information_portal.models.Tag;
 import de.thm.swtp.information_portal.service.QuestionService;
+import de.thm.swtp.information_portal.service.TagService;
 
 @RestController
 @RequestMapping("/api")
@@ -29,7 +30,7 @@ public class QuestionController {
 	
 	@Autowired
 	private QuestionService questionSerice;
-	
+
 	
 	@GetMapping("/allQuestions")
 	public List<Question> getAllQuestions() {
@@ -44,9 +45,11 @@ public class QuestionController {
 		return quest;
 	}
 	
-	@GetMapping("/questionTags/{tag}")
-	public List<Optional<Question>> findByTag(@PathVariable String tag){
-		return questionSerice.findByTags(tag);
+	
+	@GetMapping("/questionByTag/{tag}")
+	public ResponseEntity<List<Question>> findByTag(@PathVariable String tag){
+		List<Question> questions = questionSerice.findByTag(tag);
+		return new ResponseEntity<List<Question>>(questions, HttpStatus.OK);
 	}
 	
 	@PostMapping("/newQuestion")
