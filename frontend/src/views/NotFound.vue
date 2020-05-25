@@ -1,6 +1,6 @@
 <!-- views/NotFound.vue -->
 <template>
-  <v-container class="404Error">
+  <b-container class="404Error">
     <v-card class="mx-auto pa-2">
       <v-img class="white--text align-end pa-5" :max-height="maxHeight" :src="pageImage"> </v-img>
 
@@ -30,7 +30,7 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-  </v-container>
+  </b-container>
 </template>
 
 <script>

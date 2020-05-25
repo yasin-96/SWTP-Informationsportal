@@ -1,10 +1,10 @@
 <template>
-  <v-app>
+  <b-container id="app" fluid>
     <Navigation />
-      <v-content>
+      <b-container fluid>
         <router-view />
-      </v-content>
-  </v-app>
+      </b-container>
+  </b-container>
 </template>
 
 
@@ -12,9 +12,17 @@
 import Navigation from "@/components/Navigation";
 
 export default {
+  name: 'App',
   components: { Navigation },
 }
 </script>
 
 <style>
+body {
+  background-color: #DFE8DF;
+}
+#app {
+  padding: 0;
+  margin: 0;
+}
 </style>

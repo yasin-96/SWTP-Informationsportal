@@ -1,25 +1,24 @@
 <template>
   <b-container v-if="allComments.comments">
     <b-card class="mt-3" :key="id">
-      
       <!-- Information about user & creation date -->
       <template v-slot:header>
-      <b-row class="justify-content-left">
-        <b-col cols="3" sm="2" md="2" lg="1">
-          <b-iuser class="mr-2" font-scale="3"></b-iuser>
-        </b-col>
-        <b-col cols="9" sm="10" md="10" lg="11">
-          <strong>Antwort</strong> vom User <br /><small class="ml-3"
-            ><b-iclock></b-iclock>
-            {{ aDate }}
-          </small>
-        </b-col>
-      </b-row>
-    </template>
+        <b-row class="justify-content-left">
+          <b-col cols="3" sm="2" md="2" lg="1">
+            <b-iuser class="mr-2" font-scale="3"></b-iuser>
+          </b-col>
+          <b-col cols="9" sm="10" md="10" lg="11">
+            <strong>Antwort</strong> vom User <br /><small class="ml-3"
+              ><b-iclock></b-iclock>
+              {{ aDate }}
+            </small>
+          </b-col>
+        </b-row>
+      </template>
 
       <b-card-text>
         <b-container>
-        {{ aContent }}
+          {{ aContent }}
         </b-container>
         <!-- Area for all Comments -->
         <b-container>
@@ -77,7 +76,6 @@ export default {
     ...mapActions(['act_getAllComments']),
     ...mapState(['allComments']),
     ...mapGetters(['getListWithComments']),
-
   },
 };
 </script>

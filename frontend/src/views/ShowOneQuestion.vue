@@ -1,8 +1,8 @@
 <template>
-  <v-container>
-    <!-- <v-row v-if="oneQuestion && isQuestionAreLoaded"> -->
-    <v-row>
-      <v-col cols="12">
+  <b-container class="mt-3">
+    <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
+    <b-row>
+      <b-col>
         <QuestionCard 
           :qId="oneQuestion.id" 
           :qHeader="oneQuestion.header" 
@@ -15,20 +15,28 @@
             By clicking on the title of a question, a page is called up and all information is provided.
             All answers and comments made. 
         -->
-        <v-container v-if="allAnswers && areAnswersLoaded">
-          <v-content v-for="(aa, i) in allAnswers.listOfAnswers" :key="i">
-              <AnswerCard :id="paramId" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" />
-          </v-content>
-        </v-container>
-      </v-col>
-       <v-row >
-    </v-row>
-    </v-row>
-  </v-container>
+        
+        <NewContent 
+          :nPlaceholder='addNewAnswerText'
+          :nRows='2'
+          bTextSize='lg'
+        />
+
+        <b-container v-if="allAnswers && areAnswersLoaded">
+          <b-container v-for="(aa, i) in allAnswers.listOfAnswers" :key="i">
+              <AnswerCard :id="paramId" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" class="pb-3"/>
+          </b-container>
+        </b-container>
+      </b-col>
+       <b-row >
+    </b-row>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
 // @ is an alias to /src
+import NewContent from '@/components/NewContent';
 import QuestionCard from '@/components/QuestionCard';
 import AnswerCard from '@/components/AnswerCard';
 import { mapState, mapActions, mapGetters } from 'vuex';
@@ -37,7 +45,8 @@ export default {
   name: 'ShowAllQuestions',
   components: {
     QuestionCard,
-    AnswerCard
+    AnswerCard,
+    NewContent,
   },
   async beforeMount() {
     //read id from url
@@ -54,7 +63,8 @@ export default {
   data: () => ({
     isQuestionAreLoaded: false,
     areAnswersLoaded: false,
-    paramId: ""
+    paramId: "",
+    addNewAnswerText: 'Add new answer ...'
   }),
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllAnswers']),

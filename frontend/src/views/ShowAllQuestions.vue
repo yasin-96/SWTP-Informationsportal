@@ -1,7 +1,7 @@
 <template>
- <v-container v-if="allQuestions.length">
-   <v-row>
-     <v-col v-for="quest in allQuestions" :key="quest.id">
+ <b-container v-if="allQuestions.length">
+   <b-row>
+     <b-col sm="12" md="6" lg="4" xl="3" :align-self="true" v-for="quest in allQuestions" :key="quest.id" class="mt-4">
       <QuestionCard 
         :qId="quest.id"
         :qHeader="quest.header"
@@ -9,9 +9,9 @@
         :qTags="quest.tags"
         :qDate="quest.timeStamp"
       />
-     </v-col>
-   </v-row>
- </v-container>
+     </b-col>
+   </b-row>
+ </b-container>
 </template>
 
 <script>

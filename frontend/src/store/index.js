@@ -40,10 +40,10 @@ export default new Vuex.Store({
 
       console.log("SET",data)
       console.log("SET comments", data.comments);
-      // Object.keys(data.comments).forEach((d) => {
-        
-        // data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-      // });
+      data.comments.forEach((dd) => {
+        console.warn(dd);
+        dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
+      });
 
       state.allComments = data;
     },
@@ -54,6 +54,10 @@ export default new Vuex.Store({
       data.timeStamp = convertUnixTimeStampToString(data.timeStamp);
 
       state.oneQuestion = data;
+    },
+
+    ADD_NEW_COMMENT(state, data) {
+
     }
   },
   actions: {
@@ -104,6 +108,19 @@ export default new Vuex.Store({
         commit('SET_ALL_COMMENTS', response);
       } catch (error) {
         console.error('act_getAllComments: ', error.error);
+      }
+    },
+
+
+    act_addNewCommentToAnswer({commit}, newComment){
+      if(newComment) {
+        let oldState = Object.assign(
+            {}, this.state.allComments
+        );
+
+        oldState.allComments.push(newComment);
+
+        //send to backend
       }
     }
   },
