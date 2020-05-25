@@ -1,192 +1,51 @@
 <template>
-  <v-container>
-    <v-card
-      class="mx-auto"
-      :key="id"
-    >
-      <v-card-title>
-        <v-icon
-          large
-          left
-        >
-          mdi-account-circle
-        </v-icon>
-        <span class="title font-weight-light">
-          <v-list-item-content pa-1>
-            <v-list-item-title><span class="font-weight-bold">Antwort</span> von User</v-list-item-title>
-            <v-list-item-subtitle>
-              
-            <span class="subheading mt-1 mr-2"> 
-              <v-icon color="blue" small>
-                mdi-clock-outline
-              </v-icon>
-              {{ aDate }}
-              </span>
-              </v-list-item-subtitle>
-          </v-list-item-content>
-        </span>
-      </v-card-title>
+  <b-container v-if="allComments.comments">
+    <b-card class="mt-3" :key="id">
       
-      <v-card-text>
-        <v-container class="pl-3 pt-2 pr-3">
-          <p>
-            <label>
-              {{ aContent }}
-            </label>
-          </p>
-        </v-container>
-        <v-container>
-            <v-icon class="mr-1" color="primary">
-              mdi-thumb-up
-            </v-icon>
-            <span class="subheading mr-2">256</span> 
-            <v-icon class="mr-1" color="danger">
-              mdi-thumb-down
-            </v-icon>
-            <span class="subheading mr-2">256</span>
-        </v-container>
-        
-      </v-card-text>
-      
-      
+      <!-- Information about user & creation date -->
+      <template v-slot:header>
+      <b-row class="justify-content-left">
+        <b-col cols="3" sm="2" md="2" lg="1">
+          <b-iuser class="mr-2" font-scale="3"></b-iuser>
+        </b-col>
+        <b-col cols="9" sm="10" md="10" lg="11">
+          <strong>Antwort</strong> vom User <br /><small class="ml-3"
+            ><b-iclock></b-iclock>
+            {{ aDate }}
+          </small>
+        </b-col>
+      </b-row>
+    </template>
 
-      <v-divider></v-divider>
-      
-      <!-- Area for all Comments -->
-      <v-container>
-        <v-timeline dense clipped>
-          <v-timeline-item
-            class="white--text mb-12"
-            color="orange"
-            large
-          >
-            <template v-slot:icon>
-              <span>UN</span>
-            </template>
-            <v-text-field
-              v-model="input"
-              hide-details
-              flat
-              label="Neuer Kommentar ..."
-              @keydown.enter="comment"
-            >
-              <template v-slot:append>
-                <v-btn
-                  class="mx-0"
-                  depressed
-                  @click="comment"
-                >
-                  Post
-                </v-btn>
-              </template>
-            </v-text-field>
-          </v-timeline-item>
-
-        
-          <v-timeline-item
-            class="mb-2"
-            icon="mdi-comment-account"
-          >
-            <v-row justify="space-between">
-              <v-col>
-                <Comment 
-                  :cContent="asd"
-                  :cUserName="asd"
-                  :cRating="3"
-                  :cDate="asdad"
-                />
-              </v-col>
-            </v-row>
-          </v-timeline-item>
-
-          <v-timeline-item
-            class="mb-2"
-            icon="mdi-comment-account"
-          >
-            <v-row justify="space-between">
-              <v-col>
-                <Comment 
-                  :cContent="asd"
-                  :cUserName="asd"
-                  :cRating="3"
-                  :cDate="asdad"
-                />
-              </v-col>
-            </v-row>
-          </v-timeline-item>
-
-          <v-timeline-item
-            class="mb-2"
-            icon="mdi-comment-account"
-          >
-            <v-row justify="space-between">
-              <v-col>
-                <Comment 
-                  :cContent="asd"
-                  :cUserName="asd"
-                  :cRating="3"
-                  :cDate="asdad"
-                />
-              </v-col>
-            </v-row>
-          </v-timeline-item>
-
-          <v-timeline-item
-            class="mb-2"
-            icon="mdi-comment-account"
-          >
-            <v-row justify="space-between">
-              <v-col>
-                <Comment 
-                  :cContent="asd"
-                  :cUserName="asd"
-                  :cRating="3"
-                  :cDate="asdad"
-                />
-              </v-col>
-            </v-row>
-          </v-timeline-item>
-
-          <v-timeline-item
-            class="mb-2"
-            icon="mdi-comment-account"
-          >
-            <v-row justify="space-between">
-              <v-col>
-                <Comment 
-                  :cContent="asd"
-                  :cUserName="asd"
-                  :cRating="3"
-                  :cDate="asdad"
-                />
-              </v-col>
-            </v-row>
-          </v-timeline-item>
-
-
-
-        </v-timeline>
-      </v-container>
-
-
-
-    </v-card>
-  </v-container>
+      <b-card-text>
+        <b-container>
+        {{ aContent }}
+        </b-container>
+        <!-- Area for all Comments -->
+        <b-container>
+          <hr />
+          <Comment :cComments="allComments.comments" />
+        </b-container>
+      </b-card-text>
+    </b-card>
+  </b-container>
 </template>
-
-
-
-
 
 <script>
 import Comment from '@/components/Comment';
 import { mapState, mapActions, mapGetters } from 'vuex';
 
+import { BIconClock, BIconPeopleCircle, BIconChatSquareDots } from 'bootstrap-vue';
 
 export default {
   name: 'AnswerCard',
-  components: { Comment },
-  beforeMount: async function() {
+  components: {
+    Comment,
+    'b-iuser': BIconPeopleCircle,
+    'b-iclock': BIconClock,
+    'b-icomment': BIconChatSquareDots,
+  },
+  beforeMount: async function () {
     try {
       await this.$store.dispatch('act_getAllComments', this.id);
     } catch (error) {
@@ -196,20 +55,20 @@ export default {
   props: {
     id: {
       type: String,
-      required: true
+      required: true,
     },
     aContent: {
       type: String,
-      default: ''
+      default: '',
     },
     aRating: {
       type: Number,
-      default: 0
+      default: 0,
     },
     aDate: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data: () => ({
     //
@@ -217,9 +76,42 @@ export default {
   computed: {
     ...mapActions(['act_getAllComments']),
     ...mapState(['allComments']),
-    ...mapGetters(['getListWithComments'])
-  }
+    ...mapGetters(['getListWithComments']),
+
+  },
 };
 </script>
 
-<style></style>
+<style>
+ul.timeline {
+  list-style-type: none;
+  position: relative;
+}
+ul.timeline:before {
+  content: '';
+  background: #dfdfdf;
+  display: inline-block;
+  position: absolute;
+  left: 16px;
+  width: 3px;
+  height: 100%;
+  z-index: 400;
+}
+ul.timeline > li {
+  margin: 15px 0;
+  padding-left: 15px;
+}
+ul.timeline > li:before {
+  content: '';
+  background: white;
+  display: inline-block;
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid #721515;
+  margin-top: 40px;
+  left: 8px;
+  width: 20px;
+  height: 20px;
+  z-index: 400;
+}
+</style>

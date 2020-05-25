@@ -1,128 +1,89 @@
 <template>
-  <v-container>
-    <v-card
-      class="mx-auto"
-      raised
-      min-width="200"
-      max-height="400"
-    >
+  <b-card header-tag="header" header-bg-variant="#DFE8DF" header-border-variant="white" style="min-width: 200px; min-height: 300px;" class="bCard">
+    <!-- Information about user & creation date -->
+    <template v-slot:header>
+      <b-row class="justify-content-left">
+        <b-col cols="3" sm="2" md="2" lg="1">
+          <b-iuser class="mr-2" font-scale="3"></b-iuser>
+        </b-col>
+        <b-col cols="9" sm="10" md="10" lg="11">
+          <strong>Frage</strong> vom User <br /><small class="ml-3"
+            ><b-iclock></b-iclock>
+            {{ qDate }}
+          </small>
+        </b-col>
+      </b-row>
+    </template>
 
-      <!-- Information about user & creation date -->
-      <v-card-title>
-        <v-icon
-          large
-          left
-        >
-          mdi-account-circle
-        </v-icon>
-        <span class="title font-weight-light">
-          <v-list-item-content pa-1>
-            <v-list-item-title><span class="font-weight-bold">Frage</span> von User</v-list-item-title>
-            <v-list-item-subtitle>
-              
-            <span class="subheading mt-1 mr-2"> 
-              <v-icon color="blue" small>
-                mdi-clock-outline
-              </v-icon>
-              {{ qDate }}
-              </span>
-              </v-list-item-subtitle>
-          </v-list-item-content>
-        </span>
-      </v-card-title>
-      
-      <!-- Question header with content -->
-      <v-card-text>
-        <v-container class="pl-3 pt-2 pr-3">
-          <p>
-            <label class="headline font-weight-bold font-weight-black font-italic changeMouse" @click="goToQuestion()"> 
-              {{ qHeader }}
-            </label>
-          </p>
-          <p>
-            <label>
-              {{ qContent }}
-            </label>
-          </p>
-        </v-container>
-      </v-card-text>
-      
-      <v-divider></v-divider>
+    <!-- Question header with content -->
+    <b-card-title class="changeMouse bQuestionLink" @click="goToQuestion()">
+      {{ qHeader }}
+    </b-card-title>
 
-      <!-- Show all Tags from Question and its rating -->
-      <v-card-actions>
-        <v-list-item class="grow">
-          <v-chip-group
-            multiple
-            show-arrows
-            active-class="primary--text"
-          >
-            <v-chip v-for="tag in qTags" :key="tag" 
-              class="ma-2 caption"
-              label
-              color="brown lighten-2"
-              text-color="white"
-            >
-              {{ tag }}
-            </v-chip>
-          </v-chip-group>
-          <v-row
-            align="center"
-            justify="end"
-          >
-            <v-icon class="mr-1" color="blue">
-              mdi-thumb-up
-            </v-icon>
-            <span class="subheading mr-2">256</span>
-          </v-row>
-        </v-list-item>
-      </v-card-actions>
+    <!-- Question content -->
+    <b-card-text>
+      <p>{{ qContent }}</p>
+    </b-card-text>
 
-    </v-card>
-  </v-container>
+    <!-- Show all Tags from Question and its rating -->
+    <template v-if="qTags && qFooter" v-slot:footer>
+      <b-form-tags tag-pills disableAddButton v-model="qTags" class="mb-2"></b-form-tags>
+    </template>
+  </b-card>
 </template>
 
 <script>
+import { BCard, BIconClock, BIconPeopleCircle, BFormTags, BIconHeartFill } from 'bootstrap-vue';
 export default {
-  name: "QuestionCard",
+  name: 'QuestionCard',
+  components: {
+    'b-card': BCard,
+    'b-iclock': BIconClock,
+    'b-iuser': BIconPeopleCircle,
+    'b-form-tags': BFormTags,
+    'b-iheart': BIconHeartFill,
+  },
   props: {
     qId: {
       type: String,
-          default: "",
-          length: 24
+      default: '',
+      length: 24,
     },
-    qHeader:{
+    qHeader: {
       type: String,
-      default: ""
+      default: '',
     },
     qContent: {
-        type: String, 
-        default: ""
+      type: String,
+      default: '',
     },
     qTags: {
-        type: Array,
-        default: Array
+      type: Array,
+      default: Array,
     },
     qDate: {
-        type: String,
-        default: ""
+      type: String,
+      default: '',
     },
-  }, 
-  data: () => ({
-  }),
+    qFooter: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data: () => ({}),
   methods: {
     /**
      * By clicking on the title of a question, a page is called up and all information is provided.
      */
     goToQuestion() {
       this.$router.push(`/question/${this.$props.qId}`);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
 .changeMouse {
-    cursor: pointer;
+  cursor: pointer;
 }
 </style>
