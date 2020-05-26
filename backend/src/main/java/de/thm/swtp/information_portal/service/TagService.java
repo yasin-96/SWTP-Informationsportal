@@ -40,6 +40,10 @@ public class TagService {
 		System.out.println("the list:" + newTagList);
 		return newTagList;
 	}
+	
+	public List<Tag> getAllTags() {
+		return tagRepository.findAll();
+	}
 }
 		
 	
