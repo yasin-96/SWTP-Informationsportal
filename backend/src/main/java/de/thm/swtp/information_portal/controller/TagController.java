@@ -1,5 +1,7 @@
 package de.thm.swtp.information_portal.controller;
 
+
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,16 @@ public class TagController {
 	@Autowired
 	private TagRepository tagRepository;
 	
+	@Autowired
+	private TagService tagService;
+	
 	@GetMapping("/checkTags/{tagsToBeChecked}")
 	public Tag checkTags(@PathVariable String tagsToBeChecked) {
 		 return tagRepository.findByName(tagsToBeChecked);
 	}
-}
+	
+	@GetMapping("/getAllTags")
+	public List<Tag> getAllTags() {
+		return tagService.getAllTags();
+	}
+}	
