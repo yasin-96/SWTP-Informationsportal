@@ -1,41 +1,36 @@
 <!-- views/NotFound.vue -->
 <template>
-  <b-container class="404Error">
-    <v-card class="mx-auto pa-2">
-      <v-img class="white--text align-end pa-5" :max-height="maxHeight" :src="pageImage"> </v-img>
-
-      <v-card-title class="display-4 justify-center">{{ pageError }}</v-card-title>
-      <v-card-subtitle class="headline">{{ pageTitle }}</v-card-subtitle>
-      <v-card-text>
-        <v-list>
-          <v-list-item v-for="l in listOfoptions" :key="l">
-            <v-text class="body-2">
-              <span>
-                <v-icon color="danger">mdi-alert-box-outline</v-icon>
-              </span>
-              {{ l }}
-            </v-text>
-          </v-list-item>
-        </v-list>
-      </v-card-text>
-
-      <v-card-actions class="justify-center">
-        <v-btn 
-          dark 
-          v-for="(link, i) in urlOptions" 
-          :key="i" 
-          color="danger" 
-          @click="goToLink(link.url)">
+  <b-container class="mt-5">
+      <b-jumbotron 
+        :header="pageError" 
+        :lead="pageTitle"
+        bg-variant="white"
+        class="text-center"
+      >
+        <ul variant="danger" v-for="l in listOfoptions" :key="l" class="text-left">
+          <li>
+            <b-i-ediamond color="danger" class="mr-3"></b-i-ediamond>
+            {{ l }}
+          </li>
+        </ul>
+        <b-container>
+        <b-button variant="success" v-for="(link, i) in urlOptions" :key="i" color="danger" @click="goToLink(link.url)"
+          class="mt-3 mr-3"
+        >
           {{ link.title }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+        </b-button>
+        </b-container>
+      </b-jumbotron>
   </b-container>
 </template>
 
 <script>
+import { BIconExclamationDiamond } from 'bootstrap-vue';
 export default {
   name: 'NotFound',
+  components: {
+    'b-i-ediamond': BIconExclamationDiamond,
+  },
   data: () => ({
     maxHeight: '400px',
     pageImage: '@/assets/404/2703.jpg',
@@ -56,18 +51,21 @@ export default {
       },
       {
         title: 'Mtteilungen',
-        url: '/notification'
-      }
-    ]
+        url: '/notification',
+      },
+    ],
   }),
   methods: {
     goToLink(linkAddr) {
       console.log(linkAddr);
       this.$router.push(linkAddr);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style>
+ul {
+  list-style: none;
+}
 </style>
