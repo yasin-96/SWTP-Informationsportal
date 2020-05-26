@@ -3,6 +3,7 @@ package de.thm.swtp.information_portal.models;
 import java.time.Instant;
 import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Document(collection = "tag")
 public class Tag {
 	
+	@Id
 	private String id;
 	
 	private String name;
