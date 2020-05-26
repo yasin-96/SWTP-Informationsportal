@@ -2,6 +2,8 @@ package de.thm.swtp.information_portal.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.service.AnswerService;
 
@@ -28,8 +31,11 @@ public class AnswerController {
 	
 	@PostMapping("/answer")
 	public ResponseEntity<Answers> postAnswer(@RequestBody Answers answerList) throws URISyntaxException{
-		Answers answers = answerService.postAnswer(answerList);
-		return ResponseEntity.created(new URI("/api/answer" + answers.getId())).body(answers);
+			Optional<Answers> answers = answerService.findByQuestionId(answerList.getId());
+			List<Answer> answersPresent = answers.get().getListOfAnswers();
+			answersPresent.add(answerList.getListOfAnswers().get(0));
+			answerService.postAnswer(answers.get());
+			return ResponseEntity.created(new URI("/api/answer" + answers.get().getId())).body(answers.get());
 	}
 	
 	
