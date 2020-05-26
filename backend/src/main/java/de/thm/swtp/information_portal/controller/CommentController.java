@@ -16,7 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.thm.swtp.information_portal.models.Answer;
+import de.thm.swtp.information_portal.models.Answers;
+import de.thm.swtp.information_portal.models.Comment;
 import de.thm.swtp.information_portal.models.Comments;
+import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.service.CommentService;
 
 @CrossOrigin(origins="*")
@@ -26,6 +30,8 @@ public class CommentController {
 
 	@Autowired
 	private CommentService commentService;
+	
+	
 	
 	
 	@GetMapping("/allComments")
@@ -43,8 +49,11 @@ public class CommentController {
 	
 	
 	@PostMapping("/newComments")
-	public ResponseEntity<Comments> postComments(@RequestBody Comments commentsBody) throws URISyntaxException{
-		Comments comments = commentService.postComments(commentsBody);
-		return ResponseEntity.created(new URI("/api/commentsByAnswerId" + comments.getId())).body(comments);
+	public ResponseEntity<Comments> postComments(@RequestBody Comments commentList) throws URISyntaxException{
+		Optional<Comments> comments = commentService.findByAnswerId(commentList.getId());
+		List<Comment> commentsPresent = comments.get().getComments();
+		commentsPresent.add(commentList.getComments().get(0));
+		commentService.postComments(comments.get());
+		return ResponseEntity.created(new URI("/api/answer" + comments.get().getId())).body(comments.get());
 	}
 }
