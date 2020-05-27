@@ -13,7 +13,7 @@
       <template v-slot:extension>
         <v-tabs>
           <v-spacer></v-spacer>
-          <v-tab @click="goToLink('questions')">
+          <v-tab @click="goToLink('home')">
             <v-icon>
               mdi-home
             </v-icon>
