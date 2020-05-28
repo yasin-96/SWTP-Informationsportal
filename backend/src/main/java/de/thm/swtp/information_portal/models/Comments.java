@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 @Document(collection = "comments")
 public class Comments {
     
-    @Id
+    
     private String id;
     
     private List<Comment> comments;

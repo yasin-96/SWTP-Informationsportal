@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Answers {
 
     // UUID for every answer
-	@Id
+	
     private String id;
     private List<Answer> listOfAnswers;
 
