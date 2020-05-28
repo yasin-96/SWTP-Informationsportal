@@ -2,6 +2,7 @@ package de.thm.swtp.information_portal.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,9 +52,21 @@ public class CommentController {
 	@PostMapping("/newComments")
 	public ResponseEntity<Comments> postComments(@RequestBody Comments commentList) throws URISyntaxException{
 		Optional<Comments> comments = commentService.findByAnswerId(commentList.getId());
-		List<Comment> commentsPresent = comments.get().getComments();
-		commentsPresent.add(commentList.getComments().get(0));
-		commentService.postComments(comments.get());
-		return ResponseEntity.created(new URI("/api/answer" + comments.get().getId())).body(comments.get());
-	}
+		if(!comments.isPresent()) {
+			List<Comment> newCommentList = new ArrayList<Comment>();
+			newCommentList.add(commentList.getComments().get(0));
+			Comments newComments = new Comments(newCommentList,commentList.getId());
+			return ResponseEntity.created(new URI("/api/answer" + newComments.getId())).body(newComments);
+		}
+		
+		
+		
+		
+		else {
+			List<Comment> commentsPresent = comments.get().getComments();
+			commentsPresent.add(commentList.getComments().get(0));
+			commentService.postComments(comments.get());
+			return ResponseEntity.created(new URI("/api/answer" + comments.get().getId())).body(comments.get());
+		}
+}
 }

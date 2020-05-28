@@ -2,6 +2,9 @@ package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
+
+import org.springframework.data.annotation.Id;
 
 // import org.springframework.data.annotation.Id;
 // import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,9 +16,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-
 public class Answer {
 	
+	@Id
+	private String id;
 	//the answer to the question
 	private String content;
 
@@ -30,7 +34,7 @@ public class Answer {
 	
 
 	public Answer(String content, int rating) {
-
+		this.id = UUID.randomUUID().toString();
 		this.content = content;
 		this.rating = rating;
 		this.timeStamp = Instant.now().getEpochSecond()*1000;

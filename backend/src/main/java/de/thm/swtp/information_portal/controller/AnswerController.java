@@ -32,7 +32,7 @@ public class AnswerController {
 	@PostMapping("/answer")
 	public ResponseEntity<Answers> postAnswer(@RequestBody Answers answerList) throws URISyntaxException{
 			Optional<Answers> answers = answerService.findByQuestionId(answerList.getId());
-			if(answers.get().getListOfAnswers()==null) {
+			if(!answers.isPresent()) {
 				List<Answer> newAnswerList = new ArrayList<Answer>();
 				newAnswerList.add(answerList.getListOfAnswers().get(0));
 				Answers newAnswers = new Answers(newAnswerList,answerList.getId());
