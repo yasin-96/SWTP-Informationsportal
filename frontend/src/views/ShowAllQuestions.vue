@@ -1,7 +1,7 @@
 <template>
  <b-container v-if="allQuestions.length">
    <b-row>
-     <b-col sm="12" md="6" lg="4" xl="3" :align-self="true" v-for="quest in allQuestions" :key="quest.id" class="mt-4">
+     <b-col sm="12" md="6" lg="4" xl="3" v-for="quest in allQuestions" :key="quest.id" class="mt-4">
       <QuestionCard 
         :qId="quest.id"
         :qHeader="quest.header"
