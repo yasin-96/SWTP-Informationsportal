@@ -43,7 +43,7 @@ export default {
         type: Boolean,
         default: false,
     },
-    nId: {
+    id: {
       type: String,
       default: "",
     }
@@ -51,7 +51,7 @@ export default {
   mounted() {
     console.warn("ROUNTER -> ", this.$router.history.current.params.id);
     this.newAnswer.id = this.$router.history.current.params.id;
-    this.newComment.id = this.$router.history.current.params.id;
+    this.newComment.id = this.id;
   },
   data: () => ({
     newAnswer: {
@@ -72,9 +72,10 @@ export default {
     async addNewAnswer(){
       if(this.contentForAnswer) {
         this.newAnswer.listOfAnswers.push({
+          id: '',
           content: this.contentForAnswer,
           rating: 0,
-          timeStamp: Date.parse(new Date()),
+          timeStamp: 0,
         });
         console.log("HIER:!!", this.newAnswer);
         let resp = await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
