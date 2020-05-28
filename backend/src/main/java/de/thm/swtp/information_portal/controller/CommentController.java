@@ -56,6 +56,7 @@ public class CommentController {
 			List<Comment> newCommentList = new ArrayList<Comment>();
 			newCommentList.add(commentList.getComments().get(0));
 			Comments newComments = new Comments(newCommentList,commentList.getId());
+			commentService.postComments(newComments);
 			return ResponseEntity.created(new URI("/api/answer" + newComments.getId())).body(newComments);
 		}
 		
