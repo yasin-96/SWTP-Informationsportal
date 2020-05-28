@@ -34,14 +34,16 @@ public class AnswerController {
 			Optional<Answers> answers = answerService.findByQuestionId(answerList.getId());
 			if(!answers.isPresent()) {
 				List<Answer> newAnswerList = new ArrayList<Answer>();
-				newAnswerList.add(answerList.getListOfAnswers().get(0));
+				Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(),0);
+				newAnswerList.add(newAnswer);
 				Answers newAnswers = new Answers(newAnswerList,answerList.getId());
 				answerService.postAnswer(newAnswers);
 				return ResponseEntity.created(new URI("/api/answer" + newAnswers.getId())).body(newAnswers);
 			}
 			else {
 			List<Answer> answersPresent = answers.get().getListOfAnswers();
-			answersPresent.add(answerList.getListOfAnswers().get(0));
+			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(),0);
+			answersPresent.add(newAnswer);
 			answerService.postAnswer(answers.get());
 			return ResponseEntity.created(new URI("/api/answer" + answers.get().getId())).body(answers.get());
 			}

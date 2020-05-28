@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Question {
 	
 	// UUID for every question
-	@Id
+	
 	private String id;
 
 	// the question asked by any person
