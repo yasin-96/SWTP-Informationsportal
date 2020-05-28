@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Answer {
 	
-	@Id
+	
 	private String id;
 	//the answer to the question
 	private String content;
