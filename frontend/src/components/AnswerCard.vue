@@ -1,6 +1,6 @@
 <template>
-  <b-container v-if="allComments.comments">
-    <b-card class="mt-3" :key="id">
+  <b-container v-if="nId">
+    <b-card class="mt-3" :key="nId">
       <!-- Information about user & creation date -->
       <template v-slot:header>
         <b-row class="justify-content-left">
@@ -17,13 +17,18 @@
       </template>
 
       <b-card-text>
+        <!-- One answer to the question -->
         <b-container>
           {{ aContent }}
         </b-container>
+
         <!-- Area for all Comments -->
         <b-container>
           <hr />
-          <Comment :cComments="allComments.comments" />
+          <Comment 
+            :cComments="allComments.comments"
+            :nId="nId"
+          />
         </b-container>
       </b-card-text>
     </b-card>
@@ -32,7 +37,7 @@
 
 <script>
 import Comment from '@/components/Comment';
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import { BIconClock, BIconPeopleCircle, BIconChatSquareDots } from 'bootstrap-vue';
 
@@ -46,15 +51,15 @@ export default {
   },
   beforeMount: async function () {
     try {
-      await this.$store.dispatch('act_getAllComments', this.id);
+      await this.$store.dispatch('act_getAllComments', this.nId);
     } catch (error) {
       console.error(error.error);
     }
   },
   props: {
-    id: {
+    nId: {
       type: String,
-      required: true,
+      default: ''
     },
     aContent: {
       type: String,
@@ -70,13 +75,21 @@ export default {
     },
   },
   data: () => ({
-    //
+    isCommentsAreLoaded: false
   }),
   computed: {
     ...mapActions(['act_getAllComments']),
     ...mapState(['allComments']),
-    ...mapGetters(['getListWithComments']),
   },
+  watch: {
+    allComments(){
+      if(this.allComments) {
+        this.isCommentsAreLoaded = true;
+      } else {
+        this.isCommentsAreLoaded = false;
+      }
+    }
+  }
 };
 </script>
 

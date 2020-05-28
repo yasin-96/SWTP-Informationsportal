@@ -4,11 +4,18 @@ import ShowAllQuestions from '@/views/ShowAllQuestions.vue';
 import ShowOneQuestion from '@/views/ShowOneQuestion.vue';
 import About from '@/views/About.vue';
 import NotFound from '@/views/NotFound.vue';
+import Home from "../views/Home.vue";
+import NewQuestion from "@/views/NewQuestion";
 // import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: '/new',
+    name: 'NewQuestion',
+    component: NewQuestion
+  },
   {
     path: '/',
     name: 'Questions',
@@ -28,6 +35,16 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '/newQuestion',
+    name: 'NewQuestion',
+    component: NewQuestion
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: Home
   },
   {
     path: '*',

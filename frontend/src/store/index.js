@@ -11,7 +11,9 @@ export default new Vuex.Store({
     allAnswers: {},
     allComments: {},
 
-    oneQuestion: {}
+    oneQuestion: {},
+
+    allTags: []
   },
   mutations: {
     SET_ALL_QUESTIONS(state, data) {
@@ -41,7 +43,7 @@ export default new Vuex.Store({
       console.log("SET",data)
       console.log("SET comments", data.comments);
       data.comments.forEach((dd) => {
-        console.warn(dd);
+        console.log(dd);
         dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
       });
 
@@ -56,21 +58,24 @@ export default new Vuex.Store({
       state.oneQuestion = data;
     },
 
-    ADD_NEW_COMMENT(state, data) {
-
+    SET_ALL_TAGS(state, data){
+      console.log('SET_ALL_TAGS');
+      if(data) {
+        state.allTags = data;
+      }
     }
+
   },
   actions: {
     async act_getOneQuestion({ commit }, questionId) {
-      console.log('act_getOneQuestion');
+      console.log('act_getOneQuestion()');
       let response = {};
 
       try {
         response = await RestCalls.getOneQuestion(questionId);
-
-        commit('SET_ONE_QUESTION', response);
+          commit('SET_ONE_QUESTION', response);
       } catch (error) {
-        console.error('act_getAllQuestions: ', error.error);
+        console.error('act_getAllQuestions: ', error.data);
       }
     },
 
@@ -112,17 +117,49 @@ export default new Vuex.Store({
     },
 
 
-    act_addNewCommentToAnswer({commit}, newComment){
-      if(newComment) {
-        let oldState = Object.assign(
-            {}, this.state.allComments
-        );
+    async act_getAllTags({commit}) {
+      let response;
+      try {
+          response = await RestCalls.getAllTags();
+          commit('SET_ALL_TAGS', response);
+      } catch(error){
+        console.error("act_getAllTags(): ", error);
+      }
 
-        oldState.allComments.push(newComment);
+    },
 
-        //send to backend
+
+    async act_creatNewQuestion({commit}, newQuestion){
+      console.log("act_creatNewQuestion()", newQuestion);
+        try {
+          let response = await RestCalls.addNewQuestion(newQuestion);
+          return response;
+        } catch (error) {
+          console.error(error.message);
+        }
+    },
+
+    async act_addNewAnswer({commit}, newAnswer) {
+      console.log('act_addNewAnswer', newAnswer);
+      try {
+        let response = await RestCalls.addNewAnswer(newAnswer);
+        return response;
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+
+
+    async act_addNewComment({commit}, newComment) {
+      console.log('act_addNewComment', newComment);
+      try {
+        let response = await RestCalls.addNewComment(newComment);
+        return response;
+      } catch (error) {
+        console.error(error.message);
       }
     }
+    
   },
   getters: {
     getListWithAnswers: (state) => {
@@ -131,7 +168,11 @@ export default new Vuex.Store({
 
     getListWithComments: (state) => {
       return state.allComments.comments;
-    }
+    },
+
+    getAllTagName: (state) => {
+      return state.allTags.map(n => n.name);
+    },
   },
   modules: {}
 });

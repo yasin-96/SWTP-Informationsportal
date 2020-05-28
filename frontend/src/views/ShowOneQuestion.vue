@@ -17,14 +17,21 @@
         -->
         
         <NewContent 
-          :nPlaceholder='addNewAnswerText'
-          :nRows='2'
           bTextSize='lg'
+          :nRows='2'
+          :nId="oneQuestion.id"
+          :nIsAnswer="true"
         />
 
         <b-container v-if="allAnswers && areAnswersLoaded">
           <b-container v-for="(aa, i) in allAnswers.listOfAnswers" :key="i">
-              <AnswerCard :id="paramId" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" class="pb-3"/>
+              <AnswerCard 
+                :nId="oneQuestion.id" 
+                :aContent="aa.content" 
+                :aRating="aa.Rating" 
+                :aDate="aa.timeStamp" 
+                class="pb-3"
+              />
           </b-container>
         </b-container>
       </b-col>
@@ -48,23 +55,32 @@ export default {
     AnswerCard,
     NewContent,
   },
-  async beforeMount() {
+  beforeMount() {
     //read id from url
-    this.paramId = JSON.parse(JSON.stringify(this.$route.params.id));
 
-    //load data
-    try {
-      await this.$store.dispatch('act_getOneQuestion', this.paramId);
-      await this.$store.dispatch('act_getAllAnswers', this.paramId);
-    } catch (error) {
-      console.error('beforeMount: ', error);
+    if(this.$router){
+    
+      this.paramId = this.$router.history.current.params.id;
+      // console.warn("ROUTER:",this.$route.history.current.params.id);
+      console.warn("ROUTER ->:", this.$router.history.current.params.id);
+      console.warn("ROUTER - ID:", this.paramId);
+      //load data
+      if(this.paramId.length){
+
+        try {
+          this.$store.dispatch('act_getOneQuestion', this.paramId);
+          this.$store.dispatch('act_getAllAnswers', this.paramId);
+        } catch (error) {
+          console.error('beforeMount: ', error);
+        }
+      }
     }
   },
   data: () => ({
     isQuestionAreLoaded: false,
     areAnswersLoaded: false,
     paramId: "",
-    addNewAnswerText: 'Add new answer ...'
+    
   }),
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllAnswers']),
