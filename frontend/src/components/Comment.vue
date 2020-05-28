@@ -8,19 +8,13 @@
       </b-button>
     </b-button-group>
 
-    <!-- <b-container class="pt-4 pb-4">
-      <b-button-group class="d-flex">
-        <b-form-textarea v-model="newComment.content" placeholder="Add new comment..." rows="2" no-resize></b-form-textarea>
-        <b-button v-b-toggle="toggleId">Senden</b-button>
-      </b-button-group>
-    </b-container> -->
-
-    <NewContent 
-      :nPlaceholder='addNewComentText'
+    <NewContent v-if="nId" 
       :nRows="2"
+      :nIsComment="true"
+      :nId="nId"
     />
 
-    <b-collapse :id="toggleId" class="mt-2">
+    <b-collapse v-if="cComments" :id="toggleId" class="mt-2">
       <b-list-group>
         <b-list-group-item v-for="(cc, i) in cComments" :key="i" flex-column align-items-start>
           <div class="d-flex w-100 justify-content-between">
@@ -52,16 +46,21 @@ export default {
     'b-icon-toggle-on': BIconToggleOn,
   },
   props: {
+    nId:{
+      type: String,
+      required: true,
+      default: ''
+    },
     cComments: {
       type: Array,
       required: true,
       default: [],
     },
   },
-  beforeCreate() {
+  beforeMount() {
     if (this.cComments) {
       this.cComments.forEach((cc, index) => {
-        console.warn('BM:', index, cc);
+        console.log('BM:', index, cc);
         this.toggleCounter.push(`collapse-comment-id-${this.maxComments++}`);
       });
     }
@@ -77,7 +76,6 @@ export default {
       rating: 0,
       timestamp: Date.parse(new Date()),
     },
-    addNewComentText: 'Add new comment ...'
   }),
   methods: {
     changeToggelIcon() {
