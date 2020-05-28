@@ -81,6 +81,7 @@ export default {
     console.info('getAllQuestions()');
     try {
       let serverResponse = await client.get('/allQuestions');
+      console.log(serverResponse.data);
       return serverResponse.data;
     } catch (error) {
       console.error('No Data: ', error.data);
@@ -109,6 +110,51 @@ export default {
     } catch (error) {
       console.error('No Data: ', error.data);
       return null;
+    }
+  },
+
+  async getAllTags() {
+    console.info("getAllTags()");
+    try {
+      let serverResponse = await client.get(`/getAllTags`);
+      console.warn("RESP:",serverResponse);
+      return serverResponse.data
+    } catch (error) {
+      console.error('No Data: ', error.data);
+    }
+  },
+
+  async addNewQuestion(newQuestion) {
+    console.warn("newQuestion", newQuestion);
+    try {
+      let serverResponse = await client.post('/newQuestion', newQuestion);
+      console.log("addNewQuestion", serverResponse.data);
+      return serverResponse.data;
+    } catch (error) {
+      console.error("addNewQuestion():", error)
+    }
+  },
+
+
+  async addNewAnswer(newQuestion) {
+    console.warn("addNewAnswer()", newQuestion);
+    try {
+      let serverResponse = await client.post('/answer', newQuestion);
+      console.log("addNewAnswer", serverResponse.data);
+      return serverResponse.data;
+    } catch (error) {
+      console.error("addNewAnswer():", error)
+    }
+  },
+
+  async addNewComment(newComment) {
+    console.warn("addNewComment()", newComment);
+    try {
+      let serverResponse = await client.post('/newComments', newComment);
+      console.log("addNewComment", serverResponse.data);
+      return serverResponse.data;
+    } catch (error) {
+      console.error("addNewComment():", error)
     }
   }
 };
