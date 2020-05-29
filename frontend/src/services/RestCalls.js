@@ -84,7 +84,7 @@ export default {
       console.log(serverResponse.data);
       return serverResponse.data;
     } catch (error) {
-      console.error('No Data: ', error.data);
+      console.error('No Data: ', error);
       source.cancel('Operati on canceled by the user.');
       return null;
     }
@@ -97,7 +97,7 @@ export default {
       console.log("getAllAnswersToQuestions:", serverResponse);
       return serverResponse.data;
     } catch (error) {
-      console.error('No Data: ', error.data);
+      console.error('No Data: ', error);
       return null;
     }
   },
@@ -108,7 +108,7 @@ export default {
       let serverResponse = await client.get(`/commentsByAnswerId/${qId}`);
       return serverResponse.data;
     } catch (error) {
-      console.error('No Data: ', error.data);
+      console.error('No Data: ', error);
       return null;
     }
   },
@@ -120,7 +120,7 @@ export default {
       console.warn("RESP:",serverResponse);
       return serverResponse.data
     } catch (error) {
-      console.error('No Data: ', error.data);
+      console.error('No Data: ', error);
     }
   },
 

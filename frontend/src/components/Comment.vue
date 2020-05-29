@@ -8,32 +8,31 @@
       </b-button>
     </b-button-group>
 
-    <NewContent v-if="nId" 
-      :nRows="2"
-      :nIsComment="true"
-      :nId="nId"
-    />
+    <NewContent v-if="cId" :nRows="2" :nIsComment="true" :id="cId" />
 
-    <b-collapse v-if="cComments" :id="toggleId" class="mt-2">
-      <b-list-group>
-        <b-list-group-item v-for="(cc, i) in cComments" :key="i" flex-column align-items-start>
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ cc.userName }}</h5>
-            <small class="text-muted">{{ cc.timestamp }}</small>
-          </div>
-          <p class="mb-1">
-            {{ cc.content }}
-          </p>
-          <p>
-            {{ cc.rating }}
-          </p>
-        </b-list-group-item>
-      </b-list-group>
+    <b-collapse :id="toggleId" class="mt-2">
+      <b-container v-for="(cc, i) in cComments" :key="i" flex-column align-items-start>
+        <b-list-group v-for="(c, j) in cc.comments" :key="j">
+          <b-list-group-item v-if="cc.id === cId">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ c.userName }}</h5>
+              <small class="text-muted">{{ c.timestamp }}</small>
+            </div>
+            <p class="mb-1">
+              {{ c.content }}
+            </p>
+            <p>
+              {{ c.rating }}
+            </p>
+          </b-list-group-item>
+        </b-list-group>
+      </b-container>
     </b-collapse>
   </b-container>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import { v4 as uuidv4 } from 'uuid';
 import { BCard, BIconToggleOff, BIconToggleOn } from 'bootstrap-vue';
 import NewContent from '@/components/NewContent';
@@ -46,17 +45,18 @@ export default {
     'b-icon-toggle-on': BIconToggleOn,
   },
   props: {
-    nId:{
+    cId: {
       type: String,
       required: true,
-      default: ''
+      default: '',
     },
     cComments: {
       type: Array,
       required: true,
-      default: [],
+      default: new Array(),
     },
   },
+
   beforeMount() {
     if (this.cComments) {
       this.cComments.forEach((cc, index) => {
@@ -65,6 +65,7 @@ export default {
       });
     }
   },
+
   data: () => ({
     toggelCommentBtn: false,
     maxComments: 0,
@@ -76,15 +77,26 @@ export default {
       rating: 0,
       timestamp: Date.parse(new Date()),
     },
+    iCounter: 0,
   }),
   methods: {
     changeToggelIcon() {
       this.toggelCommentBtn = this.toggelCommentBtn ? false : true;
     },
+    getCommentsFromObject(objectWithComment) {
+      console.warn('OBj', objectWithComment);
+      console.warn('INDEX', this.iCounter);
+      console.warn('DAS OBJECT ist:', objectWithComment[this.iCounter].comments);
+      if (this.iCounter < this.maxComments) {
+        this.iCounter++;
+      }
+      return objectWithComment[this.iCounter].comments;
+    },
   },
+  computed: {},
 };
 </script>
 
 <style lang="scss">
-  $border-radius-root: none;
+$border-radius-root: none;
 </style>

@@ -23,11 +23,11 @@
         </b-container>
 
         <!-- Area for all Comments -->
-        <b-container>
+        <b-container >
           <hr />
           <Comment 
-            :cComments="allComments.comments"
-            :nId="nId"
+            :cComments="allComments"
+            :cId="cId"
           />
         </b-container>
       </b-card-text>
@@ -50,14 +50,21 @@ export default {
     'b-icomment': BIconChatSquareDots,
   },
   beforeMount: async function () {
-    try {
-      await this.$store.dispatch('act_getAllComments', this.nId);
-    } catch (error) {
-      console.error(error.error);
+    console.warn("Run dispatch for comments");
+    if(this.cId) {
+      try {
+        await this.$store.dispatch('act_getAllComments', this.cId);
+      } catch (error) {
+        console.error(error.error);
+      }
     }
   },
   props: {
     nId: {
+      type: String,
+      default: ''
+    },
+    cId: {
       type: String,
       default: ''
     },
@@ -94,35 +101,6 @@ export default {
 </script>
 
 <style>
-ul.timeline {
-  list-style-type: none;
-  position: relative;
-}
-ul.timeline:before {
-  content: '';
-  background: #dfdfdf;
-  display: inline-block;
-  position: absolute;
-  left: 16px;
-  width: 3px;
-  height: 100%;
-  z-index: 400;
-}
-ul.timeline > li {
-  margin: 15px 0;
-  padding-left: 15px;
-}
-ul.timeline > li:before {
-  content: '';
-  background: white;
-  display: inline-block;
-  position: absolute;
-  border-radius: 50%;
-  border: 2px solid #721515;
-  margin-top: 40px;
-  left: 8px;
-  width: 20px;
-  height: 20px;
-  z-index: 400;
-}
+
+
 </style>

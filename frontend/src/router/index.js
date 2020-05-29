@@ -14,42 +14,38 @@ const routes = [
   {
     path: '/new',
     name: 'NewQuestion',
-    component: NewQuestion
+    component: NewQuestion,
+    active: true
   },
   {
     path: '/',
     name: 'Questions',
-    component: ShowAllQuestions
+    component: ShowAllQuestions,
+    active: true
   },
   {
     path: '/questions',
     name: 'Questions',
-    component: ShowAllQuestions
+    component: ShowAllQuestions,
+    active: true
   },
   {
     path: '/question/:id',
     name: 'ShowOneQuestion',
     component: ShowOneQuestion,
+    active: true
   },
   {
     path: '/about',
     name: 'About',
-    component: About
-  },
-  {
-    path: '/newQuestion',
-    name: 'NewQuestion',
-    component: NewQuestion
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    component: Home
+    component: About,
+    active: true
   },
   {
     path: '*',
     name: '404',
-    component: NotFound
+    component: NotFound,
+    active: true
   }
 ];
 
