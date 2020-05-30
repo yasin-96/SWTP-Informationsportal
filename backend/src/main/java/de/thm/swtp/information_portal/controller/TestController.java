@@ -39,6 +39,5 @@ public class TestController {
 
         rabbitTemplate.convertAndSend("messages", new Message("New Message -> in"));
 
-        return "New Message";
     }
 }
