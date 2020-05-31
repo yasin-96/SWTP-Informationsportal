@@ -33,6 +33,15 @@ public class TestController {
 
     @GetMapping("/hello")
     public String newMessage(@AuthenticationPrincipal Jwt jwt) {
+<<<<<<< HEAD
        System.out.println("asjdlkajdk");
+=======
+        logger.info(jwt.getClaim("name"));
+
+        logger.info("New Message -> in");
+
+        rabbitTemplate.convertAndSend("messages", new Message("New Message -> in"));
+
+>>>>>>> 759c395f20fcdf22e7653c9b277677f09a10476d
     }
 }
