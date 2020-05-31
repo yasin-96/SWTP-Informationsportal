@@ -49,7 +49,7 @@
                 </b-row>
                 <b-row class="justify-content-center pt-4">
                   <b-col xs="12" sm="12" md="12" lg="10">
-                    <b-button size="md" variant="success" @click="createQuestion()">Send</b-button>
+                    <b-button size="md" variant="success" :disabled="enableSendButton" @click="createQuestion()">Send</b-button>
                   </b-col>
                 </b-row>
               </b-container>
@@ -76,11 +76,7 @@ export default {
   },
   data: () => ({
     image: require('./../assets/new_question/questions.svg'),
-    selectedTags: [],
     isTagsAreLoaded: false,
-    // options: ['Apple', 'Orange', 'Banana', 'Lime', 'Peach', 'Chocolate', 'Strawberry'],
-    value: [],
-
     newQuestion: {
       id: '',
       header: '', 
@@ -95,6 +91,13 @@ export default {
 
     availableOptions() {
         return this.getAllTagName.filter(opt => this.newQuestion.tags.indexOf(opt) === -1)
+    },
+    enableSendButton(){
+      if(this.newQuestion.header && this.newQuestion.content && this.newQuestion.tags.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
     }
   },
   methods: { 
