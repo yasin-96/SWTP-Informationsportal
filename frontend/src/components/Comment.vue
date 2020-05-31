@@ -2,7 +2,7 @@
   <b-container>
     <b-button-group>
       <h4>Comments</h4>
-      <b-button v-b-toggle="toggleId" dark variant="white">
+      <b-button v-if="hasComments" v-b-toggle="toggleId" dark variant="white">
         <b-icon-toggle-on v-if="toggelCommentBtn" @click="changeToggelIcon()"></b-icon-toggle-on>
         <b-icon-toggle-off v-if="!toggelCommentBtn" @click="changeToggelIcon()"></b-icon-toggle-off>
       </b-button>
@@ -93,7 +93,11 @@ export default {
       return objectWithComment[this.iCounter].comments;
     },
   },
-  computed: {},
+  computed: {
+    hasComments() {
+     return Object.keys(this.cComments).length > 0 ?  true : false;
+    }
+  },
 };
 </script>
 
