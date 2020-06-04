@@ -1,34 +1,68 @@
 <template>
-  <b-container>
-    <b-button-group>
-      <h4>Comments</h4>
-      <b-button v-if="hasComments" v-b-toggle="toggleId" dark variant="white">
-        <b-icon-toggle-on v-if="toggelCommentBtn" @click="changeToggelIcon()"></b-icon-toggle-on>
-        <b-icon-toggle-off v-if="!toggelCommentBtn" @click="changeToggelIcon()"></b-icon-toggle-off>
-      </b-button>
-    </b-button-group>
-
+  <div>
+    <!-- Add new comment -->
     <NewContent v-if="cId" :nRows="2" :nIsComment="true" :id="cId" />
 
-    <b-collapse :id="toggleId" class="mt-2">
-      <b-container v-for="(cc, i) in cComments" :key="i" flex-column align-items-start>
-        <b-list-group v-for="(c, j) in cc.comments" :key="j">
-          <b-list-group-item v-if="cc.id === cId">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">{{ c.userName }}</h5>
-              <small class="text-muted">{{ c.timestamp }}</small>
-            </div>
-            <p class="mb-1">
-              {{ c.content }}
-            </p>
-            <p>
-              {{ c.rating }}
-            </p>
-          </b-list-group-item>
-        </b-list-group>
-      </b-container>
-    </b-collapse>
-  </b-container>
+    <b-card no-body class="mb-1" v-if="hasComments">
+      <b-card-header header-tag="header" class="p-1" role="tab" variant="white">
+        <b-button block v-b-toggle="toggleId" variant="white"> {{ toggleText }} </b-button>
+      </b-card-header>
+      <b-collapse :id="toggleId" ref="b-collaps-comments">
+        <div v-for="(cc, i) in cComments" :key="i" flex-column align-items-start>
+          <div v-for="(c, j) in cc.comments" :key="j" class="">
+            <b-card class="rounded-0" header-tag="header" footer-bg-variant="white" footer-border-variant="white" v-if="cc.id === cId">
+              <b-card-subtitle>
+                <div class="d-flex justify-content-between">
+                  <h5 class=""><fai icon="comment-alt" /> {{ c.userName }} USER</h5>
+                  
+                </div>
+              </b-card-subtitle>
+              <b-card-text>
+                <b-form-textarea id="textarea-plaintext" plaintext  :rows="minCommentRows" :value="c.content">
+                </b-form-textarea>
+                
+              </b-card-text>
+
+              <template v-slot:footer>
+                <div class="d-flex justify-content-between">
+                <b-button-group>
+                  <b-button size="sm" variant="info">
+                    <fai icon="thumbs-up" />
+                  </b-button>
+                  <b-button size="sm" disabled variant="info">
+                    {{ c.rating }}
+                  </b-button>
+                </b-button-group>
+                <small class="text-muted">{{ c.timestamp }}</small>
+                </div>
+              </template>
+            </b-card>
+            <!-- <b-list-group-item v-if="cc.id === cId">
+              <div class="d-flex justify-content-between">
+                <h5 class="">{{ c.userName }}</h5>
+                <small class="text-muted">{{ c.timestamp }}</small>
+              </div>
+
+             
+              <div class="mb-1">
+                <p> {{ c.content }} </p>
+              </div>
+              <p>
+                <b-button-group>
+                  <b-button size="sm" variant="info">
+                    <fai icon="thumbs-up" />
+                  </b-button>
+                  <b-button size="sm" disabled variant="info">
+                    {{ c.rating }}
+                  </b-button>
+                </b-button-group>
+              </p>
+            </b-list-group-item> -->
+          </div>
+        </div>
+      </b-collapse>
+    </b-card>
+  </div>
 </template>
 
 <script>
@@ -67,6 +101,7 @@ export default {
   },
 
   data: () => ({
+    minCommentRows: 3,
     toggelCommentBtn: false,
     maxComments: 0,
     toggleId: uuidv4(),
@@ -77,11 +112,13 @@ export default {
       rating: 0,
       timestamp: Date.parse(new Date()),
     },
+    toggleText: 'Show Comments',
     iCounter: 0,
   }),
   methods: {
-    changeToggelIcon() {
+    changeText() {
       this.toggelCommentBtn = this.toggelCommentBtn ? false : true;
+      this.toggleText = this.toggleText === 'Show Comments' ? 'Hide Comments' : 'Show Comments';
     },
     getCommentsFromObject(objectWithComment) {
       console.warn('OBj', objectWithComment);
@@ -95,8 +132,13 @@ export default {
   },
   computed: {
     hasComments() {
-     return Object.keys(this.cComments).length > 0 ?  true : false;
-    }
+      return Object.keys(this.cComments).length > 0 ? true : false;
+    },
+  },
+  watch: {
+    'this.$refs.b-collaps-comments'() {
+      this.toggleText = this.toggleText === 'Show Comments' ? 'Hide Comments' : 'Show Comments';
+    },
   },
 };
 </script>

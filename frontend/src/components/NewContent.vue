@@ -1,12 +1,12 @@
 <template>
-  <b-container class="pt-4 pb-4">
+  <div class="pt-4 pb-4">
     <b-button-group class="d-flex">
       <b-form-textarea v-if="nIsAnswer" v-model="contentForAnswer" placeholder="Add new answer ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
       <b-form-textarea v-if="nIsComment" v-model="contentForComment" placeholder="Add new comment ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
-      <b-button v-if="nIsAnswer" @click="addNewAnswer()">{{ bText }}</b-button>
-      <b-button v-if="nIsComment" @click="addNewComment()">{{ bText }}</b-button>
+      <b-button v-if="nIsAnswer" @click="addNewAnswer()" variant="success"><fai icon="plus-circle"/></b-button>
+      <b-button v-if="nIsComment" @click="addNewComment()" variant="success"><fai icon="plus-circle"/></b-button>
     </b-button-group>
-  </b-container>
+  </div>
 </template>
 
 <script>
@@ -23,10 +23,10 @@ export default {
       type: Number,
       default: 3,
     },
-    bText: {
-      type: String,
-      default: 'Send',
-    },
+    // bText: {
+    //   type: String,
+    //   default: 'Send',
+    // },
     nResize: {
       type: Boolean,
       default: true,
