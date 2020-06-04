@@ -1,6 +1,7 @@
 <template>
   <b-container v-if="nId">
     <b-card class="mt-3" :key="nId">
+      
       <!-- Information about user & creation date -->
       <template v-slot:header>
         <b-row class="justify-content-left">
@@ -39,13 +40,13 @@
 import Comment from '@/components/Comment';
 import { mapState, mapActions } from 'vuex';
 
-import { BIconClock, BIconPeopleCircle, BIconChatSquareDots } from 'bootstrap-vue';
+import { BIconClock, BIconPersonCircle, BIconChatSquareDots } from 'bootstrap-vue';
 
 export default {
   name: 'AnswerCard',
   components: {
     Comment,
-    'b-iuser': BIconPeopleCircle,
+    'b-iuser': BIconPersonCircle,
     'b-iclock': BIconClock,
     'b-icomment': BIconChatSquareDots,
   },

@@ -33,13 +33,13 @@
 </template>
 
 <script>
-import { BCard, BIconClock, BIconPeopleCircle, BFormTags, BIconHeartFill } from 'bootstrap-vue';
+import { BCard, BIconClock, BIconPersonCircle, BFormTags, BIconHeartFill } from 'bootstrap-vue';
 export default {
   name: 'QuestionCard',
   components: {
     'b-card': BCard,
     'b-iclock': BIconClock,
-    'b-iuser': BIconPeopleCircle,
+    'b-iuser': BIconPersonCircle,
     'b-form-tags': BFormTags,
     'b-iheart': BIconHeartFill,
   },
