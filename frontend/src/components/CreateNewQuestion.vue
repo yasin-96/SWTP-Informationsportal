@@ -42,7 +42,7 @@
                     </b-form-tags>
 
                     <b-datalist id="alltags">
-                      <option v-for="(tag, index) in getAllTagName" :key="index" :value="tag"></option>
+                      <option v-for="(tag, index) in filterTags" :key="index" :value="tag"></option>
                     </b-datalist>
                   </b-col>
                 </b-row>
@@ -99,7 +99,12 @@ export default {
         : false
     },
 
-   
+    filterTags(){
+      if(this.newQuestion.tags){
+        return this.getAllTagName.filter(item => !this.newQuestion.tags.includes(item)); 
+      } 
+      return this.getAllTagName
+    }
   },
   methods: {
     async createQuestion() {
