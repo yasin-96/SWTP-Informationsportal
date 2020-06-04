@@ -40,9 +40,8 @@
                       :input-handlers="{ input: 'alltags'}"
                     >
                     </b-form-tags>
-
-                    <b-datalist id="alltags">
-                      <option v-for="(tag, index) in filterTags" :key="index" :value="tag"></option>
+                    
+                    <b-datalist id="alltags" :options="filterTags">
                     </b-datalist>
                   </b-col>
                 </b-row>
@@ -95,8 +94,8 @@ export default {
     },
     enableSendButton() {
       return (this.newQuestion.header && this.newQuestion.content && this.newQuestion.tags.length > 0)
-        ? true 
-        : false
+        ? false
+        : true
     },
 
     filterTags(){
@@ -127,4 +126,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
