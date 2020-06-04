@@ -11,12 +11,12 @@
         <div v-for="(cc, i) in cComments" :key="i" flex-column align-items-start>
           <div v-for="(c, j) in cc.comments" :key="j" class="">
             <b-card class="rounded-0" header-tag="header" footer-bg-variant="white" footer-border-variant="white" v-if="cc.id === cId">
-              <b-card-subtitle>
+              <b-card-sub-title>
                 <div class="d-flex justify-content-between">
                   <h5 class=""><fai icon="comment-alt" /> {{ c.userName }} USER</h5>
                   
                 </div>
-              </b-card-subtitle>
+              </b-card-sub-title>
               <b-card-text>
                 <b-form-textarea id="textarea-plaintext" plaintext  :rows="minCommentRows" :value="c.content">
                 </b-form-textarea>
@@ -37,27 +37,6 @@
                 </div>
               </template>
             </b-card>
-            <!-- <b-list-group-item v-if="cc.id === cId">
-              <div class="d-flex justify-content-between">
-                <h5 class="">{{ c.userName }}</h5>
-                <small class="text-muted">{{ c.timestamp }}</small>
-              </div>
-
-             
-              <div class="mb-1">
-                <p> {{ c.content }} </p>
-              </div>
-              <p>
-                <b-button-group>
-                  <b-button size="sm" variant="info">
-                    <fai icon="thumbs-up" />
-                  </b-button>
-                  <b-button size="sm" disabled variant="info">
-                    {{ c.rating }}
-                  </b-button>
-                </b-button-group>
-              </p>
-            </b-list-group-item> -->
           </div>
         </div>
       </b-collapse>
@@ -136,9 +115,10 @@ export default {
     },
   },
   watch: {
-    'this.$refs.b-collaps-comments'() {
-      this.toggleText = this.toggleText === 'Show Comments' ? 'Hide Comments' : 'Show Comments';
-    },
+    //TODO: soll der text für die Kommentare bleiben oder sich ändern
+    // 'this.$refs.b-collaps-comments'() {
+    //   this.toggleText = this.toggleText === 'Show Comments' ? 'Hide Comments' : 'Show Comments';
+    // },
   },
 };
 </script>
