@@ -31,6 +31,7 @@ import de.thm.swtp.information_portal.service.CommentService;
 @RestController
 public class TestController {
 
+<<<<<<< HEAD
 //    @GetMapping("/hello")
 //    public String newMessage(@AuthenticationPrincipal Jwt jwt) {
 //<<<<<<< HEAD
@@ -44,4 +45,19 @@ public class TestController {
 //
 //>>>>>>> 759c395f20fcdf22e7653c9b277677f09a10476d
 //    }
+=======
+    @GetMapping("/hello")
+    public String newMessage(@AuthenticationPrincipal Jwt jwt) {
+<<<<<<< HEAD
+       System.out.println("asjdlkajdk");
+=======
+        logger.info(jwt.getClaim("name"));
+
+        logger.info("New Message -> in");
+
+        rabbitTemplate.convertAndSend("messages", new Message("New Message -> in"));
+
+>>>>>>> 759c395f20fcdf22e7653c9b277677f09a10476d
+    }
+>>>>>>> 964829ce769098b74779ff11a6779373a63905b6
 }
