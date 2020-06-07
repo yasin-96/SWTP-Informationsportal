@@ -25,7 +25,7 @@ const serverConfig = {
   apiInterface: process.env.VUE_APP_API_INTERFACE,
   apiUrl: process.env.VUE_APP_API_URL,
   apiAddress: process.env.VUE_APP_API_URL,
-  softwareDevelopState: process.env.VUE_APP_API_STATE
+  softwareDevelopState: process.env.VUE_APP_API_STATE,
 };
 
 /* Set: Axios Instance
@@ -36,8 +36,8 @@ const client = new axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
   headers: {
     Accept: 'application/json',
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 const cancelToken = axios.CancelToken;
@@ -67,94 +67,113 @@ switch (serverConfig.softwareDevelopState) {
 
 export default {
   async getOneQuestion(qId) {
-    console.warn(qId);
-    try {
-      let serverResponse = await client.get(`/questionById/${qId}`);
-      return serverResponse.data;
-    } catch (error) {
-      console.error('No Data: ', error);
-      return null;
-    }
+    console.info('getOneQuestion()');
+    return await client
+      .get(`/questionById/${qId}`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
   },
 
   async getAllQuestions() {
     console.info('getAllQuestions()');
-    try {
-      let serverResponse = await client.get('/allQuestions');
-      console.log(serverResponse.data);
-      return serverResponse.data;
-    } catch (error) {
-      console.error('No Data: ', error);
-      source.cancel('Operati on canceled by the user.');
-      return null;
-    }
+    return await client
+      .get('/allQuestions')
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
   },
 
   async getAllAnswersToQuestions(questionId) {
     console.info('getAllAnswersToQuestions():', questionId);
-    try {
-      let serverResponse = await client.get(`/answersByQuestionId/${questionId}`);
-      console.log("getAllAnswersToQuestions:", serverResponse);
-      return serverResponse.data;
-    } catch (error) {
-      console.error('No Data: ', error);
-      return null;
-    }
+    return await client
+      .get(`/answersByQuestionId/${questionId}`)
+      .then((response) => {
+        console.log('getAllAnswersToQuestions:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
   },
 
   async getAllCommentsToAnswers(qId) {
     console.info('getAllCommentsToAnswers()', qId);
-    try {
-      let serverResponse = await client.get(`/commentsByAnswerId/${qId}`);
-      return serverResponse.data;
-    } catch (error) {
-      console.error('No Data: ', error);
-      return null;
-    }
+    return await client
+      .get(`/commentsByAnswerId/${qId}`)
+      .then((response) => {
+        console.warn('RESP:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
   },
 
   async getAllTags() {
-    console.info("getAllTags()");
-    try {
-      let serverResponse = await client.get(`/getAllTags`);
-      console.warn("RESP:",serverResponse);
-      return serverResponse.data
-    } catch (error) {
-      console.error('No Data: ', error);
-    }
+    console.info('getAllTags()');
+    return await client
+      .get(`/getAllTags`)
+      .then((response) => {
+        console.warn('RESP:', response);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
   },
 
   async addNewQuestion(newQuestion) {
-    console.warn("newQuestion", newQuestion);
-    try {
-      let serverResponse = await client.post('/newQuestion', newQuestion);
-      console.log("addNewQuestion", serverResponse.data);
-      return serverResponse.data;
-    } catch (error) {
-      console.error("addNewQuestion():", error)
-    }
+    console.warn('newQuestion', newQuestion);
+    return await client
+      .post('/newQuestion', newQuestion)
+      .then((response) => {
+        console.log('addNewQuestion', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
   },
 
-
   async addNewAnswer(newQuestion) {
-    console.warn("addNewAnswer()", newQuestion);
-    try {
-      let serverResponse = await client.post('/answer', newQuestion);
-      console.log("addNewAnswer", serverResponse.data);
-      return serverResponse.data;
-    } catch (error) {
-      console.error("addNewAnswer():", error)
-    }
+    console.warn('addNewAnswer()', newQuestion);
+    return await client
+      .post('/answer', newQuestion)
+      .then((response) => {
+        console.log('addNewAnswer', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('addNewAnswer():', error);
+        return null;
+      });
   },
 
   async addNewComment(newComment) {
-    console.warn("addNewComment()", newComment);
-    try {
-      let serverResponse = await client.post('/newComments', newComment);
-      console.log("addNewComment", serverResponse.data);
-      return serverResponse.data;
-    } catch (error) {
-      console.error("addNewComment():", error)
-    }
-  }
+    console.warn('addNewComment()', newComment);
+    return await client
+      .post('/newComments', newComment)
+      .then((response) => {
+        console.log('addNewComment', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('addNewComment():', error);
+        return null;
+      });
+  },
 };

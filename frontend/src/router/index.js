@@ -33,7 +33,8 @@ const routes = [
     path: '/question/:id',
     name: 'ShowOneQuestion',
     component: ShowOneQuestion,
-    active: true
+    active: true,
+    props: true
   },
   {
     path: '/about',

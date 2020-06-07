@@ -14,7 +14,7 @@
 
         <b-container v-if="allAnswers && areAnswersLoaded">
           <b-container v-for="(aa, i) in allAnswers.listOfAnswers" :key="i">
-            <AnswerCard :nId="oneQuestion.id" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" :cId="aa.id" class="pb-3" />
+            <AnswerCard :nId="id" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" :cId="aa.id" class="pb-3" />
           </b-container>
         </b-container>
       </b-col>
@@ -37,31 +37,31 @@ export default {
     AnswerCard,
     NewContent,
   },
-  async beforeMount() {
-    //read id from url
-
-    if (this.$router) {
-      this.paramId = this.$router.history.current.params.id;
-      // console.warn("ROUTER:",this.$route.history.current.params.id);
-      console.warn('ROUTER ->:', this.$router.history.current.params.id);
-      console.warn('ROUTER - ID:', this.paramId);
-
-      //load data
-      if (this.paramId.length) {
-        try {
-          await this.$store.dispatch('act_getOneQuestion', this.paramId);
-          await this.$store.dispatch('act_getAllAnswers', this.paramId);
-        } catch (error) {
-          console.error('beforeMount: ', error);
-        }
-      }
+  props: {
+    id: {
+      type: String,
+      required: true
     }
   },
-  data: () => ({
-    isQuestionAreLoaded: false,
-    areAnswersLoaded: false,
-    paramId: '',
-  }),
+  beforeMount: async function() {
+    //read id from url => prop[id]
+    // console.warn('ATTR', this.id);
+    
+    //load data
+    try {
+      await this.$store.dispatch('act_getOneQuestion', this.id.toString());
+      await this.$store.dispatch('act_getAllAnswers', this.id.toString());
+    } catch (error) {
+      console.error('beforeMount: ', error);
+    }
+  },
+  data() {
+    return {
+      isQuestionAreLoaded: false,
+      areAnswersLoaded: false,
+      paramId: '',
+    }
+  },
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllAnswers']),
     ...mapState(['oneQuestion', 'allAnswers']),

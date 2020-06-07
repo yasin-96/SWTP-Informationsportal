@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.validator.internal.util.logging.Log_.logger;
+//import org.hibernate.validator.internal.util.logging.Log_.logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.http.HttpStatus;
@@ -31,13 +31,17 @@ import de.thm.swtp.information_portal.service.CommentService;
 @RestController
 public class TestController {
 
-    @GetMapping("/hello")
-    public String newMessage(@AuthenticationPrincipal Jwt jwt) {
-        logger.info(jwt.getClaim("name"));
-
-        logger.info("New Message -> in");
-
-        rabbitTemplate.convertAndSend("messages", new Message("New Message -> in"));
-
-    }
+//    @GetMapping("/hello")
+//    public String newMessage(@AuthenticationPrincipal Jwt jwt) {
+//<<<<<<< HEAD
+//       System.out.println("asjdlkajdk");
+//=======
+//        logger.info(jwt.getClaim("name"));
+//
+//        logger.info("New Message -> in");
+//
+//        rabbitTemplate.convertAndSend("messages", new Message("New Message -> in"));
+//
+//>>>>>>> 759c395f20fcdf22e7653c9b277677f09a10476d
+//    }
 }

@@ -4,11 +4,12 @@
     <template v-slot:header>
       <b-row class="justify-content-left">
         <b-col cols="3" sm="2" md="2" lg="1">
-          <b-iuser class="mr-2" font-scale="3"></b-iuser>
+          <!-- <b-iuser class="mr-2" font-scale="3"></b-iuser> -->
+          <h1> <fai icon="user-circle" /></h1>
         </b-col>
         <b-col cols="9" sm="10" md="10" lg="11">
           <strong>Frage</strong> vom User <br /><small class="ml-3"
-            ><b-iclock></b-iclock>
+            ><fai icon="clock"/>
             {{ qDate }}
           </small>
         </b-col>
@@ -33,15 +34,12 @@
 </template>
 
 <script>
-import { BCard, BIconClock, BIconPeopleCircle, BFormTags, BIconHeartFill } from 'bootstrap-vue';
+import { BCard, BFormTags } from 'bootstrap-vue';
 export default {
   name: 'QuestionCard',
   components: {
     'b-card': BCard,
-    'b-iclock': BIconClock,
-    'b-iuser': BIconPeopleCircle,
     'b-form-tags': BFormTags,
-    'b-iheart': BIconHeartFill,
   },
   props: {
     qId: {
