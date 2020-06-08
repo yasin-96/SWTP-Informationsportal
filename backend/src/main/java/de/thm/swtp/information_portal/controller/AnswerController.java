@@ -5,10 +5,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,34 +30,51 @@ public class AnswerController {
 
 	@Autowired
 	private AnswerService answerService;
-	
+
+	/**
+	 * 
+	 * @param answerList
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 */
+	@Async
 	@PostMapping("/answer")
-	public ResponseEntity<Answers> postAnswer(@RequestBody Answers answerList) throws URISyntaxException{
-			Optional<Answers> answers = answerService.findByQuestionId(answerList.getId());
-			if(!answers.isPresent()) {
-				List<Answer> newAnswerList = new ArrayList<Answer>();
-				Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(),0);
-				newAnswerList.add(newAnswer);
-				Answers newAnswers = new Answers(newAnswerList,answerList.getId());
-				answerService.postAnswer(newAnswers);
-				return ResponseEntity.created(new URI("/api/answer" + newAnswers.getId())).body(newAnswers);
-			}
-			else {
+	public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList)
+			throws URISyntaxException, InterruptedException {
+		Optional<Answers> answers = answerService.findByQuestionId(answerList.getId());
+		if (!answers.isPresent()) {
+			List<Answer> newAnswerList = new ArrayList<Answer>();
+			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), 0);
+			newAnswerList.add(newAnswer);
+			Answers newAnswers = new Answers(newAnswerList, answerList.getId());
+			answerService.postAnswer(newAnswers);
+			return CompletableFuture.completedFuture(
+					ResponseEntity.created(new URI("/api/answer" + newAnswers.getId())).body(newAnswers));
+		} else {
 			List<Answer> answersPresent = answers.get().getListOfAnswers();
-			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(),0);
+			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), 0);
 			answersPresent.add(newAnswer);
 			answerService.postAnswer(answers.get());
-			return ResponseEntity.created(new URI("/api/answer" + answers.get().getId())).body(answers.get());
-			}
+			return CompletableFuture.completedFuture(
+					ResponseEntity.created(new URI("/api/answer" + answers.get().getId())).body(answers.get()));
+		}
 	}
-	
-	
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws InterruptedException
+	 * @throws InterruptedException
+	 */
+	@Async
 	@GetMapping("/answersByQuestionId/{id}")
-	public ResponseEntity<Answers> getAnswers(@PathVariable String id ){
+	public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable String id) throws InterruptedException, InterruptedException {
 		Optional<Answers> answers = answerService.findByQuestionId(id);
-		ResponseEntity<Answers> answRes = answers.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-		return answRes;
+		ResponseEntity<Answers> answRes = answers.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return CompletableFuture.completedFuture(answRes);
 	}
-	
 
 }

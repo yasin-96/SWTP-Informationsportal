@@ -3,8 +3,10 @@ package de.thm.swtp.information_portal.controller;
 // das ist ein Test
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,13 +29,26 @@ public class TagController {
 	@Autowired
 	private TagService tagService;
 	
+	/**
+	 * 
+	 * @param tagsToBeChecked
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
 	@GetMapping("/checkTags/{tagsToBeChecked}")
-	public Tag checkTags(@PathVariable String tagsToBeChecked) {
-		 return tagRepository.findByName(tagsToBeChecked);
+	public CompletableFuture<Tag> checkTags(@PathVariable String tagsToBeChecked)  throws InterruptedException{
+		return CompletableFuture.completedFuture( tagRepository.findByName(tagsToBeChecked));
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
 	@GetMapping("/getAllTags")
-	public List<Tag> getAllTags() {
-		return tagService.getAllTags();
+	public CompletableFuture<List<Tag>> getAllTags() throws InterruptedException {
+		return CompletableFuture.completedFuture( tagService.getAllTags());
 	}
 }	

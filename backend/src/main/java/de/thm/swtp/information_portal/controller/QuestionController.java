@@ -4,12 +4,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,30 +33,57 @@ public class QuestionController {
 	@Autowired
 	private QuestionService questionSerice;
 
-	
+	/**
+	 * 
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
 	@GetMapping("/allQuestions")
-	public List<Question> getAllQuestions() {
-		return questionSerice.getAllQuestions();
+	public CompletableFuture<List<Question>> getAllQuestions() throws InterruptedException {
+		var response = questionSerice.getAllQuestions();
+		return CompletableFuture.completedFuture(response);
 	}
 	
-	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
 	@GetMapping("/questionById/{id}")
-	public ResponseEntity<Question> getQuestion(@PathVariable String id){
+	public CompletableFuture<ResponseEntity<Question>> getQuestion(@PathVariable String id) throws InterruptedException{
 		Optional<Question> question = questionSerice.getQuestion(id);
 		ResponseEntity<Question> quest = question.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-		return quest;
+		return CompletableFuture.completedFuture(quest);
 	}
 	
-	
+	/**
+	 * 
+	 * @param tag
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
 	@GetMapping("/questionByTag/{tag}")
-	public ResponseEntity<List<Question>> findByTag(@PathVariable String tag){
+	public CompletableFuture<ResponseEntity<List<Question>>> findByTag(@PathVariable String tag) throws InterruptedException {
 		List<Question> questions = questionSerice.findByTag(tag);
-		return new ResponseEntity<List<Question>>(questions, HttpStatus.OK);
+		return CompletableFuture.completedFuture(new ResponseEntity<List<Question>>(questions, HttpStatus.OK));
 	}
 	
+	/**
+	 * 
+	 * @param questionBody
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 */
+	@Async
 	@PostMapping("/newQuestion")
-	public ResponseEntity<Question> postQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException{
+	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException, InterruptedException{
 		Question question = questionSerice.postQuestion(questionBody);
-		return ResponseEntity.created(new URI("/api/questionById" + question.getId())).body(question);
+		return CompletableFuture.completedFuture( ResponseEntity.created(new URI("/api/questionById" + question.getId())).body(question));
 	}
+
 }
