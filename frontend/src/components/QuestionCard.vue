@@ -6,6 +6,7 @@
         <b-col cols="3" sm="2" md="2" lg="1">
           <!-- <b-iuser class="mr-2" font-scale="3"></b-iuser> -->
           <h1> <fai icon="user-circle" /></h1>
+          <!-- <b-avatar variant="primary" text="BV"></b-avatar> -->
         </b-col>
         <b-col cols="9" sm="10" md="10" lg="11">
           <strong>Frage</strong> vom User <br /><small class="ml-3"
@@ -68,7 +69,7 @@ export default {
       default: false,
     },
   },
-  data: () => ({}),
+  data() {return {}},
   methods: {
     /**
      * By clicking on the title of a question, a page is called up and all information is provided.

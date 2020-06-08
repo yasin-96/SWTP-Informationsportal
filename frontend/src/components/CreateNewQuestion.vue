@@ -2,7 +2,6 @@
   <b-container class="mt-5">
     <b-card border-variant="white">
       <b-row class="justify-content-xs-top justify-content-sm-center justify-content-center">
-        
         <!-- Imgage for card -->
         <b-col xs="12" sm="12" md="12" lg="4">
           <b-card-img :src="image" width="100%" alt="Image"></b-card-img>
@@ -13,7 +12,6 @@
           <b-card-body>
             <b-card-text>
               <b-container>
-                
                 <!-- Title  -->
                 <b-row class="justify-content-xs-botton justify-content-sm-botton justify-content-md-center justify-content-lg-center text-center">
                   <b-col xs="12" sm="12" md="12" lg="12">
@@ -33,16 +31,9 @@
                 <!-- Tags for this question -->
                 <b-row class="justify-content-center pt-4">
                   <b-col v-if="isTagsAreLoaded" xs="12" sm="12" md="12" lg="12">
-                    <b-form-tags 
-                      v-model="newQuestion.tags"
-                      :remove-on-delete="true"
-                      :input-attrs="{ list: 'alltags' }"
-                      :input-handlers="{ input: 'alltags'}"
-                    >
-                    </b-form-tags>
-                    
-                    <b-datalist id="alltags" :options="filterTags">
-                    </b-datalist>
+                    <b-form-tags v-model="newQuestion.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }"> </b-form-tags>
+
+                    <b-datalist id="alltags" :options="filterTags"> </b-datalist>
                   </b-col>
                 </b-row>
 
@@ -66,6 +57,18 @@ import { mapState, mapActions, mapGetters } from 'vuex';
 export default {
   name: 'CreateNewQuestion',
   components: {},
+  data() {
+    return {
+      image: require('./../assets/new_question/questions.svg'),
+      isTagsAreLoaded: false,
+      newQuestion: {
+        id: '',
+        header: '',
+        content: '',
+        tags: [],
+      },
+    };
+  },
   async beforeMount() {
     try {
       await this.$store.dispatch('act_getAllTags');
@@ -74,16 +77,7 @@ export default {
       console.error(error);
     }
   },
-  data: () => ({
-    image: require('./../assets/new_question/questions.svg'),
-    isTagsAreLoaded: false,
-    newQuestion: {
-      id: '',
-      header: '',
-      content: '',
-      tags: [],
-    },
-  }),
+
   computed: {
     ...mapActions(['act_getAllTags', 'act_creatNewQuestion']),
     ...mapGetters(['getAllTagName']),
@@ -93,17 +87,15 @@ export default {
       return this.getAllTagName.filter((opt) => this.newQuestion.tags.indexOf(opt) === -1);
     },
     enableSendButton() {
-      return (this.newQuestion.header && this.newQuestion.content && this.newQuestion.tags.length > 0)
-        ? false
-        : true
+      return this.newQuestion.header && this.newQuestion.content && this.newQuestion.tags.length > 0 ? false : true;
     },
 
-    filterTags(){
-      if(this.newQuestion.tags){
-        return this.getAllTagName.filter(item => !this.newQuestion.tags.includes(item)); 
-      } 
-      return this.getAllTagName
-    }
+    filterTags() {
+      if (this.newQuestion.tags) {
+        return this.getAllTagName.filter((item) => !this.newQuestion.tags.includes(item));
+      }
+      return this.getAllTagName;
+    },
   },
   methods: {
     async createQuestion() {
@@ -126,5 +118,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

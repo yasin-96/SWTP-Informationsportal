@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import ShowAllQuestions from '@/views/ShowAllQuestions.vue';
 import ShowOneQuestion from '@/views/ShowOneQuestion.vue';
+import Search from '@/views/Search.vue';
 import About from '@/views/About.vue';
 import NotFound from '@/views/NotFound.vue';
 import Home from "../views/Home.vue";
@@ -33,6 +34,13 @@ const routes = [
     path: '/question/:id',
     name: 'ShowOneQuestion',
     component: ShowOneQuestion,
+    active: true,
+    props: true
+  },
+  {
+    path: '/search/:query',
+    name: 'Search',
+    component: Search,
     active: true,
     props: true
   },

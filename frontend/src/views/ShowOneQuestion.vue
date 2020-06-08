@@ -12,7 +12,7 @@
 
         <NewContent bTextSize="lg" :nRows="2" :id="oneQuestion.id" :nIsAnswer="true" />
 
-        <b-container v-if="allAnswers && areAnswersLoaded">
+        <b-container v-if="!!allAnswers">
           <b-container v-for="(aa, i) in allAnswers.listOfAnswers" :key="i">
             <AnswerCard :nId="id" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" :cId="aa.id" class="pb-3" />
           </b-container>
@@ -40,20 +40,23 @@ export default {
   props: {
     id: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
-  beforeMount: async function() {
-    //read id from url => prop[id]
-    // console.warn('ATTR', this.id);
-    
-    //load data
-
-
-    if (this.$localStore.get('rQuetionId')) {
-      console.log("LOCAL_STORE:",this.$localStore.get('rQuetionId'));
+  data() {
+    return {
+      isQuestionAreLoaded: false,
+      areAnswersLoaded: false,
+      paramId: '',
+    };
+  },
+  
+  async beforeMount() {
+    //check if local storage has the key with data, else set the new key & data
+    if (this.$localStore.get('rQuetionId') === this.id.toString()) {
+      console.log('LOCAL_STORE:', this.$localStore.get('rQuetionId'));
     } else {
-      this.$localStore.set('rQuetionId', this.id);
+      this.$localStore.set('rQuetionId', this.id.toString());
     }
 
     try {
@@ -63,13 +66,7 @@ export default {
       console.error('beforeMount: ', error);
     }
   },
-  data() {
-    return {
-      isQuestionAreLoaded: false,
-      areAnswersLoaded: false,
-      paramId: '',
-    }
-  },
+
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllAnswers']),
     ...mapState(['oneQuestion', 'allAnswers']),

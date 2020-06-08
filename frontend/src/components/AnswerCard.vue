@@ -20,9 +20,7 @@
       <!-- One answer to the question -->
       <b-card>
         <b-card-text>
-          <b-form-textarea id="textarea-plaintext" plaintext :rows="minCommentRows"  :value="aContent">
-          </b-form-textarea>
-          
+          <b-form-textarea id="textarea-plaintext" plaintext :rows="minCommentRows" :value="aContent"> </b-form-textarea>
         </b-card-text>
       </b-card>
 
@@ -44,19 +42,11 @@ import { BIconClock, BIconChatSquareDots } from 'bootstrap-vue';
 
 export default {
   name: 'AnswerCard',
+  
   components: {
     Comment,
   },
-  beforeMount: async function () {
-    console.warn('Run dispatch for comments');
-    if (this.cId) {
-      try {
-        await this.$store.dispatch('act_getAllComments', this.cId);
-      } catch (error) {
-        console.error(error.error);
-      }
-    }
-  },
+
   props: {
     nId: {
       type: String,
@@ -79,15 +69,31 @@ export default {
       default: '',
     },
   },
-  data: () => ({
-    minCommentRows: 3,
-    maxCommentRows: 10,
-    isCommentsAreLoaded: false,
-  }),
+
+  data() {
+    return {
+      minCommentRows: 3,
+      maxCommentRows: 10,
+      isCommentsAreLoaded: false,
+    };
+  },
+
+  async beforeMount() {
+    console.warn('Run dispatch for comments');
+    if (this.cId) {
+      try {
+        await this.$store.dispatch('act_getAllComments', this.cId);
+      } catch (error) {
+        console.error(error.error);
+      }
+    }
+  },
+
   computed: {
     ...mapActions(['act_getAllComments']),
     ...mapState(['allComments']),
   },
+
   watch: {
     allComments() {
       if (this.allComments) {

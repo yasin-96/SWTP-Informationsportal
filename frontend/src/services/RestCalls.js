@@ -40,8 +40,8 @@ const client = new axios.create({
   },
 });
 
-const cancelToken = axios.CancelToken;
-const source = cancelToken.source();
+// const cancelToken = axios.CancelToken;
+// const source = cancelToken.source();
 
 /*
  * Returns the information under which address the backend is to be delivered.
@@ -50,12 +50,12 @@ const source = cancelToken.source();
 switch (serverConfig.softwareDevelopState) {
   case 'dev':
     isDebugEnabled = true;
-    console.log(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.apiAddress} .`);
+    console.debug(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.apiAddress} .`);
     break;
 
   case 'release':
     isDebugEnabled = false;
-    console.log(`REST-API is addressed PRODUCTIVELY at the address: ${serverConfig.apiAddress} angesprochen.`);
+    console.debug(`REST-API is addressed PRODUCTIVELY at the address: ${serverConfig.apiAddress} angesprochen.`);
     break;
 
   default:
@@ -67,7 +67,7 @@ switch (serverConfig.softwareDevelopState) {
 
 export default {
   async getOneQuestion(qId) {
-    console.info('getOneQuestion()');
+    console.debug('RestCall: getOneQuestion()', qId);
     return await client
       .get(`/questionById/${qId}`)
       .then((response) => {
@@ -76,15 +76,31 @@ export default {
       .catch((error) => {
         console.error('No Data: ', error);
         return null;
+      }).finally(()=> {
+        console.log("getOneQuestion() :> axios close ");
       });
   },
 
   async getAllQuestions() {
-    console.info('getAllQuestions()');
+    console.debug('getAllQuestions()');
     return await client
       .get('/allQuestions')
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  async getAllDataByQuery(searchQuery) {
+    console.debug('getAllDataByQuery()', searchQuery);
+    return await client
+      .get('/allQuestions', searchQuery) //TODO: muss angepasst werden !!
+      .then((response) => {
+        // console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -94,11 +110,11 @@ export default {
   },
 
   async getAllAnswersToQuestions(questionId) {
-    console.info('getAllAnswersToQuestions():', questionId);
+    console.debug('getAllAnswersToQuestions():', questionId);
     return await client
       .get(`/answersByQuestionId/${questionId}`)
       .then((response) => {
-        console.log('getAllAnswersToQuestions:', response.data);
+        // console.log('getAllAnswersToQuestions:', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -107,10 +123,10 @@ export default {
       });
   },
 
-  async getAllCommentsToAnswers(qId) {
-    console.info('getAllCommentsToAnswers()', qId);
+  async getAllCommentsToAnswers(answerId) {
+    console.info('getAllCommentsToAnswers()', answerId);
     return await client
-      .get(`/commentsByAnswerId/${qId}`)
+      .get(`/commentsByAnswerId/${answerId}`)
       .then((response) => {
         console.warn('RESP:', response.data);
         return response.data;

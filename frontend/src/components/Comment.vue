@@ -14,26 +14,23 @@
               <b-card-sub-title>
                 <div class="d-flex justify-content-between">
                   <h5 class=""><fai icon="comment-alt" /> {{ c.userName }} USER</h5>
-                  
                 </div>
               </b-card-sub-title>
               <b-card-text>
-                <b-form-textarea id="textarea-plaintext" plaintext  :rows="minCommentRows" :value="c.content">
-                </b-form-textarea>
-                
+                <b-form-textarea id="textarea-plaintext" plaintext :rows="minCommentRows" :value="c.content"> </b-form-textarea>
               </b-card-text>
 
               <template v-slot:footer>
                 <div class="d-flex justify-content-between">
-                <b-button-group>
-                  <b-button size="sm" variant="info">
-                    <fai icon="thumbs-up" />
-                  </b-button>
-                  <b-button size="sm" disabled variant="info">
-                    {{ c.rating }}
-                  </b-button>
-                </b-button-group>
-                <small class="text-muted">{{ c.timestamp }}</small>
+                  <b-button-group>
+                    <b-button size="sm" variant="info">
+                      <fai icon="thumbs-up" />
+                    </b-button>
+                    <b-button size="sm" disabled variant="info">
+                      {{ c.rating }}
+                    </b-button>
+                  </b-button-group>
+                  <small class="text-muted">{{ c.timestamp }}</small>
                 </div>
               </template>
             </b-card>
@@ -69,6 +66,23 @@ export default {
       default: new Array(),
     },
   },
+  data() {
+    return {
+      minCommentRows: 3,
+      toggelCommentBtn: false,
+      maxComments: 0,
+      toggleId: uuidv4(),
+      toggleCounter: new Array(),
+      newComment: {
+        content: '',
+        userName: '',
+        rating: 0,
+        timestamp: Date.parse(new Date()),
+      },
+      toggleText: 'Show Comments',
+      iCounter: 0,
+    };
+  },
 
   beforeMount() {
     if (this.cComments) {
@@ -79,21 +93,7 @@ export default {
     }
   },
 
-  data: () => ({
-    minCommentRows: 3,
-    toggelCommentBtn: false,
-    maxComments: 0,
-    toggleId: uuidv4(),
-    toggleCounter: new Array(),
-    newComment: {
-      content: '',
-      userName: '',
-      rating: 0,
-      timestamp: Date.parse(new Date()),
-    },
-    toggleText: 'Show Comments',
-    iCounter: 0,
-  }),
+  
   methods: {
     changeText() {
       this.toggelCommentBtn = this.toggelCommentBtn ? false : true;
