@@ -48,9 +48,17 @@ export default {
     // console.warn('ATTR', this.id);
     
     //load data
+
+
+    if (this.$localStore.get('rQuetionId')) {
+      console.log("LOCAL_STORE:",this.$localStore.get('rQuetionId'));
+    } else {
+      this.$localStore.set('rQuetionId', this.id);
+    }
+
     try {
-      await this.$store.dispatch('act_getOneQuestion', this.id.toString());
-      await this.$store.dispatch('act_getAllAnswers', this.id.toString());
+      await this.$store.dispatch('act_getOneQuestion', this.id.toString() || this.$localStore.get('rQuetionId'));
+      await this.$store.dispatch('act_getAllAnswers', this.id.toString() || this.$localStore.get('rQuetionId'));
     } catch (error) {
       console.error('beforeMount: ', error);
     }
