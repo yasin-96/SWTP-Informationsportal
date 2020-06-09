@@ -24,7 +24,8 @@
 
     <!-- Question content -->
     <b-card-text>
-      <p>{{ qContent }}</p>
+      <p v-if="qTrimText" >{{ qContent.substr(0, qShowMaxText) + ' .....' }} </p>
+      <p v-else >{{ qContent }} </p>
     </b-card-text>
 
     <!-- Show all Tags from Question and its rating -->
@@ -68,6 +69,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    qShowMaxText: {
+      type: Number,
+      default: 50
+    },
+    qTrimText: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {return {}},
   methods: {
