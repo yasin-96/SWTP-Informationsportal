@@ -156,5 +156,14 @@ export default {
     } catch (error) {
       console.error("addNewComment():", error)
     }
+  },
+  async postNewQuestion(question) {
+    try {
+      let serverResponse = await client.post(`/newQuestion`, question);
+      return serverResponse.data;
+    } catch (error) {
+      console.error(info.message);
+      return null;
+    }
   }
 };

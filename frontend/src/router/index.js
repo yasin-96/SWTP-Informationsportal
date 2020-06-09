@@ -18,12 +18,6 @@ const routes = [
     active: true
   },
   {
-    path: '/',
-    name: 'Questions',
-    component: ShowAllQuestions,
-    active: true
-  },
-  {
     path: '/questions',
     name: 'Questions',
     component: ShowAllQuestions,

@@ -48,9 +48,9 @@
                   </b-col>
                 </b-row>
                 <b-row class="justify-content-center pt-4">
-                  <b-col xs="12" sm="12" md="12" lg="10">
-                    <b-button size="md" variant="success" @click="createQuestion()">Send</b-button>
-                  </b-col>
+                  <b-col xs="12" sm="12" md="12" lg="10"> 
+                    <b-button pill variant="outline-primary" @click="createQuestion()">Send</b-button>
+                  </b-col> 
                 </b-row>
               </b-container>
             </b-card-text>
