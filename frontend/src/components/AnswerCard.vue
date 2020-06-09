@@ -79,7 +79,6 @@ export default {
   },
 
   async beforeMount() {
-    console.warn('Run dispatch for comments');
     if (this.cId) {
       try {
         await this.$store.dispatch('act_getAllComments', this.cId);

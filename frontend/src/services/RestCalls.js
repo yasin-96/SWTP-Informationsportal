@@ -98,7 +98,7 @@ export default {
   async getAllDataByQuery(searchQuery) {
     console.debug('getAllDataByQuery()', searchQuery);
     return await client
-      .get('/allQuestions', searchQuery) //TODO: muss angepasst werden !!
+      .post('/question/query', searchQuery) //TODO: muss angepasst werden !!
       .then((response) => {
         // console.log(response.data);
         return response.data;
