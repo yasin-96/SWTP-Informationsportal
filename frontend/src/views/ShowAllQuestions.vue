@@ -8,6 +8,7 @@
         :qContent="quest.content"
         :qTags="quest.tags"
         :qDate="quest.timeStamp"
+        :qTrimText="true"
       />
      </b-col>
    </b-row>

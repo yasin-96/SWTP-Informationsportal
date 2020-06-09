@@ -5,10 +5,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,50 +26,66 @@ import de.thm.swtp.information_portal.models.Comments;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.service.CommentService;
 
-@CrossOrigin(origins="*")
-@RequestMapping("/api")
 @RestController
+@RequestMapping("/api")
 public class CommentController {
 
 	@Autowired
 	private CommentService commentService;
-	
-	
-	
-	
+
+	/**
+	 * 
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
 	@GetMapping("/allComments")
-	public List<Comments> findAllComments(){
-		return commentService.findAllComments();
+	public CompletableFuture<List<Comments>> findAllComments() throws InterruptedException {
+		return CompletableFuture.completedFuture(commentService.findAllComments());
 	}
 
-	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
 	@GetMapping("/commentsByAnswerId/{id}")
-	public ResponseEntity<Comments> findByAnswerId(@PathVariable String id){
+	public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable String id)  throws InterruptedException {
 		Optional<Comments> comments = commentService.findByAnswerId(id);
-		ResponseEntity<Comments> resComments = comments.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-		return resComments;
+		ResponseEntity<Comments> resComments = comments.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return CompletableFuture.completedFuture(resComments);
 	}
-	
-	
+
+	/**
+	 * 
+	 * @param commentList
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 */
+	@Async
 	@PostMapping("/newComments")
-	public ResponseEntity<Comments> postComments(@RequestBody Comments commentList) throws URISyntaxException{
+	public CompletableFuture<ResponseEntity<Comments>> postComments(@RequestBody Comments commentList)
+			throws URISyntaxException, InterruptedException {
 		Optional<Comments> comments = commentService.findByAnswerId(commentList.getId());
-		if(!comments.isPresent()) {
+		if (!comments.isPresent()) {
 			List<Comment> newCommentList = new ArrayList<Comment>();
 			newCommentList.add(commentList.getComments().get(0));
-			Comments newComments = new Comments(newCommentList,commentList.getId());
+			Comments newComments = new Comments(newCommentList, commentList.getId());
 			commentService.postComments(newComments);
-			return ResponseEntity.created(new URI("/api/answer" + newComments.getId())).body(newComments);
+			return CompletableFuture.completedFuture(
+					ResponseEntity.created(new URI("/api/answer" + newComments.getId())).body(newComments));
 		}
-		
-		
-		
-		
+
 		else {
 			List<Comment> commentsPresent = comments.get().getComments();
 			commentsPresent.add(commentList.getComments().get(0));
 			commentService.postComments(comments.get());
-			return ResponseEntity.created(new URI("/api/answer" + comments.get().getId())).body(comments.get());
+			return CompletableFuture.completedFuture(
+					ResponseEntity.created(new URI("/api/answer" + comments.get().getId())).body(comments.get()));
 		}
-}
+	}
 }

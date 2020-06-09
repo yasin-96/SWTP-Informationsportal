@@ -32,7 +32,6 @@ public class Answer {
 	private Long timeStamp;
 	
 	
-
 	public Answer(String content, int rating) {
 		this.id = UUID.randomUUID().toString();
 		this.content = content;
