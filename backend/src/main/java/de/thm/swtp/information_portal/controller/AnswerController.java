@@ -25,7 +25,6 @@ import de.thm.swtp.information_portal.service.AnswerService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class AnswerController {
 
 	@Autowired

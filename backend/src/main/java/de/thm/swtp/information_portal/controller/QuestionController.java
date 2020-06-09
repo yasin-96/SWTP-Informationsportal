@@ -2,9 +2,12 @@ package de.thm.swtp.information_portal.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -27,7 +30,6 @@ import de.thm.swtp.information_portal.service.TagService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class QuestionController {
 	
 	@Autowired
@@ -85,5 +87,27 @@ public class QuestionController {
 		Question question = questionSerice.postQuestion(questionBody);
 		return CompletableFuture.completedFuture( ResponseEntity.created(new URI("/api/questionById" + question.getId())).body(question));
 	}
+
+
+	
+	@Async
+	@PostMapping("/question/query")
+	public CompletableFuture<ResponseEntity<ArrayList<Question>>> getDataByQuery(@Valid @RequestBody String searchQuery) throws URISyntaxException, InterruptedException{
+		
+		var queryForTags = Arrays.asList(searchQuery.split(" "));
+		
+		var allQuestions = new ArrayList<CompletableFuture<ResponseEntity<List<Question>>>>();
+
+		for(var query: queryForTags ) {
+			allQuestions.add(this.findByTag(query));
+		}
+
+		
+
+		return null;
+	}
+
+
+
 
 }

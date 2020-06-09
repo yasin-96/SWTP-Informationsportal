@@ -19,7 +19,6 @@ import de.thm.swtp.information_portal.service.TagService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class TagController {
 
 	
@@ -48,7 +47,7 @@ public class TagController {
 	 */
 	@Async
 	@GetMapping("/getAllTags")
-	public CompletableFuture<List<Tag>> getAllTags() throws InterruptedException {
+	public CompletableFuture<List<Tag>> getAllTags() {
 		return CompletableFuture.completedFuture( tagService.getAllTags());
 	}
 }	

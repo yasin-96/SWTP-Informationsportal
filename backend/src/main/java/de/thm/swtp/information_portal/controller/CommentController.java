@@ -26,9 +26,8 @@ import de.thm.swtp.information_portal.models.Comments;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.service.CommentService;
 
-@CrossOrigin(origins = "*")
-@RequestMapping("/api")
 @RestController
+@RequestMapping("/api")
 public class CommentController {
 
 	@Autowired

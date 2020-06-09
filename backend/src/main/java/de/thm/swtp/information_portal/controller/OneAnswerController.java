@@ -17,7 +17,6 @@ import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.service.OneAnswerService;
 
 @RestController
-@CrossOrigin(origins="*")
 @RequestMapping("/api")
 public class OneAnswerController {
 	
