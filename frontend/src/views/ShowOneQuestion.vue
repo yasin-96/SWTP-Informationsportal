@@ -3,7 +3,7 @@
     <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
     <b-row>
       <b-col>
-        <QuestionCard :qId="oneQuestion.id" :qHeader="oneQuestion.header" :qContent="oneQuestion.content" :qTags="oneQuestion.tags" :qDate="oneQuestion.timeStamp" />
+        <QuestionCard :qId="oneQuestion.id" :qHeader="oneQuestion.header" :qContent="oneQuestion.content" :qTags="oneQuestion.tags" :qDate="oneQuestion.timeStamp" :qFooter="true" />
 
         <!-- 
             By clicking on the title of a question, a page is called up and all information is provided.

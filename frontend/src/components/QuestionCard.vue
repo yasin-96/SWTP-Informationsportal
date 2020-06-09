@@ -5,12 +5,12 @@
       <b-row class="justify-content-left">
         <b-col cols="3" sm="2" md="2" lg="1">
           <!-- <b-iuser class="mr-2" font-scale="3"></b-iuser> -->
-          <h1> <fai icon="user-circle" /></h1>
+          <h1><fai icon="user-circle" /></h1>
           <!-- <b-avatar variant="primary" text="BV"></b-avatar> -->
         </b-col>
         <b-col cols="9" sm="10" md="10" lg="11">
           <strong>Frage</strong> vom User <br /><small class="ml-3"
-            ><fai icon="clock"/>
+            ><fai icon="clock" />
             {{ qDate }}
           </small>
         </b-col>
@@ -24,13 +24,13 @@
 
     <!-- Question content -->
     <b-card-text>
-      <p v-if="qTrimText" >{{ qContent.substr(0, qShowMaxText) + ' .....' }} </p>
-      <p v-else >{{ qContent }} </p>
+      <p v-if="qTrimText">{{ qContent.substr(0, qShowMaxText) + ' .....' }}</p>
+      <p v-else>{{ qContent }}</p>
     </b-card-text>
 
     <!-- Show all Tags from Question and its rating -->
     <template v-if="qTags && qFooter" v-slot:footer>
-      <b-form-tags tag-pills disableAddButton v-model="qTags" class="mb-2"></b-form-tags>
+      <b-form-tags v-model="allTags" tag-pills disabled class="mb-2" placeholder> </b-form-tags>
     </template>
   </b-card>
 </template>
@@ -71,20 +71,27 @@ export default {
     },
     qShowMaxText: {
       type: Number,
-      default: 50
+      default: 50,
     },
     qTrimText: {
       type: Boolean,
       default: false,
-    }
+    },
   },
-  data() {return {}},
+  data() {
+    return {};
+  },
   methods: {
     /**
      * By clicking on the title of a question, a page is called up and all information is provided.
      */
     goToQuestion() {
       this.$router.push(`/question/${this.$props.qId}`);
+    },
+  },
+  computed: {
+    allTags() {
+      return this.qTags.map((tag) => tag.name);
     },
   },
 };
