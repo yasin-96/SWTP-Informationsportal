@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+
+import com.mongodb.connection.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -89,20 +92,33 @@ public class QuestionController {
 	}
 
 
-	
+	//TODO: hier muss noch einiges gemacht werden
 	@Async
 	@PostMapping("/question/query")
 	public CompletableFuture<ResponseEntity<ArrayList<Question>>> getDataByQuery(@Valid @RequestBody String searchQuery) throws URISyntaxException, InterruptedException{
 		
-		var queryForTags = Arrays.asList(searchQuery.split(" "));
+		//split the string in parts and remove empty string
+		var queryForTags = Arrays.asList(searchQuery.split(" "))
+			.stream()
+			.filter((item) -> !item.isEmpty())
+			.collect(Collectors.toList());
 		
-		var allQuestions = new ArrayList<CompletableFuture<ResponseEntity<List<Question>>>>();
+		//result
+		var allQuestions = new ArrayList<List<Question>>();
 
+		//take each query and check if any question has this tag
 		for(var query: queryForTags ) {
-			allQuestions.add(this.findByTag(query));
+			try{
+				var response = questionSerice.findByTag(query);
+				if(response != null){
+					allQuestions.add(response);
+				}
+			} catch(Exception e){
+				System.out.println(e);
+			}
 		}
 
-		
+		System.out.println(allQuestions.toString());
 
 		return null;
 	}
