@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -18,13 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Question;
 import de.thm.swtp.information_portal.models.Tag;
@@ -94,33 +89,40 @@ public class QuestionController {
 
 	//TODO: hier muss noch einiges gemacht werden
 	@Async
-	@PostMapping("/question/query")
-	public CompletableFuture<ResponseEntity<ArrayList<Question>>> getDataByQuery(@Valid @RequestBody String searchQuery) throws URISyntaxException, InterruptedException{
-		
+	@GetMapping("/question/query")
+	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Valid @RequestParam String searchQuery) throws URISyntaxException, InterruptedException{
+
+
+
 		//split the string in parts and remove empty string
-		var queryForTags = Arrays.asList(searchQuery.split(" "))
-			.stream()
-			.filter((item) -> !item.isEmpty())
-			.collect(Collectors.toList());
+
+		List<String> listQuery = Arrays.stream(searchQuery.split(" "))
+				.filter(item-> !item.isEmpty())
+				.collect(Collectors.toList());
+
+
+
+		//System.out.println(Arrays.toString(queryForTags));
 		
 		//result
-		var allQuestions = new ArrayList<List<Question>>();
+		var filteredQuestions = new ArrayList<Question>();
 
 		//take each query and check if any question has this tag
-		for(var query: queryForTags ) {
+		for(var query: listQuery ) {
 			try{
 				var response = questionSerice.findByTag(query);
+
 				if(response != null){
-					allQuestions.add(response);
+					filteredQuestions.addAll(response);
 				}
 			} catch(Exception e){
 				System.out.println(e);
 			}
 		}
 
-		System.out.println(allQuestions.toString());
+		System.out.println(filteredQuestions);
 
-		return null;
+		return CompletableFuture.completedFuture(new ResponseEntity<>(filteredQuestions, HttpStatus.OK));
 	}
 
 
