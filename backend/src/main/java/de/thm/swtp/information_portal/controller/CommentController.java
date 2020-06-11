@@ -26,6 +26,8 @@ import de.thm.swtp.information_portal.models.Comments;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.service.CommentService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class CommentController {
@@ -58,6 +60,23 @@ public class CommentController {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return CompletableFuture.completedFuture(resComments);
 	}
+
+	public CompletableFuture<ResponseEntity<Comments>> increaseCommentRating(@Valid @RequestBody Comments commentList){
+		Optional<Comments> commentsToBeModified = commentService.findByAnswerId(commentList.getId());
+		Comment modifiedComment = commentList.getComments().get(0);
+		List<Comment> listOfComments = commentsToBeModified.get().getComments();
+		listOfComments.forEach((item -> {
+			if(item.equals(modifiedComment.getId())){
+				int index = listOfComments.indexOf(item);
+				listOfComments.set(index,modifiedComment);
+			}
+		}));
+		commentsToBeModified.get().setComments(listOfComments);
+		ResponseEntity<Comments> comRes = commentsToBeModified.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return CompletableFuture.completedFuture(comRes);
+	}
+
 
 	/**
 	 * 
