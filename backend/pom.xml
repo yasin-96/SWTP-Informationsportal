@@ -22,6 +22,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
@@ -36,11 +42,36 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+			<version>2.5.0.RELEASE</version>
+		</dependency>
+
+		<!-- Swagger Settings -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-mongodb-log4j -->
 <dependency>
-    <groupId>org.springframework.security.oauth</groupId>
-    <artifactId>spring-security-oauth2</artifactId>
-    <version>2.5.0.RELEASE</version>
+    <groupId>org.springframework.data</groupId>
+    <artifactId>spring-data-mongodb-log4j</artifactId>
+    <version>1.10.23.RELEASE</version>
 </dependency>
+
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
