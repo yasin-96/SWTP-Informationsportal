@@ -17,4 +17,8 @@ public class OneAnswerService {
 	public Optional<Answer> getAnswer(String id) {
 		return oneAnswerRepository.findById(id);
 	}
+
+	public Answer postAnswer(Answer newAnswer){
+		return oneAnswerRepository.save(newAnswer);
+	}
 }

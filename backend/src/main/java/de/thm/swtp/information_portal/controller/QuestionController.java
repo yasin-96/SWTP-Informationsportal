@@ -83,7 +83,7 @@ public class QuestionController {
 	@PostMapping("/newQuestion")
 	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException, InterruptedException{
 		Question question = questionSerice.postQuestion(questionBody);
-		return CompletableFuture.completedFuture( ResponseEntity.created(new URI("/api/questionById" + question.getId())).body(question));
+		return CompletableFuture.completedFuture( ResponseEntity.created(new URI("/api/question" + question.getId())).body(question));
 	}
 
 
@@ -102,12 +102,12 @@ public class QuestionController {
 
 
 
-		//System.out.println(Arrays.toString(queryForTags));
+
 		
-		//result
+
 		var filteredQuestions = new ArrayList<Question>();
 
-		//take each query and check if any question has this tag
+
 		for(var query: listQuery ) {
 			try{
 				var response = questionSerice.findByTag(query);
@@ -120,7 +120,6 @@ public class QuestionController {
 			}
 		}
 
-		System.out.println(filteredQuestions);
 
 		return CompletableFuture.completedFuture(new ResponseEntity<>(filteredQuestions, HttpStatus.OK));
 	}
