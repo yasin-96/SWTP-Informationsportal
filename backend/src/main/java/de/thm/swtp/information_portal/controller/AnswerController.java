@@ -42,7 +42,7 @@ public class AnswerController {
 	public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList)
 			throws URISyntaxException, InterruptedException {
 		Optional<Answers> answers = answerService.findByQuestionId(answerList.getId());
-		if (!answers.isPresent()) {
+		if (answers.isEmpty()) {
 			List<Answer> newAnswerList = new ArrayList<Answer>();
 			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), 0);
 			newAnswerList.add(newAnswer);
@@ -59,6 +59,8 @@ public class AnswerController {
 					ResponseEntity.created(new URI("/api/answer" + answers.get().getId())).body(answers.get()));
 		}
 	}
+
+
 
 	/**
 	 * 
