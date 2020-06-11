@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 
 import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.repositories.OneAnswerRepository;
-import de.thm.swtp.information_portal.service.OneAnswerService;
 
 @ComponentScan(basePackages={"de.thm.swtp.information_portal"})
 @DataMongoTest
