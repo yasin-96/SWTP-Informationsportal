@@ -78,4 +78,21 @@ public class AnswerController {
 		return CompletableFuture.completedFuture(answRes);
 	}
 
+	@Async
+	@PostMapping("/answer/increaseRating")
+	public CompletableFuture<ResponseEntity<Answers>> increaseAnswerRating(@RequestBody Answers answerList){
+		Optional<Answers> answersToBeModified = answerService.findByQuestionId(answerList.getId());
+		Answer modifiedAnswer = answerList.getListOfAnswers().get(0);
+		List<Answer> listOfAnswers = answersToBeModified.get().getListOfAnswers();
+		listOfAnswers.forEach((item -> {
+			if(item.getId().equals(modifiedAnswer.getId())){
+				int index = listOfAnswers.indexOf(item);
+				listOfAnswers.set(index,modifiedAnswer);
+			}
+		}));
+		answersToBeModified.get().setListOfAnswers(listOfAnswers);
+		ResponseEntity<Answers> answRes = answersToBeModified.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return CompletableFuture.completedFuture(answRes);
+	}
 }

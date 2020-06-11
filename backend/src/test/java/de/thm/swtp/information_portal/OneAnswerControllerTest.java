@@ -17,9 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import de.thm.swtp.information_portal.controller.OneAnswerController;
 import de.thm.swtp.information_portal.models.Answer;
-import de.thm.swtp.information_portal.service.OneAnswerService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(OneAnswerController.class)
