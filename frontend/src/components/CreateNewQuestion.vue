@@ -39,15 +39,9 @@
 
                 <!-- Create option -->
                 <b-row class="justify-content-center pt-4">
-<<<<<<< HEAD
-                  <b-col xs="12" sm="12" md="12" lg="10"> 
-                    <b-button pill variant="outline-primary" @click="createQuestion()">Send</b-button>
-                  </b-col> 
-=======
                   <b-col xs="12" sm="12" md="12" lg="12">
                     <b-button block size="md" variant="success" :disabled="enableSendButton" @click="createQuestion()">Send</b-button>
                   </b-col>
->>>>>>> 14357775b524a3cffcaafd40971e545cb41a3cc5
                 </b-row>
               </b-container>
             </b-card-text>

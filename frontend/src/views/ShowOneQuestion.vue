@@ -66,7 +66,6 @@ export default {
       console.error('beforeMount: ', error);
     }
   },
-
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllAnswers']),
     ...mapState(['oneQuestion', 'allAnswers']),

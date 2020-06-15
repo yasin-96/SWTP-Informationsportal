@@ -18,9 +18,21 @@
       </template>
 
       <!-- One answer to the question -->
-      <b-card>
+      <b-card  
+        class="mb-1"
+        footer-bg-border="white"
+        footer-border-variant="white"
+      >
         <b-card-text>
           <b-form-textarea id="textarea-plaintext" plaintext :rows="minCommentRows" :value="aContent"> </b-form-textarea>
+          <b-button-group>
+            <b-button size="sm" variant="info" @click="increaseRating()">
+              <fai icon="thumbs-up" />
+            </b-button>
+            <b-button size="sm" disabled variant="info">
+              {{ aRating }}
+            </b-button>
+          </b-button-group>
         </b-card-text>
       </b-card>
 
@@ -29,8 +41,11 @@
         <b-container>
           <Comment :cComments="allComments" :cId="cId" />
         </b-container>
+        <b-container>
+        </b-container>
       </b-card-body>
     </b-card>
+   
   </b-container>
 </template>
 
@@ -75,6 +90,10 @@ export default {
       minCommentRows: 3,
       maxCommentRows: 10,
       isCommentsAreLoaded: false,
+      changeAnswerObject: {
+        id: '',
+        listOfAnswers: [],
+      },
     };
   },
 
@@ -88,8 +107,26 @@ export default {
     }
   },
 
+  methods: {
+    async increaseRating() {
+      this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
+      this.changeAnswerObject.listOfAnswers.push({
+        id: this.cId,
+        content: this.aContent,
+        rating: this.aRating + 1 ,
+        timeStamp: Date.parse(new Date(this.aDate)),
+      });
+      console.warn("INCRESE Rating AWT", this.changeAnswerObject);
+      await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject)
+        .then(() => {
+          this.changeAnswerObject = "";
+          this.changeAnswerObject.listOfAnswers = [];
+        });
+    }
+  },
+
   computed: {
-    ...mapActions(['act_getAllComments']),
+    ...mapActions(['act_getAllComments', 'increaseRatingForAnswer']),
     ...mapState(['allComments']),
   },
 

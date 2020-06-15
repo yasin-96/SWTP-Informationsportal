@@ -23,7 +23,7 @@
               <template v-slot:footer>
                 <div class="d-flex justify-content-between">
                   <b-button-group>
-                    <b-button size="sm" variant="info">
+                    <b-button size="sm" variant="info" @click="increaseRating(c)">
                       <fai icon="thumbs-up" />
                     </b-button>
                     <b-button size="sm" disabled variant="info">
@@ -108,8 +108,13 @@ export default {
       }
       return objectWithComment[this.iCounter].comments;
     },
+    increaseRating(comment) {
+      comment.rating = comment.rating + 1;
+      this.$store.dispatch('act_increaseCommentRating', comment);
+    }
   },
   computed: {
+    ...mapActions(['act_increaseCommentRating']),
     hasComments() {
       return Object.keys(this.cComments).length > 0 ? true : false;
     },

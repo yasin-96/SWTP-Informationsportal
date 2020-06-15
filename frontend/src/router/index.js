@@ -56,6 +56,8 @@ const router = new VueRouter({
   mode: 'history',
   // eslint-disable-next-line no-undef
   base: process.env.BASE_URL,
+  // other options could be: 'reload', 'throw' and default to `throw` to avoid breaking changes
+  duplicateNavigationPolicy: 'ignore',
   routes
 });
 

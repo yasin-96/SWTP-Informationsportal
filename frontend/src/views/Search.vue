@@ -1,7 +1,7 @@
 <template>
   <b-container class="mt-3">
     <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
-    <b-row >
+    <b-row v-if="!!allQueryData">
       <b-col sm="12" md="12" lg="12" xl="12" class="mt-4" v-for="(item,i) in allQueryData" :key="i">
         <QuestionCard :qId="item.id" :qHeader="item.header" :qContent="item.content" :qTags="item.tags" :qDate="item.timeStamp" />
       </b-col>
@@ -22,7 +22,8 @@ export default {
   props: {
     query: {
       type: String,
-      required: true,
+      default: "",
+      // required: true,
     },
   },
   data() {

@@ -35,8 +35,15 @@ export default {
   computed: { ...mapActions(['act_getAllDataByQuery']) },
   methods: {
     searchData() {
-      let response = this.$store.dispatch('act_getAllDataByQuery', this.searchInput);
-      console.warn(response);
+
+      this.$router.push({
+        path:`/search/${this.searchInput}`
+      });
+
+      // await this.$store.dispatch('act_getAllDataByQuery', this.searchInput)
+          // this.$router.path
+          // this.$router.push(`/search`);
+      // console.warn("DaTa:", response);
     },
   },
 };

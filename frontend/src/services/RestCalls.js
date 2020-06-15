@@ -98,9 +98,9 @@ export default {
   async getAllDataByQuery(searchQuery) {
     console.debug('getAllDataByQuery()', searchQuery);
     return await client
-      .post('/question/query', searchQuery) //TODO: muss angepasst werden !!
+      .get(`/question/query/`,  { params: { searchQuery}}) //TODO: muss angepasst werden !!
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -179,8 +179,18 @@ export default {
       });
   },
 
+  async increaseAnswerRating(answer) {
+    console.warn("increaseAnswerRating()", answer);
+    try {
+      let serverResponse = await client.post('/answer/increaseRating', answer);
+      console.log("answer with increased comment", serverResponse.data);
+      return serverResponse.data;
+    } catch (error) {
+      console.error("increaseAnswerRating():", error)
+    }
+  },
+
   async addNewComment(newComment) {
-<<<<<<< HEAD
     console.warn("addNewComment()", newComment);
     try {
       let serverResponse = await client.post('/newComments', newComment);
@@ -190,6 +200,19 @@ export default {
       console.error("addNewComment():", error)
     }
   },
+
+  async increaseCommentRating(comment) {
+    console.warn("increaseCommentRating()", comment);
+    try {
+      let serverResponse = await client.post('/newComments', comment);
+      console.log("comment with increased comment", serverResponse.data);
+      return serverResponse.data;
+    } catch (error) {
+      console.error("increaseCommentRating():", error)
+    }
+  },
+
+
   async postNewQuestion(question) {
     try {
       let serverResponse = await client.post(`/newQuestion`, question);
@@ -199,18 +222,4 @@ export default {
       return null;
     }
   }
-=======
-    console.warn('addNewComment()', newComment);
-    return await client
-      .post('/newComments', newComment)
-      .then((response) => {
-        console.log('addNewComment', response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('addNewComment():', error);
-        return null;
-      });
-  },
->>>>>>> 14357775b524a3cffcaafd40971e545cb41a3cc5
 };

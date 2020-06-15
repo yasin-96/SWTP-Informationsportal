@@ -75,6 +75,11 @@ export default new Vuex.Store({
 
     SET_ALL_QUERY_DATA(state, data) {
       console.debug('SET_ALL_QUERY_DATA');
+
+      Object.keys(data).forEach((d) => {
+        data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+      });
+
       state.allQueryData = data;
     }
   },
@@ -111,6 +116,8 @@ export default new Vuex.Store({
       if (!!query) {
         await RestCalls.getAllDataByQuery(query)
           .then((response) => {
+            
+            console.warn("getAllDataByQuery", response);
             if (response != null) {
               commit('SET_ALL_QUERY_DATA', response);
             }
@@ -181,9 +188,32 @@ export default new Vuex.Store({
         });
     },
 
+    async increaseRatingForAnswer({ commit }, answer) {
+      console.log('increaseAnswerRating', answer);
+      return await RestCalls.increaseAnswerRating(answer)
+        .then((response) => {
+          
+          return response;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
     async act_addNewComment({ commit }, newComment) {
       console.log('act_addNewComment', newComment);
       return await RestCalls.addNewComment(newComment)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
+    async act_increaseCommentRating({ commit }, comment) {
+      console.log('act_increaseCommentRating', comment);
+      return await RestCalls.increaseCommentRating(comment)
         .then((response) => {
           return response;
         })

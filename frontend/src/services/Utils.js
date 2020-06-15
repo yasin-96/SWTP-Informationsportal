@@ -6,5 +6,12 @@ function convertUnixTimeStampToString(toConvert){
     return newDate;
 }
 
+function createUnixTimeStamp(toConvert){
+    if(!!toConvert){
+        return Date.parse(new Date(toConvert))
+    }
+    return Date.parse(new Date());
+}
+
 
 export { convertUnixTimeStampToString };
