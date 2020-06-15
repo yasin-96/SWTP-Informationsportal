@@ -91,9 +91,11 @@ public class CommentController {
 	public CompletableFuture<ResponseEntity<Comments>> postComments(@RequestBody Comments commentList)
 			throws URISyntaxException, InterruptedException {
 		Optional<Comments> comments = commentService.findByAnswerId(commentList.getId());
+		Comment existingComment = commentList.getComments().get(0);
 		if (!comments.isPresent()) {
 			List<Comment> newCommentList = new ArrayList<Comment>();
-			newCommentList.add(commentList.getComments().get(0));
+			Comment newComment = new Comment(existingComment.getContent(),existingComment.getUserName(),existingComment.getRating());
+			newCommentList.add(newComment);
 			Comments newComments = new Comments(newCommentList, commentList.getId());
 			commentService.postComments(newComments);
 			return CompletableFuture.completedFuture(
@@ -102,7 +104,9 @@ public class CommentController {
 
 		else {
 			List<Comment> commentsPresent = comments.get().getComments();
-			commentsPresent.add(commentList.getComments().get(0));
+			Comment newComment = new Comment(existingComment.getContent(),existingComment.getUserName(),existingComment.getRating());
+			commentsPresent.add(newComment);
+			comments.get().setComments(commentsPresent);
 			commentService.postComments(comments.get());
 			return CompletableFuture.completedFuture(
 					ResponseEntity.created(new URI("/api/answer" + comments.get().getId())).body(comments.get()));
