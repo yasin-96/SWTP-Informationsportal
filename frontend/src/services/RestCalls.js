@@ -120,6 +120,8 @@ export default {
       .catch((error) => {
         console.error('No Data: ', error);
         return null;
+      }).finally(()=> {
+        console.log("getAllAnswersToQuestions() :> axios close ");
       });
   },
 
@@ -134,6 +136,8 @@ export default {
       .catch((error) => {
         console.error('No Data: ', error);
         return null;
+      }).finally(()=> {
+        console.log("getAllCommentsToAnswers() :> axios close ");
       });
   },
 
@@ -204,7 +208,7 @@ export default {
   async increaseCommentRating(comment) {
     console.warn("increaseCommentRating()", comment);
     try {
-      let serverResponse = await client.post('/newComments', comment);
+      let serverResponse = await client.post('/comment/increaseRating', comment);
       console.log("comment with increased comment", serverResponse.data);
       return serverResponse.data;
     } catch (error) {

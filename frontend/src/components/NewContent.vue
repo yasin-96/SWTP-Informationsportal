@@ -47,28 +47,32 @@ export default {
       default: '',
     },
   },
-  data: () => ({
-    newAnswer: {
-      id: '',
-      listOfAnswers: [],
-    },
-    newComment: {
-      id: '',
-      comments: [],
-    },
-    contentForAnswer: '',
-    contentForComment: '',
-  }),
-  mounted() {
-    console.warn('ROUNTER -> ', this.$router.history.current.params.id);
-    this.newAnswer.id = this.$router.history.current.params.id;
+  data() {
+    return {
+      newAnswer: {
+        id: '',
+        listOfAnswers: [],
+      },
+      newComment: {
+        id: '',
+        comments: [],
+      },
+      contentForAnswer: '',
+      contentForComment: '',
+    };
+  },
+  beforeMount() {
+    // console.warn('ROUNTER -> ', this.$router.history.current.params.id);
+    console.warn('ROUNTER -> ', this.$localStore.get('rQuetionId'));
+    // this.newAnswer.id = this.$router.history.current.params.id;
+    this.newAnswer.id = this.$localStore.get('rQuetionId');
     this.newComment.id = this.id;
   },
 
   computed: {
     ...mapActions(['act_addNewAnswer', 'act_addNewComment']),
   },
-  
+
   methods: {
     async addNewAnswer() {
       if (this.contentForAnswer) {

@@ -1,6 +1,6 @@
 <template>
   <b-container v-if="nId">
-    <b-card class="mt-3" :key="nId">
+    <b-card id="nId" class="mt-3" :key="nId">
       <!-- Information about user & creation date -->
       <template v-slot:header>
         <b-row class="justify-content-left">
@@ -93,7 +93,10 @@ export default {
       changeAnswerObject: {
         id: '',
         listOfAnswers: [],
+        timeStamp: Date.parse(new Date())
       },
+      newRating: Number(this.aRating) + 1,
+      reloadComponent: 0
     };
   },
 
@@ -110,18 +113,21 @@ export default {
   methods: {
     async increaseRating() {
       this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
-      this.changeAnswerObject.listOfAnswers.push({
+      let currentDate = Date.parse(new Date());
+      // let newRating = Number(this.aRating) + 1;
+      console.warn("NEW R", this.newRating);
+
+      this.changeAnswerObject.listOfAnswers = [{
         id: this.cId,
         content: this.aContent,
-        rating: this.aRating + 1 ,
-        timeStamp: Date.parse(new Date(this.aDate)),
-      });
+        rating: this.newRating,
+        timeStamp: currentDate,
+      }];
       console.warn("INCRESE Rating AWT", this.changeAnswerObject);
-      await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject)
-        .then(() => {
-          this.changeAnswerObject = "";
-          this.changeAnswerObject.listOfAnswers = [];
-        });
+      await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
+      
+      //reload page 
+      this.$router.go();
     }
   },
 

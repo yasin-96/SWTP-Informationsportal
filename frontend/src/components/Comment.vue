@@ -108,9 +108,29 @@ export default {
       }
       return objectWithComment[this.iCounter].comments;
     },
-    increaseRating(comment) {
-      comment.rating = comment.rating + 1;
-      this.$store.dispatch('act_increaseCommentRating', comment);
+    async increaseRating(comment) {
+      let newRating = Number(comment.rating) + 1;
+
+
+      console.warn("OBJ", comment);
+
+      let newComment = {
+        id: this.cId,
+        comments: [{
+          id: comment.id,
+          content: comment.content,
+          userName: comment.userName,
+          rating: newRating,
+          timestamp: Date.parse(new Date())
+        }
+        ],
+        timestamp: Date.parse(new Date())
+      };
+      await this.$store.dispatch('act_increaseCommentRating', newComment);
+      console.warn("NEW  COMMENT WIHT R", newComment);
+
+      //reload page 
+      this.$router.go();
     }
   },
   computed: {

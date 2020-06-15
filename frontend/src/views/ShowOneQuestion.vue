@@ -13,8 +13,9 @@
         <NewContent bTextSize="lg" :nRows="2" :id="oneQuestion.id" :nIsAnswer="true" />
 
         <b-container v-if="!!allAnswers">
-          <b-container v-for="(aa, i) in allAnswers.listOfAnswers" :key="i">
-            <AnswerCard :nId="id" :aContent="aa.content" :aRating="aa.Rating" :aDate="aa.timeStamp" :cId="aa.id" class="pb-3" />
+          <b-container v-for="(aa) in allAnswers.listOfAnswers" :key="aa.id">
+            <AnswerCard :nId="id" :aContent="aa.content" :aRating="aa.rating" :aDate="aa.timeStamp" :cId="aa.id" class="pb-3" />
+            <!-- <AnswerCard :nId="aa.id" :aContent="aa.content" :aRating="aa.rating" :aDate="aa.timeStamp" :cId="aa.id" class="pb-3" /> -->
           </b-container>
         </b-container>
       </b-col>
@@ -48,10 +49,13 @@ export default {
       isQuestionAreLoaded: false,
       areAnswersLoaded: false,
       paramId: '',
+      componentKey: "",
+      componentCounter: 0,
     };
   },
   
   async beforeMount() {
+    console.info("BMount--")
     //check if local storage has the key with data, else set the new key & data
     if (this.$localStore.get('rQuetionId') === this.id.toString()) {
       console.log('LOCAL_STORE:', this.$localStore.get('rQuetionId'));
@@ -59,16 +63,21 @@ export default {
       this.$localStore.set('rQuetionId', this.id.toString());
     }
 
+    console.warn("THIS ID:", this.id);
+    this.paramId = this.id || this.$localStore.get('rQuetionId');
+    console.warn("PARA ID:", this.paramId);
+    // console.warn("PARA ID-Router:", this.$route.params.id);
+
     try {
-      await this.$store.dispatch('act_getOneQuestion', this.id.toString() || this.$localStore.get('rQuetionId'));
-      await this.$store.dispatch('act_getAllAnswers', this.id.toString() || this.$localStore.get('rQuetionId'));
+      await this.$store.dispatch('act_getOneQuestion', this.paramId);
+      await this.$store.dispatch('act_getAllAnswers', this.paramId);
     } catch (error) {
       console.error('beforeMount: ', error);
     }
   },
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllAnswers']),
-    ...mapState(['oneQuestion', 'allAnswers']),
+    ...mapState(['oneQuestion', 'allAnswers', 'oneAnswerWasChanged']),
     ...mapGetters(['getListWithAnswers']),
   },
   watch: {
@@ -86,6 +95,8 @@ export default {
       } else {
         this.areAnswersLoaded = false;
       }
+      console.warn("Data for Answer changed");
+      //  this.$mount();
     },
   },
 };

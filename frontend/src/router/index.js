@@ -58,7 +58,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   // other options could be: 'reload', 'throw' and default to `throw` to avoid breaking changes
   duplicateNavigationPolicy: 'ignore',
-  routes
+  routes,
 });
 
 export default router;

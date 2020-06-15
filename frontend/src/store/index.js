@@ -17,6 +17,8 @@ export default new Vuex.Store({
     allTags: [],
 
     allQueryData: [],
+
+    oneAnswerWasChanged: false
   },
   mutations: {
     SET_ALL_QUESTIONS(state, data) {
@@ -81,12 +83,42 @@ export default new Vuex.Store({
       });
 
       state.allQueryData = data;
+    },
+
+    UPDATE_ANSWER_IN_UI(state, data) {
+      state.oneAnswerWasChanged = data
     }
+
+    //   console.warn("UPDATE A I UI", data);
+    //   let answerToUpdate = data.listOfAnswers[0];
+
+      
+    //   answerToUpdate.timeStamp = convertUnixTimeStampToString(answerToUpdate.timeStamp);
+    //   console.warn("UP:", answerToUpdate);
+
+    //   let newAnswerWithSomeUpdates = Object.assign({}, state.allAnswers);
+    //   newAnswerWithSomeUpdates.listOfAnswers.forEach((d, index) => {
+    //     if(d.id === answerToUpdate.id) {
+    //       console.warn("FOUND:", d.id, answerToUpdate.id);
+    //       newAnswerWithSomeUpdates.listOfAnswers[index] = answerToUpdate
+    //     }
+    //   });
+
+    //   console.warn("OLD", state.allAnswers);
+    //   state.allAnswers = Object.assign({}, newAnswerWithSomeUpdates);
+    //   console.warn("NEW", state.allAnswers);
+
+    //   state.oneAnswerWasChanged = true
+
+
+    // }
   },
   actions: {
     async act_getOneQuestion({ commit }, questionId) {
       console.log('act_getOneQuestion()');
-      await RestCalls.getOneQuestion(questionId)
+      console.log('act_getOneQuestion()', questionId);
+      try{
+        await RestCalls.getOneQuestion(questionId)
         .then((response) => {
           if (response != null) {
             commit('SET_ONE_QUESTION', response);
@@ -95,6 +127,10 @@ export default new Vuex.Store({
         .catch((error) => {
           console.error('act_getAllQuestions: ', error);
         });
+      } catch(error){
+        console.error('act_getAllQuestions: ', error);
+      }
+     
     },
 
     async act_getAllQuestions({ commit }) {
@@ -191,10 +227,6 @@ export default new Vuex.Store({
     async increaseRatingForAnswer({ commit }, answer) {
       console.log('increaseAnswerRating', answer);
       return await RestCalls.increaseAnswerRating(answer)
-        .then((response) => {
-          
-          return response;
-        })
         .catch((error) => {
           console.error(error);
         });
@@ -213,14 +245,13 @@ export default new Vuex.Store({
 
     async act_increaseCommentRating({ commit }, comment) {
       console.log('act_increaseCommentRating', comment);
-      return await RestCalls.increaseCommentRating(comment)
-        .then((response) => {
-          return response;
-        })
-        .catch((error) => {
+      return await RestCalls.increaseCommentRating(comment).then(()=>{
+        commit('UPDATE_ANSWER_IN_UI', true);
+      }).catch((error) => {
           console.error(error);
-        });
+      });
     },
+
   },
 
   getters: {
