@@ -74,6 +74,7 @@ public class CommentController {
 		commentsToBeModified.get().setComments(listOfComments);
 		ResponseEntity<Comments> comRes = commentsToBeModified.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		commentService.postComments(commentsToBeModified.get());
 		return CompletableFuture.completedFuture(comRes);
 	}
 

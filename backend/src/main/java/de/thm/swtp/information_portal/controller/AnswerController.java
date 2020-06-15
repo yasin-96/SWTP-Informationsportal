@@ -93,6 +93,7 @@ public class AnswerController {
 		answersToBeModified.get().setListOfAnswers(listOfAnswers);
 		ResponseEntity<Answers> answRes = answersToBeModified.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		answerService.postAnswer(answersToBeModified.get());
 		return CompletableFuture.completedFuture(answRes);
 	}
 }
