@@ -61,12 +61,14 @@ public class CommentController {
 		return CompletableFuture.completedFuture(resComments);
 	}
 
+	@Async
+	@PostMapping("/comment/increaseRating")
 	public CompletableFuture<ResponseEntity<Comments>> increaseCommentRating(@Valid @RequestBody Comments commentList){
 		Optional<Comments> commentsToBeModified = commentService.findByAnswerId(commentList.getId());
 		Comment modifiedComment = commentList.getComments().get(0);
 		List<Comment> listOfComments = commentsToBeModified.get().getComments();
 		listOfComments.forEach((item -> {
-			if(item.equals(modifiedComment.getId())){
+			if(item.getId().equals(modifiedComment.getId())){
 				int index = listOfComments.indexOf(item);
 				listOfComments.set(index,modifiedComment);
 			}
