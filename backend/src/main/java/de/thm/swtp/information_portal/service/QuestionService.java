@@ -44,6 +44,10 @@ public class QuestionService {
 		return questionRepository.findAll();
 	}
 
+	public Question editQuestion(Question question){
+		return questionRepository.save(question);
+	}
+
 	public Question postQuestion(Question question) {
 		// Question newQuestion = question;
 		List<Tag> newQuestionTags = tagService.checkIfTagsExist(question.getTags());

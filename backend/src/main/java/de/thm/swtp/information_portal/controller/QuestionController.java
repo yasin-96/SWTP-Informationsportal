@@ -86,6 +86,13 @@ public class QuestionController {
 		return CompletableFuture.completedFuture( ResponseEntity.created(new URI("/api/question" + question.getId())).body(question));
 	}
 
+	@Async
+	@PutMapping("/question/{id}")
+	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException{
+		Question question = questionSerice.editQuestion(questionBody);
+		return CompletableFuture.completedFuture(ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question));
+	}
+
 
 	//TODO: hier muss noch einiges gemacht werden
 	@Async
