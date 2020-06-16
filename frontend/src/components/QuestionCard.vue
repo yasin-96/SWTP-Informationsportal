@@ -13,6 +13,7 @@
             ><fai icon="clock" />
             {{ qDate }}
           </small>
+          <b-button v-if="qEdit" @click="editQuestion()"><fai icon="edit"></fai></b-button>
         </b-col>
       </b-row>
     </template>
@@ -77,6 +78,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    qEdit: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {};
@@ -86,8 +91,11 @@ export default {
      * By clicking on the title of a question, a page is called up and all information is provided.
      */
     goToQuestion() {
-      this.$router.push(`/question/${this.$props.qId}`);
+      this.$router.push(`/question/${this.$props.qId}`).catch(err => {});
     },
+    editQuestion(){
+      this.$router.push(`/question/edit/${this.$props.qId}`).catch(err => {});
+    }
   },
   computed: {
     allTags() {
