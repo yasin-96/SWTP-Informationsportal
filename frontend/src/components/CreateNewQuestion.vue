@@ -92,9 +92,9 @@ export default {
 
     filterTags() {
       if (this.newQuestion.tags) {
-        return this.getAllTagName.filter((item) => !this.newQuestion.tags.includes(item));
+        return this.getAllTagName.filter((item) => !this.newQuestion.tags.includes(item)).map((item) => item.toUpperCase());
       }
-      return this.getAllTagName;
+      return this.getAllTagName.map((item) => item.toUpperCase());
     },
   },
   methods: {

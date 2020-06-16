@@ -39,7 +39,7 @@ export default {
         .push({
           path: '/search',
           query: {
-            q: `${this.searchInput}`,
+            q: `${String(this.searchInput).toUpperCase()}`,
           },
         })
         .catch((err) => {});
