@@ -11,17 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.service.AnswerService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -60,8 +56,23 @@ public class AnswerController {
 		}
 	}
 
-
-
+	@Async
+	@PutMapping("/answer/{id}")
+	public CompletableFuture<ResponseEntity<Answers>> editAnswer(@Valid @RequestBody Answers answers) throws URISyntaxException{
+		Answer editedAnswer = answers.getListOfAnswers().get(0);
+		Optional<Answers> answersToBeEdited = answerService.findByQuestionId(answers.getId());
+		List<Answer> answerList = answersToBeEdited.get().getListOfAnswers();
+		answerList.forEach((item -> {
+			if (item.getId().equals(editedAnswer.getId())) {
+				int index = answerList.indexOf(item);
+				answerList.set(index, editedAnswer);
+			}
+		}));
+		answersToBeEdited.get().setListOfAnswers(answerList);
+		answerService.postAnswer(answersToBeEdited.get());
+		return CompletableFuture.completedFuture(ResponseEntity.created(new URI("/api/answer/" +
+				answersToBeEdited.get().getId())).body(answersToBeEdited.get()));
+	}
 	/**
 	 * 
 	 * @param id
