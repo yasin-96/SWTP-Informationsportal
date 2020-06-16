@@ -1,9 +1,9 @@
 <template>
-  <b-container class="mt-5">
+  <b-container class="mt-5" background="primary">
     <b-card border-variant="white">
       <b-row class="justify-content-xs-top justify-content-sm-center justify-content-center">
         <!-- Imgage for card -->
-        <b-col xs="12" sm="12" md="12" lg="4">
+        <b-col xs="12" sm="12" md="12" lg="5">
           <b-card-img :src="image" width="100%" alt="Image"></b-card-img>
         </b-col>
 

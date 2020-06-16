@@ -1,102 +1,63 @@
 <template>
-  <b-card>
-    <b-navbar toggleable="md">
+  <div class="shadow-sm p-3 mb-5 bg-white rounded">
+    <div>
+      <b-navbar toggleable="md" class="mt-2">
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav>
+            <b-nav-form>
+              <img src="https://www.thm.de/_thm/logos/thm.svg" fluid alt="THM LOGO" />
+            </b-nav-form>
+          </b-navbar-nav>
 
-      <!-- <b-navbar variant="faded" type="light">
-          <b-navbar-brand tag="h1" class="mb-0">Informationsportal</b-navbar-brand>
-        </b-navbar>
-      -->
+          <!-- Right aligned nav items -->
+          <b-navbar-nav class="ml-auto">
+            <Searching />
+            <b-nav-item-dropdown right>
+              <!-- Using 'button-content' slot -->
+              <template v-slot:button-content>
+                <b-avatar rounded variant="primary" text="BV"></b-avatar>
+              </template>
+              <b-dropdown-item href="#">Profile</b-dropdown-item>
+              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
 
-
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-      <b-collapse id="nav-collapse" is-nav>
+      <b-navbar>
         <b-navbar-nav>
-          <b-nav-form>
-            <img src="https://www.thm.de/_thm/logos/thm.svg" fluid alt="THM LOGO">
-          </b-nav-form>
+          <b-collapse>
+            <b-nav-item-dropdown right>
+              <template v-slot:button-content>
+                <b-avatar variant="primary" text="BV"></b-avatar>
+              </template>
+              <b-dropdown-item href="#">Profile</b-dropdown-item>
+              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-collapse>
         </b-navbar-nav>
-        <!-- <b-navbar-nav class="ml-auto">
-            <b-nav-item href="#">Link</b-nav-item>
-            <b-nav-item href="#" disabled>Disabled</b-nav-item>
-        </b-navbar-nav>-->
-
-        <!-- Right aligned nav items -->
-        <b-navbar-nav class="ml-auto">
-          <!-- <b-nav-form>
-              <b-input-group>
-                <b-form-input type="text"></b-form-input>
-                <b-input-group-append>
-                  <b-button>Suchen</b-button>
-                </b-input-group-append>
-              </b-input-group>
-          </b-nav-form>-->
-
-          <b-nav-item-dropdown right>
-            <!-- Using 'button-content' slot -->
-            <template v-slot:button-content>
-              <b-avatar variant="primary" text="BV"></b-avatar>
-            </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
-
-    <div style="margin-top: 40px">
-      <b-navbar toggleable="lg" type="light" variant="light">
-        <b-navbar-nav ul>
-          <b-navbar-brand>Informationsportal</b-navbar-brand>
-          <b-nav-item href="/home">Home</b-nav-item>
-          <b-nav-item href="/new">Neue Frage stellen</b-nav-item>
-          <b-nav-item href="/questions">Alle Fragen anzeigen</b-nav-item>
-          <b-nav-item href="/">Aktuelle Themen</b-nav-item>
-          <b-nav-item href="/about">About</b-nav-item>
-        </b-navbar-nav>
-
-        <b-navbar-nav class="ml-auto" >
-          <b-nav-form>
-            <b-form-input size="sm" class="mr-sm-2" placeholder="Frage suchen"></b-form-input>
-            <!-- <b-icon icon="search" scale="1.5" class="my-2 my-sm-0" type="submit"></b-icon> -->
-            
-          </b-nav-form>
-        </b-navbar-nav>
-
-                  <b-button :hidden="!disableSearchBar" squared size="md" :pressed.sync="disableSearchBar">
-            <fai icon="search" class="mr-2"/>
-            <span>Search</span>
-          </b-button>
-          <b-button variant="danger" :hidden="disableSearchBar" squared size="md" :pressed.sync="disableSearchBar">
-            <fai icon="search-minus" class="mr-2"/>
-            <span>Abort</span>
-          </b-button>
       </b-navbar>
     </div>
-    <b-navbar>
-    <b-collapse>
-        <b-navbar-nav>  
-
-          <b-nav-item-dropdown right>
-            <!-- Using 'button-content' slot -->
-            <template v-slot:button-content>
-              <b-avatar variant="primary" text="BV"></b-avatar>
-            </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-
-
-  
-       
-      </b-collapse>
-    </b-navbar>
-    <Searching :disable="disableSearchBar"/>
-  </b-card>
+    <div>
+      <div class="mt-4">
+        <b-navbar toggleable="md" type="light" variant="">
+          <b-navbar-nav class="mx-auto">
+            <b-navbar-brand>Informationsportal</b-navbar-brand>
+            <b-nav-item href="/home">Home</b-nav-item>
+            <b-nav-item href="/new">Neue Frage stellen</b-nav-item>
+            <b-nav-item href="/questions">Alle Fragen anzeigen</b-nav-item>
+            <b-nav-item href="/">Aktuelle Themen</b-nav-item>
+            <b-nav-item href="/about">About</b-nav-item>
+          </b-navbar-nav>
+        </b-navbar>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import Searching from "@/components/Searching";
+import Searching from '@/components/Searching';
 import { BNavbar } from 'bootstrap-vue';
 
 // import Vue from 'vue'
@@ -105,19 +66,20 @@ import { BNavbar } from 'bootstrap-vue';
 // Vue.use(BootstrapVue)
 // Vue.use(BootstrapVueIcons)
 
-import {mapActions} from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Navigation',
-  components: { 
+  components: {
     Searching,
     'b-navbar': BNavbar,
   },
   data() {
     return {
       thmSVGURl: 'https://www.thm.de/_thm/logos/thm.svg',
-      disableSearchBar: true, 
-      searchInput: ''
+      disableSearchBar: true,
+      searchInput: '',
+      isHovered: false,
     };
   },
 
@@ -125,7 +87,14 @@ export default {
     goToLink(link) {
       this.$router.push(`/${link}`);
     },
+    handleHover(hovered) {
+      this.isHovered = hovered;
+    },
   },
 };
 </script>
-<style></style>
+<style>
+.nav-item:hover {
+  background-color: rgb(223, 229, 230);
+}
+</style>

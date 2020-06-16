@@ -1,7 +1,7 @@
 <template>
- <b-container v-if="allQuestions.length">
+ <b-container v-if="questions.length">
    <b-row>
-     <b-col sm="12" md="6" lg="4" xl="3" v-for="quest in allQuestions" :key="quest.id" class="mt-4">
+     <b-col sm="12" md="6" lg="4" xl="3" v-for="quest in questions" :key="quest.id" class="mt-4">
       <QuestionCard 
         :qId="quest.id"
         :qHeader="quest.header"
@@ -34,7 +34,17 @@ export default {
   },
   computed: {
     ...mapActions(['act_getAllQuestions',]),
-    ...mapState(['allQuestions'])
+    ...mapState(['allQuestions']),
+    questions(){
+      if(!!this.allQuestions){
+        return this.allQuestions;
+      }
+    }
   },
+  watch: { 
+    allQuestions(){
+      this.$forceUpdate();
+    },
+  }
 };
 </script>

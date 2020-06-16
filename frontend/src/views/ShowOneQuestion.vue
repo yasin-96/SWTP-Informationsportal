@@ -71,12 +71,13 @@ export default {
     try {
       await this.$store.dispatch('act_getOneQuestion', this.paramId);
       await this.$store.dispatch('act_getAllAnswers', this.paramId);
+      await this.$store.dispatch('act_getAllQuestions');
     } catch (error) {
       console.error('beforeMount: ', error);
     }
   },
   computed: {
-    ...mapActions(['act_getOneQuestion', 'act_getAllAnswers']),
+    ...mapActions(['act_getAllQuestions', 'act_getOneQuestion', 'act_getAllAnswers']),
     ...mapState(['oneQuestion', 'allAnswers', 'oneAnswerWasChanged']),
     ...mapGetters(['getListWithAnswers']),
   },

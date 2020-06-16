@@ -131,6 +131,7 @@ export default {
 
       //reload page 
       this.$router.go();
+
     }
   },
   computed: {

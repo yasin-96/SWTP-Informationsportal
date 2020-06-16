@@ -39,7 +39,7 @@ export default new Vuex.Store({
         d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
       });
 
-      state.allAnswers = data;
+      state.allAnswers = Object.assign({}, data);
     },
 
     SET_ALL_COMMENTS(state, data) {
@@ -77,11 +77,11 @@ export default new Vuex.Store({
 
     SET_ALL_QUERY_DATA(state, data) {
       console.debug('SET_ALL_QUERY_DATA');
-
-      Object.keys(data).forEach((d) => {
-        data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-      });
-
+      if(data){
+        Object.keys(data).forEach((d) => {
+          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+        });
+      }
       state.allQueryData = data;
     },
 
@@ -148,15 +148,15 @@ export default new Vuex.Store({
     },
 
     async act_getAllDataByQuery({ commit }, query) {
-      console.log('act_getAllQuestionsByQuery');
+      console.log('act_getAllQuestionsByQuery', query);
       if (!!query) {
         await RestCalls.getAllDataByQuery(query)
           .then((response) => {
             
             console.warn("getAllDataByQuery", response);
-            if (response != null) {
+            // if (response != null) {
               commit('SET_ALL_QUERY_DATA', response);
-            }
+            // }
           })
           .catch((error) => {
             console.error('act_getAllDataByQuery: ', error);
@@ -224,12 +224,13 @@ export default new Vuex.Store({
         });
     },
 
-    async increaseRatingForAnswer({ commit }, answer) {
+    async increaseRatingForAnswer({ commit, dispatch  }, answer) {
       console.log('increaseAnswerRating', answer);
-      return await RestCalls.increaseAnswerRating(answer)
-        .catch((error) => {
+      return await RestCalls.increaseAnswerRating(answer).then(async ()=>{
+          await dispatch('act_getAllAnswers', answer.id);
+      }).catch((error) => {
           console.error(error);
-        });
+      });
     },
 
     async act_addNewComment({ commit }, newComment) {
@@ -245,8 +246,8 @@ export default new Vuex.Store({
 
     async act_increaseCommentRating({ commit }, comment) {
       console.log('act_increaseCommentRating', comment);
-      return await RestCalls.increaseCommentRating(comment).then(()=>{
-        commit('UPDATE_ANSWER_IN_UI', true);
+      return await RestCalls.increaseCommentRating(comment).then(async ()=>{
+        await dispatch('act_getAllComments', comment.id);
       }).catch((error) => {
           console.error(error);
       });

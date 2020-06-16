@@ -98,14 +98,14 @@ export default {
   async getAllDataByQuery(searchQuery) {
     console.debug('getAllDataByQuery()', searchQuery);
     return await client
-      .get(`/question/query/`,  { params: { searchQuery}}) //TODO: muss angepasst werden !!
+      .get(`/question/query/`,  { params: { searchQuery}})
       .then((response) => {
         console.log(response.data);
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
-        return null;
+        return new Array();
       });
   },
 

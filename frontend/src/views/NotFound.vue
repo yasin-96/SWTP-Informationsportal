@@ -4,12 +4,12 @@
       <b-jumbotron 
         :header="pageError" 
         :lead="pageTitle"
-        bg-variant="white"
+        bg-variant="rgb(223, 229, 230)"
         class="text-center"
       >
         <ul variant="danger" v-for="l in listOfoptions" :key="l" class="text-left">
           <li>
-            <b-i-ediamond color="danger" class="mr-3"></b-i-ediamond>
+            <fai icon="exclamation-triangle" color="danger" class="mr-3"></fai>
             {{ l }}
           </li>
         </ul>
@@ -25,12 +25,8 @@
 </template>
 
 <script>
-import { BIconExclamationDiamond } from 'bootstrap-vue';
 export default {
   name: 'NotFound',
-  components: {
-    'b-i-ediamond': BIconExclamationDiamond,
-  },
   data: () => ({
     maxHeight: '400px',
     pageImage: '@/assets/404/2703.jpg',

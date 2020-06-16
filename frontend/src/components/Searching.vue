@@ -2,11 +2,11 @@
   <b-container>
     <b-row>
       <b-col>
-        <b-input-group prepend="" class="mt-3">
-          <b-form-input :hidden="disable" v-model="searchInput" placeholder="Search by tags, header or content ..."></b-form-input>
+        <b-input-group>
+          <b-form-input v-model="searchInput" placeholder="Search by tags, header or content ..."></b-form-input>
           <b-input-group-append>
-            <b-button :hidden="disable" variant="outline-success" @click="searchData()">
-                <fai icon="search" />
+            <b-button variant="outline-success" @click="searchData()">
+              <fai icon="search" />
             </b-button>
           </b-input-group-append>
         </b-input-group>
@@ -21,10 +21,10 @@ import { mapActions } from 'vuex';
 export default {
   name: 'Searching',
   props: {
-      disable: {
-          type: Boolean,
-          default: true
-      }
+    disable: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -35,15 +35,14 @@ export default {
   computed: { ...mapActions(['act_getAllDataByQuery']) },
   methods: {
     searchData() {
-
-      this.$router.push({
-        path:`/search/${this.searchInput}`
-      });
-
-      // await this.$store.dispatch('act_getAllDataByQuery', this.searchInput)
-          // this.$router.path
-          // this.$router.push(`/search`);
-      // console.warn("DaTa:", response);
+      this.$router
+        .push({
+          path: '/search',
+          query: {
+            q: `${this.searchInput}`,
+          },
+        })
+        .catch((err) => {});
     },
   },
 };

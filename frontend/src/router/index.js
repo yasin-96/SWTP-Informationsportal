@@ -7,7 +7,6 @@ import About from '@/views/About.vue';
 import NotFound from '@/views/NotFound.vue';
 import Home from "../views/Home.vue";
 import NewQuestion from "@/views/NewQuestion";
-// import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -16,39 +15,33 @@ const routes = [
     path: '/new',
     name: 'NewQuestion',
     component: NewQuestion,
-    active: true
   },
   {
     path: '/questions',
     name: 'Questions',
     component: ShowAllQuestions,
-    active: true
   },
   {
     path: '/question/:id',
     name: 'ShowOneQuestion',
     component: ShowOneQuestion,
-    active: true,
     props: true
   },
   {
-    path: '/search/:query',
+    path: '/search',
     name: 'Search',
     component: Search,
-    active: true,
-    props: true
+    props: (route) => ({ query: route.query.q })
   },
   {
     path: '/about',
     name: 'About',
     component: About,
-    active: true
   },
   {
     path: '*',
     name: '404',
     component: NotFound,
-    active: true
   }
 ];
 
@@ -57,7 +50,7 @@ const router = new VueRouter({
   // eslint-disable-next-line no-undef
   base: process.env.BASE_URL,
   // other options could be: 'reload', 'throw' and default to `throw` to avoid breaking changes
-  duplicateNavigationPolicy: 'ignore',
+  duplicateNavigationPolicy: 'reload',
   routes,
 });
 

@@ -1,12 +1,29 @@
 <template>
-  <b-container class="mt-3">
+  <b-container v-if="this.query">
     <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
     <b-row v-if="!!allQueryData">
-      <b-col sm="12" md="12" lg="12" xl="12" class="mt-4" v-for="(item,i) in allQueryData" :key="i">
+      <b-col sm="12" md="12" lg="12" xl="12" class="mt-4" v-for="(item, i) in allQueryData" :key="i">
         <QuestionCard :qId="item.id" :qHeader="item.header" :qContent="item.content" :qTags="item.tags" :qDate="item.timeStamp" />
       </b-col>
       <b-row> </b-row>
     </b-row>
+    <b-row v-if="!allQueryData.length">
+      <b-col cols="auto"> </b-col>
+      <b-col cols="">
+        <b-card border-variant="danger" header="Kein Ergebnis bei der Suche" header-border-variant="danger" header-text-variant="danger" align="center">
+            <b-jumbotron bg-variant="danger" text-variant="white" border-variant="dark">
+              {{this.query}}
+            </b-jumbotron>
+        </b-card>
+      </b-col>
+      <b-col cols="auto"> </b-col>
+    </b-row>
+  </b-container>
+
+  <b-container v-else>
+    <b-card border-variant="info" header="Information" header-border-variant="info" header-text-variant="info" align="center">
+      <b-card-text>Kein Suchbegriff vorhanden!</b-card-text>
+    </b-card>
   </b-container>
 </template>
 
@@ -22,30 +39,38 @@ export default {
   props: {
     query: {
       type: String,
-      default: "",
-      // required: true,
+      default: '',
+      required: true,
     },
   },
-  data() {
-    return {};
-  },
+  methods: {
+    async sendQuery() {
+      //check if local storage has the key with data, else set the new key & data
+      if (this.$localStore.get('searchQuery') === this.query) {
+        console.log('LOCAL_STORE:', this.$localStore.get('searchQuery'));
+      } else {
+        this.$localStore.set('searchQuery', this.query);
+      }
 
-  async beforeMount() {
-    //check if local storage has the key with data, else set the new key & data
-    if (this.$localStore.get('searchQuery') === this.query) {
-      console.log('LOCAL_STORE:', this.$localStore.get('searchQuery'));
-    } else {
-      this.$localStore.set('searchQuery', this.query);
-    }
-
-    try {
-      await this.$store.dispatch('act_getAllDataByQuery', this.query.toString() || this.$localStore.get('rQuetionId'));
-    } catch (error) {
-      console.error('beforeMount: ', error);
+      try {
+        console.warn('Query:', this.query);
+        await this.$store.dispatch('act_getAllDataByQuery', this.query || this.$localStore.get('rQuetionId'));
+      } catch (error) {
+        console.error('beforeMount: ', error);
+      }
+    },
+    formatter(text) {
+      return text.bold().italics();
     }
   },
-  
   computed: { ...mapState(['allQueryData']), ...mapActions(['act_getAllDataByQuery']) },
+  watch: {
+    query() {
+      if (this.query && this.query.length) {
+        this.sendQuery();
+      }
+    },
+  },
 };
 </script>
 
