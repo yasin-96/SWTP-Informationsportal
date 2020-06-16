@@ -34,7 +34,9 @@
           <!-- Show all Tags from Question and its rating -->
           <template v-if="isTagsAreLoaded" v-slot:footer>
             <!-- Tags for this question -->
-            <b-form-tags v-model="question.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }"> </b-form-tags>
+            <b-form-tags @input="formatter($event)" v-model="question.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }">
+              
+            </b-form-tags>
 
             <b-datalist id="alltags" :options="filterTags"> </b-datalist>
           </template>
@@ -153,6 +155,12 @@ export default {
         console.error(error);
       }
     },
+    formatter(newTag){
+      console.warn(newTag)
+      this.question.tags = newTag.map((tag) => tag.toUpperCase());
+      console.warn(this.question.tags)
+    }
   },
+  
 };
 </script>

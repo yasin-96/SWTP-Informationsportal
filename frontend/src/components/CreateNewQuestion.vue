@@ -31,7 +31,7 @@
                 <!-- Tags for this question -->
                 <b-row class="justify-content-center pt-4">
                   <b-col v-if="isTagsAreLoaded" xs="12" sm="12" md="12" lg="12">
-                    <b-form-tags v-model="newQuestion.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }"> </b-form-tags>
+                    <b-form-tags @input="formatter($event)" v-model="newQuestion.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }"> </b-form-tags>
 
                     <b-datalist id="alltags" :options="filterTags"> </b-datalist>
                   </b-col>
@@ -103,6 +103,11 @@ export default {
       console.log('res', response);
       this.$router.push(`/question/${response.id}`);
     },
+    formatter(newTag){
+      console.warn(newTag)
+      this.newQuestion.tags = newTag.map((tag) => tag.toUpperCase());
+      console.warn(this.newQuestion.tags)
+    }
   },
   watch: {
     allTags() {
