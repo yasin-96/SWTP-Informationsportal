@@ -23,13 +23,13 @@ import org.springframework.web.bind.annotation.*;
 import de.thm.swtp.information_portal.models.Question;
 import de.thm.swtp.information_portal.service.QuestionService;
 import java.util.Collections;
-import java.util.Comparator;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static java.util.stream.Collectors.*;
-import static java.util.Map.Entry.*;
+
 
 
 @RestController
@@ -132,7 +132,7 @@ public class QuestionController {
 
 
 	@Async
-	@GetMapping("/question/mostActiveQuestions")
+	@GetMapping("/question/getMostActiveQuestions")
 	public CompletableFuture<ResponseEntity<List<Question>>> getMostActiveQuestions(){
 		List<Question> allQuestions = questionService.getAllQuestions();
 		List<Question> mostActiveQuestions = new ArrayList<>();
@@ -141,11 +141,11 @@ public class QuestionController {
 			List<Answer> answers = answerService.findByQuestionId(item.getId()).get().getListOfAnswers();
 			myMap.put(item,answers.size());
 		}
-		mostActiveQuestions = getMostActiveQuestions(myMap);
+		mostActiveQuestions = getListOfMostActiveQuestions(myMap);
 		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions,HttpStatus.OK));
 	}
 
-	public List<Question> getMostActiveQuestions(Map<Question,Integer> myMap){
+	public List<Question> getListOfMostActiveQuestions(Map<Question,Integer> myMap){
 		List<Question> questions = new ArrayList<>();
 		Map<Question, Integer> sorted = myMap
 				.entrySet()
@@ -157,7 +157,6 @@ public class QuestionController {
 								LinkedHashMap::new));
 
 		for (var entry : sorted.entrySet()) {
-			//System.out.println(entry.getKey());
 			questions.add(entry.getKey());
 		}
 		return questions.stream().limit(12).collect(Collectors.toList());
