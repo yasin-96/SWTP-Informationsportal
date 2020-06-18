@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 
 import de.thm.swtp.information_portal.models.Answer;
+import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -137,11 +138,11 @@ public class QuestionController {
 		List<Question> allQuestions = questionService.getAllQuestions();
 		List<Question> mostActiveQuestions = new ArrayList<>();
 		Map<Question,Integer> myMap = new HashMap<>();
-		for(var item: allQuestions){
-			List<Answer> answers = answerService.findByQuestionId(item.getId()).get().getListOfAnswers();
-			myMap.put(item,answers.size());
+		for(var item: allQuestions) {
+			Optional<Answers> answers = answerService.findByQuestionId(item.getId());
+			answers.ifPresent(value -> myMap.put(item, value.getListOfAnswers().size()));
 		}
-		mostActiveQuestions = getListOfMostActiveQuestions(myMap);
+			mostActiveQuestions = getListOfMostActiveQuestions(myMap);
 		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions,HttpStatus.OK));
 	}
 
@@ -150,7 +151,6 @@ public class QuestionController {
 		Map<Question, Integer> sorted = myMap
 				.entrySet()
 				.stream()
-
 				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
 				.collect(
 						toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,

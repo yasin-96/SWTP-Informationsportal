@@ -28,6 +28,8 @@ public class Tag {
 	
 	private Long timeStamp;
 
+	private int counter;
+
 	public Tag(String name) {
 		this.id = UUID.randomUUID().toString();
 		this.name = name;
