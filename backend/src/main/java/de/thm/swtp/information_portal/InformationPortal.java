@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 //import org.springframework.security.oauth2
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,7 +21,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 //https://spring.io/guides/gs/async-method/
 @SpringBootApplication
 @EnableAsync
-
 @EnableWebSecurity
 public class InformationPortal extends WebSecurityConfigurerAdapter {
 	public static void main(String[] args) {
@@ -41,20 +41,23 @@ public class InformationPortal extends WebSecurityConfigurerAdapter {
 
 		//define any origin that are allowed
 		corsSettings.setAllowedOrigins(Arrays.asList("*"));
-		
+
 
 		urlBased.registerCorsConfiguration("/**", corsSettings);
 		return urlBased;
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().permitAll()
-				.and()
-				.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwt -> {
-					System.out.println(jwt.getClaimAsString("name"));
-					return  new JwtAuthenticationToken(jwt);
-		});
+	@Configuration
+	class SecurityConfig extends WebSecurityConfigurerAdapter {
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http.authorizeRequests().anyRequest().permitAll()
+					.and()
+					.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwt -> {
+				System.out.println(jwt.getClaimAsString("name"));
+				return new JwtAuthenticationToken(jwt);
+			});
+		}
 	}
 }
 
