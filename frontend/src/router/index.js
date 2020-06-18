@@ -7,6 +7,7 @@ import About from '@/views/About.vue';
 import NotFound from '@/views/NotFound.vue';
 import Home from "../views/Home.vue";
 import NewQuestion from "@/views/NewQuestion";
+import EditView from "@/views/EditView";
 
 Vue.use(VueRouter);
 
@@ -25,7 +26,13 @@ const routes = [
     path: '/question/:id',
     name: 'ShowOneQuestion',
     component: ShowOneQuestion,
-    props: true
+    props: (route) => ({ id: route.params.id })
+  },
+  {
+    path: '/question/edit/:id',
+    name: 'EditView',
+    component: EditView,
+    props: (route) => ({ id: route.params.id })
   },
   {
     path: '/search',

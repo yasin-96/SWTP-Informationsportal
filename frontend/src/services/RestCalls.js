@@ -169,6 +169,20 @@ export default {
       });
   },
 
+  async updateCurrentQuestion(updatedQuestion) {
+    console.warn('updateCurrentQuestion', updatedQuestion);
+    return await client
+      .put('/question', updatedQuestion)
+      .then((response) => {
+        console.log('updateCurrentQuestion', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
   async addNewAnswer(newQuestion) {
     console.warn('addNewAnswer()', newQuestion);
     return await client

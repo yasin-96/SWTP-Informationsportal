@@ -84,34 +84,6 @@ export default new Vuex.Store({
       }
       state.allQueryData = data;
     },
-
-    UPDATE_ANSWER_IN_UI(state, data) {
-      state.oneAnswerWasChanged = data
-    }
-
-    //   console.warn("UPDATE A I UI", data);
-    //   let answerToUpdate = data.listOfAnswers[0];
-
-      
-    //   answerToUpdate.timeStamp = convertUnixTimeStampToString(answerToUpdate.timeStamp);
-    //   console.warn("UP:", answerToUpdate);
-
-    //   let newAnswerWithSomeUpdates = Object.assign({}, state.allAnswers);
-    //   newAnswerWithSomeUpdates.listOfAnswers.forEach((d, index) => {
-    //     if(d.id === answerToUpdate.id) {
-    //       console.warn("FOUND:", d.id, answerToUpdate.id);
-    //       newAnswerWithSomeUpdates.listOfAnswers[index] = answerToUpdate
-    //     }
-    //   });
-
-    //   console.warn("OLD", state.allAnswers);
-    //   state.allAnswers = Object.assign({}, newAnswerWithSomeUpdates);
-    //   console.warn("NEW", state.allAnswers);
-
-    //   state.oneAnswerWasChanged = true
-
-
-    // }
   },
   actions: {
     async act_getOneQuestion({ commit }, questionId) {
@@ -252,6 +224,19 @@ export default new Vuex.Store({
           console.error(error);
       });
     },
+    
+
+    async act_updateCurrentQuestion({ commit }, questionWithNewData) {
+      console.log('act_updateCurrentQuestion()', questionWithNewData);
+      return await RestCalls.updateCurrentQuestion(questionWithNewData)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
 
   },
 

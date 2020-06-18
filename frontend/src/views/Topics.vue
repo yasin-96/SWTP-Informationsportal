@@ -21,29 +21,29 @@ import QuestionCard from "@/components/QuestionCard"
 import { mapState, mapActions } from 'vuex';
 
 export default {
-  name: "Home",
+  name: "Topics",
   components: {
     QuestionCard
   },
   async beforeMount() {
     try {
-      await this.$store.dispatch('act_getMostActiveQuestions');
+      await this.$store.dispatch('act_getCurrentTopics');
     } catch(error) {
       console.error("beforeMount: ", error);
     } 
   },
   computed: {
-    ...mapActions(['act_getMostActiveQuestions',]),
-    ...mapState(['activeQuestions']),
+    ...mapActions(['act_getCurrentTopics',]),
+    ...mapState(['questionsBasedOnTopics']),
     
     questions(){
-      if(!!this.activeQuestions){
+      if(!!this.questionsBasedOnTopics){
         return this.activeQuestions;
       }
     }
   },
   watch: { 
-    activeQuestions(){
+    questionsBasedOnTopics(){
       this.$forceUpdate();
     },
   }

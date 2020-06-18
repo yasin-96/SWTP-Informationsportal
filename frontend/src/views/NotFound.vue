@@ -9,12 +9,12 @@
       >
         <ul variant="danger" v-for="l in listOfoptions" :key="l" class="text-left">
           <li>
-            <fai icon="exclamation-triangle" color="danger" class="mr-3"></fai>
+            <fai icon="exclamation-triangle" class="mr-3"></fai>
             {{ l }}
           </li>
         </ul>
         <b-container>
-        <b-button variant="success" v-for="(link, i) in urlOptions" :key="i" color="danger" @click="goToLink(link.url)"
+        <b-button variant="success" v-for="(link, i) in urlOptions" :key="i" @click="goToLink(link.url)"
           class="mt-3 mr-3"
         >
           {{ link.title }}
