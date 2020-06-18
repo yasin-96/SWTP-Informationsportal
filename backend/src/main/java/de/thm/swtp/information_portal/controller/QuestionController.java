@@ -1,20 +1,19 @@
 package de.thm.swtp.information_portal.controller;
 
+
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.stream.Collector;
+
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import com.mongodb.connection.Stream;
 
+
+import de.thm.swtp.information_portal.models.Answer;
+import de.thm.swtp.information_portal.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +21,26 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Question;
-import de.thm.swtp.information_portal.models.Tag;
 import de.thm.swtp.information_portal.service.QuestionService;
-import de.thm.swtp.information_portal.service.TagService;
+import java.util.Collections;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static java.util.stream.Collectors.*;
+
+
 
 @RestController
 @RequestMapping("/api")
 public class QuestionController {
 	
 	@Autowired
-	private QuestionService questionSerice;
+	private QuestionService questionService;
+
+	@Autowired
+	private AnswerService answerService;
 
 	/**
 	 * 
@@ -41,7 +50,7 @@ public class QuestionController {
 	@Async
 	@GetMapping("/allQuestions")
 	public CompletableFuture<List<Question>> getAllQuestions() throws InterruptedException {
-		var response = questionSerice.getAllQuestions();
+		var response = questionService.getAllQuestions();
 		return CompletableFuture.completedFuture(response);
 	}
 	
@@ -54,10 +63,12 @@ public class QuestionController {
 	@Async
 	@GetMapping("/questionById/{id}")
 	public CompletableFuture<ResponseEntity<Question>> getQuestion(@PathVariable String id) throws InterruptedException{
-		Optional<Question> question = questionSerice.getQuestion(id);
+		Optional<Question> question = questionService.getQuestion(id);
 		ResponseEntity<Question> quest = question.map(response->ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return CompletableFuture.completedFuture(quest);
 	}
+
+
 	
 	/**
 	 * 
@@ -68,7 +79,7 @@ public class QuestionController {
 	@Async
 	@GetMapping("/questionByTag/{tag}")
 	public CompletableFuture<ResponseEntity<List<Question>>> findByTag(@PathVariable String tag) throws InterruptedException {
-		List<Question> questions = questionSerice.findByTag(tag);
+		List<Question> questions = questionService.findByTag(tag);
 		return CompletableFuture.completedFuture(new ResponseEntity<List<Question>>(questions, HttpStatus.OK));
 	}
 	
@@ -82,19 +93,19 @@ public class QuestionController {
 	@Async
 	@PostMapping("/newQuestion")
 	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException, InterruptedException{
-		Question question = questionSerice.postQuestion(questionBody);
+		Question question = questionService.postQuestion(questionBody);
 		return CompletableFuture.completedFuture( ResponseEntity.created(new URI("/api/question" + question.getId())).body(question));
 	}
 
 	@Async
 	@PutMapping("/question/{id}")
 	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException{
-		Question question = questionSerice.editQuestion(questionBody);
+		Question question = questionService.editQuestion(questionBody);
 		return CompletableFuture.completedFuture(ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question));
 	}
 
 
-	//TODO: hier muss noch einiges gemacht werden
+
 	@Async
 	@GetMapping("/question/query")
 	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Valid @RequestParam String searchQuery) throws URISyntaxException, InterruptedException{
@@ -107,7 +118,7 @@ public class QuestionController {
 
 		for(var query: listQuery ) {
 			try{
-				var response = questionSerice.findByTag(query);
+				var response = questionService.findByTag(query);
 
 				if(response != null){
 					filteredQuestions.addAll(response);
@@ -120,6 +131,34 @@ public class QuestionController {
 	}
 
 
+	@Async
+	@GetMapping("/question/getMostActiveQuestions")
+	public CompletableFuture<ResponseEntity<List<Question>>> getMostActiveQuestions(){
+		List<Question> allQuestions = questionService.getAllQuestions();
+		List<Question> mostActiveQuestions = new ArrayList<>();
+		Map<Question,Integer> myMap = new HashMap<>();
+		for(var item: allQuestions){
+			List<Answer> answers = answerService.findByQuestionId(item.getId()).get().getListOfAnswers();
+			myMap.put(item,answers.size());
+		}
+		mostActiveQuestions = getListOfMostActiveQuestions(myMap);
+		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions,HttpStatus.OK));
+	}
 
+	public List<Question> getListOfMostActiveQuestions(Map<Question,Integer> myMap){
+		List<Question> questions = new ArrayList<>();
+		Map<Question, Integer> sorted = myMap
+				.entrySet()
+				.stream()
 
+				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				.collect(
+						toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+								LinkedHashMap::new));
+
+		for (var entry : sorted.entrySet()) {
+			questions.add(entry.getKey());
+		}
+		return questions.stream().limit(12).collect(Collectors.toList());
+	}
 }
