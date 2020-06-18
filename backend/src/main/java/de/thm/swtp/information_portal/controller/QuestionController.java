@@ -98,7 +98,7 @@ public class QuestionController {
 	}
 
 	@Async
-	@PutMapping("/question/{id}")
+	@PutMapping("/question")
 	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException{
 		Question question = questionService.editQuestion(questionBody);
 		return CompletableFuture.completedFuture(ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question));
