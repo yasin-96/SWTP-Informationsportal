@@ -6,11 +6,13 @@ import java.util.Collections;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+//import org.springframework.security.oauth2
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -47,8 +49,12 @@ public class InformationPortal extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-		.cors().and().csrf().disable();
+		http.authorizeRequests().anyRequest().permitAll()
+				.and()
+				.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwt -> {
+					System.out.println(jwt.getClaimAsString("name"));
+					return  new JwtAuthenticationToken(jwt);
+		});
 	}
-
 }
+
