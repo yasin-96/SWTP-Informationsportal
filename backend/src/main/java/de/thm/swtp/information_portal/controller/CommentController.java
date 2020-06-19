@@ -3,6 +3,7 @@ package de.thm.swtp.information_portal.controller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -56,10 +57,19 @@ public class CommentController {
 	@GetMapping("/commentsByAnswerId/{id}")
 	public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable String id)  throws InterruptedException {
 		Optional<Comments> comments = commentService.findByAnswerId(id);
+		List<Comment> allComments = comments.get().getComments();
+		allComments.sort(compareByRating);
 		ResponseEntity<Comments> resComments = comments.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return CompletableFuture.completedFuture(resComments);
 	}
+
+	Comparator<Comment> compareByRating = new Comparator<Comment>() {
+		@Override
+		public int compare(Comment o1, Comment o2) {
+			return o2.getRating() - o1.getRating();
+		}
+	};
 
 	@Async
 	@PostMapping("/comment/increaseRating")

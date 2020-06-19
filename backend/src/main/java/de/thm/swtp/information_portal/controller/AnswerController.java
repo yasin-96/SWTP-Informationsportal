@@ -2,9 +2,7 @@ package de.thm.swtp.information_portal.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -101,10 +99,19 @@ public class AnswerController {
 	@GetMapping("/answersByQuestionId/{id}")
 	public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable String id) throws InterruptedException, InterruptedException {
 		Optional<Answers> answers = answerService.findByQuestionId(id);
+		List<Answer> allAnswers = answers.get().getListOfAnswers();
+		allAnswers.sort(compareByRating);
 		ResponseEntity<Answers> answRes = answers.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return CompletableFuture.completedFuture(answRes);
 	}
+
+	Comparator<Answer> compareByRating = new Comparator<Answer>() {
+		@Override
+		public int compare(Answer o1, Answer o2) {
+			return o2.getRating() - o1.getRating();
+		}
+	};
 
 	@Async
 	@PostMapping("/answer/increaseRating")
