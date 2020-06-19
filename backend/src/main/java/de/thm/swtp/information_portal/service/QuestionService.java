@@ -49,7 +49,6 @@ public class QuestionService {
 	}
 
 	public Question postQuestion(Question question) {
-		// Question newQuestion = question;
 		List<Tag> newQuestionTags = tagService.checkIfTagsExist(question.getTags());
 		Question newQuestion = new Question(question.getHeader(), question.getContent(), newQuestionTags);
 		return questionRepository.save(newQuestion);

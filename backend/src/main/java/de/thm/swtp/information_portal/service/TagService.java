@@ -30,14 +30,12 @@ public class TagService {
 				Tag tagToBeAdded = new Tag(tags.get(index).getName());
 				tagRepository.save(tagToBeAdded);	
 				newTagList.add(tagToBeAdded);
-				System.out.println("list here" + newTagList);
 			}
 			else {
 				newTagList.add(newTag);
 			}
 	
 		}
-		System.out.println("the list:" + newTagList);
 		return newTagList;
 	}
 	

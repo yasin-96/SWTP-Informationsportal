@@ -4,6 +4,7 @@ package de.thm.swtp.information_portal.controller;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.thm.swtp.information_portal.models.Question;
@@ -12,15 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Tag;
 import de.thm.swtp.information_portal.repositories.TagRepository;
 import de.thm.swtp.information_portal.service.TagService;
+
+import javax.validation.constraints.AssertFalse;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -63,21 +62,27 @@ public class TagController {
 	}
 
 	@Async
+	@PostMapping("/tag/newTag")
+	public Tag createTag(@RequestBody Tag tag){
+		return tagRepository.save(tag);
+	}
+
+	@Async
 	@GetMapping("/tagsWithMostQuestions")
-	public CompletableFuture<ResponseEntity<List<Tag>>> getTagsWithMostQuestions(){
+	public CompletableFuture<ResponseEntity<List<Tag>>> getTagsWithMostQuestions() {
 		List<Question> allQuestions = questionService.getAllQuestions();
-		System.out.println(allQuestions.toString());
 		List<Tag> allTags = tagService.getAllTags();
-		Map<Tag,Integer> myMap = new HashMap<>();
-		//allQuestions.stream().filter()
-		myMap.forEach((key,value) -> System.out.println(key + ":" + value));
-		List<Tag> mostActiveTags = getTagsWithMostQuestions(myMap);
+		Map<Tag,Long> map = allQuestions.stream()
+				.flatMap(q -> q.getTags().stream())
+				.filter(allTags::contains)
+				.collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+		var mostActiveTags = getTagsWithMostQuestions(map);
 		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveTags, HttpStatus.OK));
 	}
 
-	public List<Tag> getTagsWithMostQuestions(Map<Tag,Integer> myMap){
+	public List<Tag> getTagsWithMostQuestions(Map<Tag,Long> myMap){
 			List<Tag> tags = new ArrayList<>();
-			Map<Tag, Integer> sorted = myMap
+			Map<Tag, Long> sorted = myMap
 					.entrySet()
 					.stream()
 					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
@@ -85,11 +90,10 @@ public class TagController {
 							toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
 									LinkedHashMap::new));
 
-
-
 			for (var entry : sorted.entrySet()) {
 				tags.add(entry.getKey());
 			}
+
 			return tags.stream().limit(12).collect(Collectors.toList());
 		}
 	}

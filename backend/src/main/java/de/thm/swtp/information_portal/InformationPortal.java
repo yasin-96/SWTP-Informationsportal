@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 //import org.springframework.security.oauth2
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -47,17 +48,11 @@ public class InformationPortal extends WebSecurityConfigurerAdapter {
 		return urlBased;
 	}
 
-	@Configuration
-	class SecurityConfig extends WebSecurityConfigurerAdapter {
+
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests().anyRequest().permitAll()
-					.and()
-					.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwt -> {
-				System.out.println(jwt.getClaimAsString("name"));
-				return new JwtAuthenticationToken(jwt);
-			});
+			http.cors().and().csrf().disable();
 		}
 	}
-}
+
 

@@ -1,16 +1,12 @@
 package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 
 @NoArgsConstructor
@@ -28,11 +24,26 @@ public class Tag {
 	
 	private Long timeStamp;
 
-	private int counter;
+
+
+
 
 	public Tag(String name) {
 		this.id = UUID.randomUUID().toString();
 		this.name = name;
 		this.timeStamp = Instant.now().getEpochSecond()*1000;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Tag tag = (Tag) o;
+		return getName().equals(tag.getName());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getName());
 	}
 }
