@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.service.AnswerService;
+import de.thm.swtp.information_portal.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,10 @@ import static java.util.stream.Collectors.*;
 @RestController
 @RequestMapping("/api")
 public class QuestionController {
-	
+
+	@Autowired
+	private TagService tagService;
+
 	@Autowired
 	private QuestionService questionService;
 
@@ -101,6 +105,7 @@ public class QuestionController {
 	@Async
 	@PutMapping("/question")
 	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException{
+		tagService.checkIfTagsExist(questionBody.getTags());
 		Question question = questionService.editQuestion(questionBody);
 		return CompletableFuture.completedFuture(ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question));
 	}
