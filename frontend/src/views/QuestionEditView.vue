@@ -148,6 +148,7 @@ export default {
     },
     async sendUpdatedQuestion() {
       try {
+        console.warn("QID in EDIT",this.question);
         let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
         this.$router.push(`/question/${response.id}`).catch((err) => {});
        

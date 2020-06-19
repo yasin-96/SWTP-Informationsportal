@@ -45,9 +45,9 @@
           <b-navbar-nav class="mx-auto">
             <b-navbar-brand>Informationsportal</b-navbar-brand>
             <b-nav-item href="/home">Home</b-nav-item>
-            <b-nav-item href="/new">Neue Frage stellen</b-nav-item>
-            <b-nav-item href="/questions">Alle Fragen anzeigen</b-nav-item>
-            <b-nav-item href="/">Aktuelle Themen</b-nav-item>
+            <b-nav-item href="/new">New</b-nav-item>
+            <b-nav-item href="/questions">General</b-nav-item>
+            <b-nav-item href="/topics">Topics</b-nav-item>
             <b-nav-item href="/about">About</b-nav-item>
           </b-navbar-nav>
         </b-navbar>

@@ -5,9 +5,12 @@ import ShowOneQuestion from '@/views/ShowOneQuestion.vue';
 import Search from '@/views/Search.vue';
 import About from '@/views/About.vue';
 import NotFound from '@/views/NotFound.vue';
-import Home from "../views/Home.vue";
-import NewQuestion from "@/views/NewQuestion";
-import EditView from "@/views/EditView";
+import Home from '@/views/Home';
+import Topics from '@/views/Topics';
+import NewQuestion from '@/views/NewQuestion';
+import QuestionEditView from '@/views/QuestionEditView';
+import AnswerEditView from '@/views/AnswerEditView';
+import QuestionsByTopics from '@/views/QuestionsByTopics';
 
 Vue.use(VueRouter);
 
@@ -23,22 +26,34 @@ const routes = [
     component: ShowAllQuestions,
   },
   {
+    path: '/questions/topics/:tag',
+    name: 'QuestionsByTopics',
+    component: QuestionsByTopics,
+    props: (route) => ({ tag: route.params.tag }),
+  },
+  {
     path: '/question/:id',
     name: 'ShowOneQuestion',
     component: ShowOneQuestion,
-    props: (route) => ({ id: route.params.id })
+    props: (route) => ({ id: route.params.id }),
   },
   {
     path: '/question/edit/:id',
-    name: 'EditView',
-    component: EditView,
-    props: (route) => ({ id: route.params.id })
+    name: 'QuestionEditView',
+    component: QuestionEditView,
+    props: (route) => ({ id: route.params.id }),
+  },
+  {
+    path: '/answer/edit',
+    name: 'AnswerEditView',
+    component: AnswerEditView,
+    props: (route) => ({ qId: route.query.qId, aId: route.query.aId }),
   },
   {
     path: '/search',
     name: 'Search',
     component: Search,
-    props: (route) => ({ query: route.query.q })
+    props: (route) => ({ query: route.query.q }),
   },
   {
     path: '/about',
@@ -46,10 +61,20 @@ const routes = [
     component: About,
   },
   {
+    path: '/home',
+    name: 'Home',
+    component: Home,
+  },
+  {
+    path: '/topics',
+    name: 'Topics',
+    component: Topics,
+  },
+  {
     path: '*',
     name: '404',
     component: NotFound,
-  }
+  },
 ];
 
 const router = new VueRouter({

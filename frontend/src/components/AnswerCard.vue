@@ -32,6 +32,7 @@
             <b-button size="sm" disabled variant="info">
               {{ aRating }}
             </b-button>
+          <b-button size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
           </b-button-group>
         </b-card-text>
       </b-card>
@@ -128,6 +129,17 @@ export default {
       
       //reload page 
       this.$router.go();
+    },
+    editAnswer(){
+      this.$router
+        .push({
+          path: '/answer/edit',
+          query: {
+            qId: `${this.nId}`,
+            aId: `${this.cId}`,
+          },
+        })
+        .catch((err) => {});
     }
   },
 

@@ -125,6 +125,40 @@ export default {
       });
   },
 
+  //TODO endpoint
+  async getOneAnswerToQuestion(ids) {
+    console.debug('getOneAnswerToQuestion():', ids);
+    return await client
+      .get('/answersByQuestionId/', ids)
+      .then((response) => {
+        // console.log('getAllAnswersToQuestions:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      }).finally(()=> {
+        console.log("getAllAnswersToQuestions() :> axios close ");
+      });
+  },
+
+    ///TODO endpoint
+  async setOneAnswerToQuestion(updatedAnswer) {
+    console.debug('setOneAnswerToQuestion():', updatedAnswer);
+    return await client
+      .put('/answersByQuestionId/', updatedAnswer)
+      .then((response) => {
+        // console.log('getAllAnswersToQuestions:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      }).finally(()=> {
+        console.log("getAllAnswersToQuestions() :> axios close ");
+      });
+  },
+
   async getAllCommentsToAnswers(answerId) {
     console.info('getAllCommentsToAnswers()', answerId);
     return await client
@@ -239,5 +273,36 @@ export default {
       console.error(info.message);
       return null;
     }
+  },
+  
+  
+  async getMostActiveQuestions() {
+      return await client.get('/question/getMostActiveQuestions').then((response) => {
+        return  response.data;
+      }).catch((error) => {
+        return null
+      });
+  },
+
+
+  async getCurrentTopics() {
+    return await client.get('/tagsWithMostQuestions').then((response) => {
+      console.warn("Topics", response.data);
+      return response.data;
+    }).catch((error) => {
+        return null;
+    });
+  },
+
+  
+  async getQuestionBasedOnTopic(tag) {
+    return await client.get(`/questionByTag/${tag}`).then((response) => {
+      console.warn("Topics", response.data);
+      return response.data;
+    }).catch((error) => {
+        return null;
+    });
   }
+
+
 };

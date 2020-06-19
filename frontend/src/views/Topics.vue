@@ -1,14 +1,11 @@
 <template>
- <b-container v-if="questions.length">
+ <b-container v-if="!!topics && topics.length">
    <b-row>
-     <b-col sm="12" md="6" lg="4" xl="3" v-for="quest in questions" :key="quest.id" class="mt-4">
-      <QuestionCard 
-        :qId="quest.id"
-        :qHeader="quest.header"
-        :qContent="quest.content"
-        :qTags="quest.tags"
-        :qDate="quest.timeStamp"
-        :qTrimText="true"
+     <b-col sm="12" md="6" lg="4" xl="3" v-for="topic in topics" :key="topic.id" class="mt-4">
+      <TagCard 
+        :tId="topic.id"
+        :tName="topic.name"
+        :tDate="topic.timeStamp"
       />
      </b-col>
    </b-row>
@@ -17,13 +14,13 @@
 
 <script>
 // @ is an alias to /src
-import QuestionCard from "@/components/QuestionCard"
+import TagCard from "@/components/TagCard"
 import { mapState, mapActions } from 'vuex';
 
 export default {
   name: "Topics",
   components: {
-    QuestionCard
+    TagCard
   },
   async beforeMount() {
     try {
@@ -34,11 +31,11 @@ export default {
   },
   computed: {
     ...mapActions(['act_getCurrentTopics',]),
-    ...mapState(['questionsBasedOnTopics']),
+    ...mapState(['topicsBasedOnTags']),
     
-    questions(){
-      if(!!this.questionsBasedOnTopics){
-        return this.activeQuestions;
+    topics(){
+      if(!!this.topicsBasedOnTags){
+        return this.topicsBasedOnTags;
       }
     }
   },
