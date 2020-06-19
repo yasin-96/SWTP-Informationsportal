@@ -57,8 +57,10 @@ public class CommentController {
 	@GetMapping("/commentsByAnswerId/{id}")
 	public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable String id)  throws InterruptedException {
 		Optional<Comments> comments = commentService.findByAnswerId(id);
-		List<Comment> allComments = comments.get().getComments();
-		allComments.sort(compareByRating);
+		if(comments.isPresent()){
+			List<Comment> allComments = comments.get().getComments();
+			allComments.sort(compareByRating);
+		}
 		ResponseEntity<Comments> resComments = comments.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return CompletableFuture.completedFuture(resComments);
