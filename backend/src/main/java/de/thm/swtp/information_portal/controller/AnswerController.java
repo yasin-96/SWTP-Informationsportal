@@ -98,7 +98,7 @@ public class AnswerController {
 	@Async
 	@GetMapping("/answersByQuestionId/{id}")
 	public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable String id) throws InterruptedException, InterruptedException {
-		Optional<Answers> answers = answerService.findByQuestionId(id);g
+		Optional<Answers> answers = answerService.findByQuestionId(id);
 		if(answers.isPresent()) {
 			List<Answer> allAnswers = answers.get().getListOfAnswers();
 			allAnswers.sort(compareByRating);
