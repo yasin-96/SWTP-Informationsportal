@@ -7,26 +7,29 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    //questions
     allQuestions: {},
-
-    //one question with all answers and comments
     oneQuestion: {},
-    allAnswers: {},
-    allComments: [],
-
-    allTags: [],
-
-    allQueryData: [],
-
-    oneAnswer: {},
-
+    questionsBasedOnTopics: [],
     activeQuestions: [],
-    topicsBasedOnTags:[],
-    questionsBasedOnTopics:[],
+    allQueryData: [],
+    reloadQuestions: false,
 
-    oneAnswerWasChanged: false
+    //anwser
+    allAnswers: {},
+    oneAnswer: {},
+    reloadAnswers: false,
+
+    //comments
+    allComments: [],
+    reloadComments: false,
+
+    //tags
+    allTags: [],
+    topicsBasedOnTags: [],
   },
   mutations: {
+    //all mutation for questions
     SET_ALL_QUESTIONS(state, data) {
       console.debug('SET_ALL_QUESTIONS');
 
@@ -37,17 +40,76 @@ export default new Vuex.Store({
       state.allQuestions = data;
     },
 
+    SET_ONE_QUESTION(state, data) {
+      console.debug('SET_ONE_QUESTION');
+
+      data.timeStamp = convertUnixTimeStampToString(data.timeStamp);
+
+      state.oneQuestion = data;
+    },
+
+    SET_QUESTIONS_BASED_ON_TOPICS(state, data) {
+      if (data) {
+        Object.keys(data).forEach((d) => {
+          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+        });
+        state.questionsBasedOnTopics = data;
+      }
+    },
+
+    SET_MOST_ACTIV_QUESTIONS(state, data) {
+      if (data) {
+        Object.keys(data).forEach((d) => {
+          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+        });
+
+        state.activeQuestions = data;
+      }
+    },
+
+    SET_ALL_QUERY_DATA(state, data) {
+      console.debug('SET_ALL_QUERY_DATA');
+      if (data) {
+        Object.keys(data).forEach((d) => {
+          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+        });
+      }
+      state.allQueryData = data;
+    },
+
+    RELOAD_DATA_FOR_ONE_QUESTION(toggle){
+      state.reloadQuestions = toggle;
+    },
+
+    //all mutation for answers
     SET_ALL_ANSWERS(state, data) {
       console.debug('SET_ALL_ANSWERS');
 
+      state.reloadAnswers = state.reloadAnswers ? false : true;
+      
       data.listOfAnswers.forEach((d) => {
         console.debug('ANSWERS', d);
         d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
       });
 
-      state.allAnswers = Object.assign({}, data);
+      state.allAnswers = Object.assign([], data);  
     },
 
+    SET_ONE_ANSWER_TO_QUESTION(state, data) {
+      console.debug('SET_ONE_ANSWER_TO_QUESTION');
+      if (data) {
+        state.oneAnswer = data;
+      }
+    },
+
+    RELOAD_ANSWERS_FOR_ONE_QUESTION(state, toggle) {
+      state.reloadAnswers = toggle;
+      setTimeout(() => {
+        state.reloadAnswers = false;
+      }, 15000);
+    },
+
+    //all mutation for comments
     SET_ALL_COMMENTS(state, data) {
       if (data) {
         console.debug('SET_ALL_COMMENTS');
@@ -68,87 +130,30 @@ export default new Vuex.Store({
       }
     },
 
-    SET_ONE_QUESTION(state, data) {
-      console.debug('SET_ONE_QUESTION');
-
-      data.timeStamp = convertUnixTimeStampToString(data.timeStamp);
-
-      state.oneQuestion = data;
+    RELOAD_COMMENTS_FOR_ONE_QUESTION(toggle){
+      state.reloadComments = toggle;
     },
 
+    //all tags -> topics
     SET_ALL_TAGS(state, data) {
       console.debug('SET_ALL_TAGS');
       state.allTags = data;
     },
 
-    SET_ALL_QUERY_DATA(state, data) {
-      console.debug('SET_ALL_QUERY_DATA');
-      if(data){
-        Object.keys(data).forEach((d) => {
-          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-        });
-      }
-      state.allQueryData = data;
-    },
-
-    SET_ONE_ANSWER_TO_QUESTION(state, data){
-      console.debug('SET_ONE_ANSWER_TO_QUESTION');
-      if(data) {
-        state.oneAnswer = data;
-      }
-    },
-
-    SET_MOST_ACTIV_QUESTIONS(state, data){
-      if(data){
-        Object.keys(data).forEach((d) => {
-          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-        });
-
-        state.activeQuestions = data;
-      }
-    },
-
-    SET_TOPICS(state, data){
-      if(data){
+    SET_TOPICS(state, data) {
+      if (data) {
         Object.keys(data).forEach((d) => {
           data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
         });
         state.topicsBasedOnTags = data;
       }
     },
-
-    SET_QUESTIONS_BASED_ON_TOPICS(state, data){
-      if(data){
-        Object.keys(data).forEach((d) => {
-          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-        });
-        state.questionsBasedOnTopics = data;
-      }
-    }
   },
   actions: {
-    async act_getOneQuestion({ commit }, questionId) {
-      console.log('act_getOneQuestion()');
-      console.log('act_getOneQuestion()', questionId);
-      try{
-        await RestCalls.getOneQuestion(questionId)
-        .then((response) => {
-          if (response != null) {
-            commit('SET_ONE_QUESTION', response);
-          }
-        })
-        .catch((error) => {
-          console.error('act_getAllQuestions: ', error);
-        });
-      } catch(error){
-        console.error('act_getAllQuestions: ', error);
-      }
-     
-    },
-
+    //questions
     async act_getAllQuestions({ commit }) {
       console.log('act_getAllQuestions');
-        await RestCalls.getAllQuestions()
+      await RestCalls.getAllQuestions()
         .then((response) => {
           if (response != null) {
             commit('SET_ALL_QUESTIONS', response);
@@ -157,7 +162,41 @@ export default new Vuex.Store({
         .catch((error) => {
           console.error('act_getAllQuestions: ', error);
         });
-      
+    },
+
+    async act_getOneQuestion({ commit }, questionId) {
+      console.log('act_getOneQuestion()', questionId);
+        await RestCalls.getOneQuestion(questionId)
+          .then((response) => {
+            if (response != null) {
+              commit('SET_ONE_QUESTION', response);
+            }
+          })
+          .catch((error) => {
+            console.error('act_getAllQuestions: ', error);
+          });
+    },
+
+    async act_getQuestionsBasedOnTopic({ commit }, topic) {
+      console.log('act_getQuestionsBasedOnTopic()');
+      await RestCalls.getQuestionBasedOnTopic(topic)
+        .then((response) => {
+          commit('SET_QUESTIONS_BASED_ON_TOPICS', response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
+    async act_getMostActiveQuestions({ commit }) {
+      console.log('act_getMostActiveQuestions()');
+      return await RestCalls.getMostActiveQuestions()
+        .then((response) => {
+          commit('SET_MOST_ACTIV_QUESTIONS', response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
 
     async act_getAllDataByQuery({ commit }, query) {
@@ -165,78 +204,15 @@ export default new Vuex.Store({
       if (!!query) {
         await RestCalls.getAllDataByQuery(query)
           .then((response) => {
-            
-            console.warn("getAllDataByQuery", response);
+            console.warn('getAllDataByQuery', response);
             // if (response != null) {
-              commit('SET_ALL_QUERY_DATA', response);
+            commit('SET_ALL_QUERY_DATA', response);
             // }
           })
           .catch((error) => {
             console.error('act_getAllDataByQuery: ', error);
           });
       }
-    },
-
-    async act_getAllAnswers({ commit }, questionId) {
-      console.log('act_getAllAnswers');
-        await RestCalls.getAllAnswersToQuestions(questionId)
-          .then((response) => {
-            if (response != null) {
-              commit('SET_ALL_ANSWERS', response);
-            }
-          })
-          .catch((error) => {
-            console.error('act_getAllAnswers: ', error);
-          });
-    },
-
-    async act_getOneAnswerToQuestion({ commit }, {ids}) {
-      console.log('act_getOneAnswerToQuestion');
-        await RestCalls.getOneAnswerToQuestion(ids)
-          .then((response) => {
-            if (response != null) {
-              commit('SET_ONE_ANSWER_TO_QUESTION', response);
-            }
-          })
-          .catch((error) => {
-            console.error('act_getOneAnswerToQuestion: ', error);
-          });
-    },
-
-    async act_updateAnswerFromQuestion({ commit }, updatedAnswerToQuestion) {
-      console.log('act_updateAnswerFromQuestion');
-        await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
-          .then((response) => {
-            return response;
-          })
-          .catch((error) => {
-            console.error('act_updateAnswerFromQuestion: ', error);
-          });
-    },
-
-    async act_getAllComments({ commit }, answerId) {
-      console.log('act_getAllComments');
-        await RestCalls.getAllCommentsToAnswers(answerId)
-          .then((response) => {
-            if (response != null) {
-              commit('SET_ALL_COMMENTS', response);
-            }
-          })
-          .catch((error) => {
-            console.error('act_getAllComments: ', error);
-          });
-    },
-
-    async act_getAllTags({ commit }) {
-      await RestCalls.getAllTags()
-        .then((response) => {
-          if (response != null) {
-            commit('SET_ALL_TAGS', response);
-          }
-        })
-        .catch((error) => {
-          console.error('act_getAllTags(): ', error);
-        });
     },
 
     async act_creatNewQuestion({ commit }, newQuestion) {
@@ -247,6 +223,53 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           console.error(error);
+        });
+    },
+
+    async act_updateCurrentQuestion({ commit }, questionWithNewData) {
+      console.log('act_updateCurrentQuestion()', questionWithNewData);
+      return await RestCalls.updateCurrentQuestion(questionWithNewData)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
+    //answers
+    async act_getAllAnswers({ commit }, questionId) {
+      console.log('act_getAllAnswers');
+      await RestCalls.getAllAnswersToQuestions(questionId)
+        .then((response) => {
+          commit('SET_ALL_ANSWERS', response);
+        })
+        .catch((error) => {
+          console.error('act_getAllAnswers: ', error);
+        });
+    },
+
+    async act_getOneAnswerToQuestion({ commit }, id) {
+      console.log('act_getOneAnswerToQuestion', id);
+      await RestCalls.getOneAnswerToQuestion(id)
+        .then((response) => {
+          if (response != null) {
+            commit('SET_ONE_ANSWER_TO_QUESTION', response);
+          }
+        })
+        .catch((error) => {
+          console.error('act_getOneAnswerToQuestion: ', error);
+        });
+    },
+
+    async act_updateAnswerFromQuestion({ commit }, updatedAnswerToQuestion) {
+      console.log('act_updateAnswerFromQuestion');
+      await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
+        .then((response) => {
+          return response;
+        })
+        .catch((error) => {
+          console.error('act_updateAnswerFromQuestion: ', error);
         });
     },
 
@@ -261,13 +284,34 @@ export default new Vuex.Store({
         });
     },
 
-    async increaseRatingForAnswer({ commit, dispatch  }, answer) {
+    act_switchLoadingStateForAnswer({commit}, toggle){
+      commit("RELOAD_ANSWERS_FOR_ONE_QUESTION", toggle);
+    },
+
+    async increaseRatingForAnswer({ commit, dispatch }, answer) {
       console.log('increaseAnswerRating', answer);
-      return await RestCalls.increaseAnswerRating(answer).then(async ()=>{
-          await dispatch('act_getAllAnswers', answer.id);
-      }).catch((error) => {
+      await RestCalls.increaseAnswerRating(answer)
+        .then(() => {
+          // dispatch('act_switchLoadingStateForAnswer', true);
+          commit("RELOAD_ANSWERS_FOR_ONE_QUESTION");
+        })
+        .catch((error) => {
           console.error(error);
-      });
+        });
+    },
+
+    //comments
+    async act_getAllComments({ commit }, answerId) {
+      console.log('act_getAllComments');
+      await RestCalls.getAllCommentsToAnswers(answerId)
+        .then((response) => {
+          if (response != null) {
+            commit('SET_ALL_COMMENTS', response);
+          }
+        })
+        .catch((error) => {
+          console.error('act_getAllComments: ', error);
+        });
     },
 
     async act_addNewComment({ commit }, newComment) {
@@ -281,36 +325,27 @@ export default new Vuex.Store({
         });
     },
 
-    async act_increaseCommentRating({ commit }, comment) {
+    async act_increaseCommentRating({ dispatch }, comment) {
       console.log('act_increaseCommentRating', comment);
-      return await RestCalls.increaseCommentRating(comment).then(async ()=>{
-        await dispatch('act_getAllComments', comment.id);
-      }).catch((error) => {
-          console.error(error);
-      });
-    },
-    
-
-    async act_updateCurrentQuestion({ commit }, questionWithNewData) {
-      console.log('act_updateCurrentQuestion()', questionWithNewData);
-      return await RestCalls.updateCurrentQuestion(questionWithNewData)
-        .then((response) => {
-          return response;
+      return await RestCalls.increaseCommentRating(comment)
+        .then(async (reponse) => {
+          await dispatch('act_getAllComments', reponse.id);
         })
         .catch((error) => {
           console.error(error);
         });
     },
 
-    async act_getMostActiveQuestions({ commit }) {
-      console.log('act_getMostActiveQuestions()');
-      return await RestCalls.getMostActiveQuestions()
+    //tags
+    async act_getAllTags({ commit }) {
+      await RestCalls.getAllTags()
         .then((response) => {
-
-          commit('SET_MOST_ACTIV_QUESTIONS', response);
+          if (response != null) {
+            commit('SET_ALL_TAGS', response);
+          }
         })
         .catch((error) => {
-          console.error(error);
+          console.error('act_getAllTags(): ', error);
         });
     },
 
@@ -318,26 +353,12 @@ export default new Vuex.Store({
       console.log('act_getCurrentTopics()');
       await RestCalls.getCurrentTopics()
         .then((response) => {
-          
           commit('SET_TOPICS', response);
         })
         .catch((error) => {
           console.error(error);
         });
     },
-
-    async act_getQuestionsBasedOnTopic({ commit }, topic) {
-      console.log('act_getQuestionsBasedOnTopic()');
-      await RestCalls.getQuestionBasedOnTopic(topic)
-        .then((response) => {
-          commit('SET_QUESTIONS_BASED_ON_TOPICS', response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-
-
   },
 
   getters: {

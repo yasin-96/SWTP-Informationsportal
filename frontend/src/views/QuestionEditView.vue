@@ -95,12 +95,8 @@ export default {
     this.paramId = this.id || this.$localStore.get('rQuetionId');
     console.warn('PARA ID:', this.paramId);
 
-    try {
-      await this.$store.dispatch('act_getAllTags');
-      await this.$store.dispatch('act_getOneQuestion', this.paramId);
-    } catch (error) {
-      console.error('beforeMount: ', error);
-    }
+    await this.$store.dispatch('act_getAllTags');
+    await this.$store.dispatch('act_getOneQuestion', this.paramId);
   },
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllTags', 'act_updateCurrentQuestion']),
@@ -147,14 +143,9 @@ export default {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
     async sendUpdatedQuestion() {
-      try {
-        console.warn("QID in EDIT",this.question);
-        let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
-        this.$router.push(`/question/${response.id}`).catch((err) => {});
-       
-      } catch (error) {
-        console.error(error);
-      }
+      console.warn("QID in EDIT",this.question);
+      let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
+      this.$router.push(`/question/${response.id}`).catch((err) => {});
     },
     formatter(newTag){
       console.warn(newTag)

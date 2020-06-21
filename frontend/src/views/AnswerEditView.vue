@@ -1,13 +1,10 @@
 <template>
-  <b-container class="mt-3" >
+  <b-container class="mt-3">
     <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
     <b-row>
-        <b-col>
-            <QuestionCard v-if="isQuestionAreLoaded" :qId="oneQuestion.id" :qHeader="oneQuestion.header" :qContent="oneQuestion.content" :qTags="oneQuestion.tags" :qDate="oneQuestion.timeStamp" :qFooter="true" :qEdit="true"/>
-        </b-col>
-
-
-    
+      <!-- <b-col>
+        <QuestionCard v-if="!!answer" :qId="answer.id" :qHeader="answer.header" :qContent="answer.content" :qTags="answer.tags" :qDate="answer.timeStamp" :qFooter="true" :qEdit="false" />
+      </b-col> -->
 
       <b-col>
         <b-card header-tag="header" header-bg-variant="#DFE8DF" header-border-variant="white" style="min-width: 200px; min-height: 300px;" class="bCard">
@@ -28,13 +25,10 @@
             </b-row>
           </template>
 
-
           <!-- Answer content -->
           <b-card-text>
             <b-form-textarea v-model="currentAnswer.content" :search-input.sync="currentAnswer.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true"></b-form-textarea>
           </b-card-text>
-
-         
         </b-card>
       </b-col>
     </b-row>
@@ -56,7 +50,7 @@ import QuestionCard from '@/components/QuestionCard';
 
 export default {
   name: 'AnswerEditView',
-  components: {QuestionCard},
+  components: { QuestionCard },
   props: {
     qId: {
       type: String,
@@ -74,7 +68,7 @@ export default {
       paramId: '',
       componentKey: '',
       componentCounter: 0,
-      currentAnswer:{},
+      currentAnswer: {},
       updatedAnswer: {
         id: '',
         listOfAnswers: [],
@@ -82,8 +76,12 @@ export default {
     };
   },
 
-  async beforeMount() {
-    console.info('BMount--');
+  async mounted() {
+
+    if(this.qId && this. aId){
+      await this.$store.dispatch('act_getOneQuestion', this.qId);
+      await this.$store.dispatch('act_getOneAnswerToQuestion', { ids: [this.qId, this.aId] });
+    }
     //check if local storage has the key with data, else set the new key & data
     // if (this.$localStore.get('rQuetionId') === this.id.toString()) {
     //   console.log('LOCAL_STORE:', this.$localStore.get('rQuetionId'));
@@ -95,29 +93,27 @@ export default {
     // this.paramId = this.id || this.$localStore.get('rQuetionId');
     // console.warn('PARA ID:', this.paramId);
 
-    try {
-      await this.$store.dispatch('act_getOneQuestion', this.qId);
-      await this.$store.dispatch('act_getOneAnswerToQuestion', { ids: [this.qId, this.aId ]});
-    } catch (error) {
-      console.error('beforeMount: ', error);
-    }
+    // try {
+      
+    // } catch (error) {
+    //   console.error('beforeMount: ', error);
+    // }
   },
   computed: {
-    ...mapActions(['act_getOneQuestion','act_getOneAnswerToQuestion', 'act_updateAnswerFromQuestion']),
-    ...mapState(['oneAnswer', 'oneQuestion'])
+    ...mapActions(['act_getOneQuestion', 'act_getOneAnswerToQuestion', 'act_updateAnswerFromQuestion']),
+    ...mapState(['oneAnswer', 'oneQuestion']),
+
+    anser(){
+      if(!!this.oneAnswer){
+        
+      }
+    }
   },
   methods: {
     goToDetailView() {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
     async sendUpdatedAnswer() {
-    //   try {
-    //     let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
-    //     this.$router.push(`/question/${response.id}`).catch((err) => {});
-       
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
       if (this.contentForAnswer) {
         this.updatedAnswer.listOfAnswers.push({
           id: '',
@@ -125,28 +121,25 @@ export default {
           rating: 0,
           timeStamp: Date.parse(new Date()),
         });
-        console.log('HIER:!!', this.updatedAnswer);
         let response = await this.$store.dispatch('act_updateAnswerFromQuestion', this.updatedAnswer);
         this.$router.go(`/question/${response.id}`);
       }
     },
-    
   },
-  watch:{
-      oneAnswer(){
-          if(this.oneAnswer){
-              this.currentAnswer = Object.assign({},this.oneAnswer);
-              this.isAnswerLoaded = true;
-          }
-      },
-       oneQuestion() {
-      if (this.oneQuestion && !this.oneQuestion) {
+  watch: {
+    answer() {
+      if (!!this.oneAnswer) {
+        return this.this.oneAnswer;
+        this.isAnswerLoaded = true;
+      }
+    },
+    oneQuestion() {
+      if (this.oneQuestion) {
         this.isQuestionAreLoaded = true;
       } else {
         this.isQuestionAreLoaded = false;
       }
     },
-  }
-  
+  },
 };
 </script>

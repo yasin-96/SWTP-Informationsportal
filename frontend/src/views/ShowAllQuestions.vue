@@ -26,11 +26,8 @@ export default {
     QuestionCard
   },
   async beforeMount() {
-    try {
-      await this.$store.dispatch('act_getAllQuestions')
-    } catch(error) {
-      console.error("beforeMount: ", error);
-    } 
+    console.warn("beforeMount -> SHOW-ALL-QUESTIONS.vue")
+    await this.$store.dispatch('act_getAllQuestions')
   },
   computed: {
     ...mapActions(['act_getAllQuestions',]),

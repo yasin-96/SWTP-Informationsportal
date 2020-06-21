@@ -22,15 +22,10 @@ export default {
     tag: {
       type: String,
       default: '',
-      required: true,
     },
   },
   async beforeMount() {
-    try {
-      await this.$store.dispatch('act_getQuestionsBasedOnTopic', this.tag);
-    } catch (error) {
-      console.error('beforeMount: ', error);
-    }
+    await this.$store.dispatch('act_getQuestionsBasedOnTopic', this.tag);
   },
   computed: {
     ...mapActions(['act_getAllQuestions']),

@@ -36,7 +36,6 @@ export default {
     tId: {
       type: String,
       default: '',
-      length: 24,
     },
     tName: {
       type: String,

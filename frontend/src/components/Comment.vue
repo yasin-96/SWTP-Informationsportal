@@ -57,7 +57,6 @@ export default {
   props: {
     cId: {
       type: String,
-      required: true,
       default: '',
     },
     cComments: {

@@ -16,6 +16,11 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/',
+    name: 'Index',
+    component: Home,
+  },
+  {
     path: '/new',
     name: 'NewQuestion',
     component: NewQuestion,
@@ -25,6 +30,7 @@ const routes = [
     name: 'Questions',
     component: ShowAllQuestions,
   },
+ 
   {
     path: '/questions/topics/:tag',
     name: 'QuestionsByTopics',

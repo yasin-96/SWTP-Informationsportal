@@ -22,10 +22,6 @@ export default {
       type: Number,
       default: 3,
     },
-    // bText: {
-    //   type: String,
-    //   default: 'Send',
-    // },
     nResize: {
       type: Boolean,
       default: true,
@@ -62,10 +58,10 @@ export default {
     };
   },
   beforeMount() {
+
     // console.warn('ROUNTER -> ', this.$router.history.current.params.id);
-    console.warn('ROUNTER -> ', this.$localStore.get('rQuetionId'));
-    // this.newAnswer.id = this.$router.history.current.params.id;
-    this.newAnswer.id = this.$localStore.get('rQuetionId');
+    console.warn('ROUNTER -> ', this.id);
+    this.newAnswer.id = this.id;
     this.newComment.id = this.id;
   },
 
@@ -77,14 +73,14 @@ export default {
     async addNewAnswer() {
       if (this.contentForAnswer) {
         this.newAnswer.listOfAnswers.push({
-          id: '',
           content: this.contentForAnswer,
           rating: 0,
-          timeStamp: 0,
+          timeStamp: Date.parse(new Date()),
         });
         console.log('HIER:!!', this.newAnswer);
         let resp = await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
-        this.$router.go(`/question/${resp.id}`);
+        // this.$store.dispatch('act_switchLoadingStateForAnswer', true);
+        //this.$router.go(`/question/${resp.id}`);
       }
     },
 
@@ -93,7 +89,7 @@ export default {
         this.newComment.comments.push({
           content: this.contentForComment,
           rating: 0,
-          timestamp: Date.parse(new Date()),
+          timestamp: Date.parse(new Date()), //TODO
         });
         console.log('HIER:!!', this.newComment);
         let resp = await this.$store.dispatch('act_addNewComment', this.newComment);

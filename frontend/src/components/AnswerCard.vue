@@ -71,6 +71,7 @@ export default {
     cId: {
       type: String,
       default: '',
+
     },
     aContent: {
       type: String,
@@ -103,11 +104,7 @@ export default {
 
   async beforeMount() {
     if (this.cId) {
-      try {
-        await this.$store.dispatch('act_getAllComments', this.cId);
-      } catch (error) {
-        console.error(error.error);
-      }
+      await this.$store.dispatch('act_getAllComments', this.cId);
     }
   },
 
@@ -128,7 +125,7 @@ export default {
       await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
       
       //reload page 
-      this.$router.go();
+      // this.$router.go();
     },
     editAnswer(){
       this.$router

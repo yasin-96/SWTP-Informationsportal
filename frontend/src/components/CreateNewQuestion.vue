@@ -69,13 +69,8 @@ export default {
       },
     };
   },
-  async beforeMount() {
-    try {
+  async mounted() {
       await this.$store.dispatch('act_getAllTags');
-      console.log('beforeMount: ', this.getAllTagName);
-    } catch (error) {
-      console.error(error);
-    }
   },
 
   computed: {

@@ -23,11 +23,8 @@ export default {
     TagCard
   },
   async beforeMount() {
-    try {
-      await this.$store.dispatch('act_getCurrentTopics');
-    } catch(error) {
-      console.error("beforeMount: ", error);
-    } 
+    console.warn("TOPICS.vue -> act_getCurrentTopics");
+    await this.$store.dispatch('act_getCurrentTopics');
   },
   computed: {
     ...mapActions(['act_getCurrentTopics',]),

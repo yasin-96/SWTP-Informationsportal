@@ -59,13 +59,6 @@
 <script>
 import Searching from '@/components/Searching';
 import { BNavbar } from 'bootstrap-vue';
-
-// import Vue from 'vue'
-// import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
-
-// Vue.use(BootstrapVue)
-// Vue.use(BootstrapVueIcons)
-
 import { mapActions } from 'vuex';
 
 export default {
