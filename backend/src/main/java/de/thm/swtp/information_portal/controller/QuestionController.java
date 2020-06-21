@@ -150,7 +150,7 @@ public class QuestionController {
 			answers.ifPresent(value -> myMap.put(item, value.getListOfAnswers().size()));
 		}
 			mostActiveQuestions = getListOfMostActiveQuestions(myMap);
-		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions,HttpStatus.OK));
+		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions, HttpStatus.OK));
 	}
 
 	public List<Question> getListOfMostActiveQuestions(Map<Question,Integer> myMap){

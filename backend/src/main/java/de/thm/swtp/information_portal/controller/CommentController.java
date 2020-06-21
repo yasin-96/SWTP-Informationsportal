@@ -62,7 +62,7 @@ public class CommentController {
 			allComments.sort(compareByRating);
 		}
 		ResponseEntity<Comments> resComments = comments.map(response -> ResponseEntity.ok().body(response))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+				.orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
 		return CompletableFuture.completedFuture(resComments);
 	}
 
@@ -87,7 +87,7 @@ public class CommentController {
 		}));
 		commentsToBeModified.get().setComments(listOfComments);
 		ResponseEntity<Comments> comRes = commentsToBeModified.map(response -> ResponseEntity.ok().body(response))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+				.orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
 		commentService.postComments(commentsToBeModified.get());
 		return CompletableFuture.completedFuture(comRes);
 	}

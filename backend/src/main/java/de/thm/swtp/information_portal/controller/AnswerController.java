@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 import de.thm.swtp.information_portal.models.Question;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,8 @@ import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.service.AnswerService;
 
 import javax.validation.Valid;
+
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 @RestController
 @RequestMapping("/api")
@@ -61,17 +62,23 @@ public class AnswerController {
 	public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(@Valid @RequestBody String[] ids) {
 		Optional<Answers> answers = answerService.findByQuestionId(ids[0]);
 		List<Answer> answerList = answers.get().getListOfAnswers();
+		var foundAnswer = new Answer();
 		for(var answer : answerList){
 			if(answer.getId().equals(ids[1])){
-				return CompletableFuture.completedFuture(new ResponseEntity<Answer>(answer,HttpStatus.OK));
+				foundAnswer = answer;
+				
 			}
 		}
-		return  null;
+		if(foundAnswer != null){
+			return CompletableFuture.completedFuture(new ResponseEntity<Answer>(foundAnswer, HttpStatus.OK));
+		} else {
+			return CompletableFuture.completedFuture(new ResponseEntity<Answer>(new Answer(), HttpStatus.NO_CONTENT));
+		}
 	}
 
 
 	@Async
-	@PutMapping("/answer/{id}")
+	@PutMapping("/answer")
 	public CompletableFuture<ResponseEntity<Answers>> editAnswer(@Valid @RequestBody Answers answersBody) throws URISyntaxException{
 		Optional<Answers> answersToBeModified = answerService.findByQuestionId(answersBody.getId());
 		Answer modifiedAnswer = answersBody.getListOfAnswers().get(0);
@@ -104,7 +111,7 @@ public class AnswerController {
 			allAnswers.sort(compareByRating);
 		}
 		ResponseEntity<Answers> answRes = answers.map(response -> ResponseEntity.ok().body(response))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+				.orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
 		return CompletableFuture.completedFuture(answRes);
 	}
 
@@ -129,7 +136,7 @@ public class AnswerController {
 		}));
 		answersToBeModified.get().setListOfAnswers(listOfAnswers);
 		ResponseEntity<Answers> answRes = answersToBeModified.map(response -> ResponseEntity.ok().body(response))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+				.orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
 		answerService.postAnswer(answersToBeModified.get());
 		return CompletableFuture.completedFuture(answRes);
 	}
