@@ -1,21 +1,19 @@
 <template>
-  <b-container class="mt-3" v-if="id">
-    <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
+  <b-container class="mt-3" v-if="id && isDataLoaded.question">
     <b-row>
       <b-col>
-        <QuestionCard :qId="question.id" :qHeader="question.header" :qContent="question.content" :qTags="question.tags" :qDate="question.timeStamp" :qFooter="true" :qEdit="true" />
+        <QuestionCard :qId="oneQuestion.id" :qHeader="oneQuestion.header" :qContent="oneQuestion.content" :qTags="oneQuestion.tags" :qDate="oneQuestion.timeStamp" :qFooter="true" :qEdit="true" />
 
         <!-- 
             By clicking on the title of a question, a page is called up and all information is provided.
             All answers and comments made. 
         -->
 
-        <NewContent bTextSize="lg" :nRows="2" :id="question.id" :nIsAnswer="true" />
+        <NewContent bTextSize="lg" :nRows="2" :id="oneQuestion.id" :nIsAnswer="true" />
 
-        <b-container v-if="!!answers">
-          <b-container v-for="aa in answers" :key="aa.id">
-            <AnswerCard :nId="id" :aContent="aa.content" :aRating="aa.rating" :aDate="aa.timeStamp" :cId="aa.id" class="pb-3" />
-            <!-- <AnswerCard :nId="aa.id" :aContent="aa.content" :aRating="aa.rating" :aDate="aa.timeStamp" :cId="aa.id" class="pb-3" /> -->
+        <b-container v-if="isDataLoaded.answers">
+          <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index">
+            <AnswerCard :nId="oneQuestion.id" :aContent="answer.content" :aRating="answer.rating" :aDate="answer.timeStamp" :cId="answer.id" class="pb-3" />
           </b-container>
         </b-container>
       </b-col>
@@ -41,77 +39,49 @@ export default {
   props: {
     id: {
       type: String,
-      default: '',
+      required: true,
     },
   },
   data() {
     return {
-      isQuestionAreLoaded: false,
-      areAnswersLoaded: false,
-      paramId: '',
-      componentKey: '',
-      componentCounter: 0,
+      isDataLoaded: {
+        question: false,
+        answers: false,
+      },
     };
   },
 
-  async beforeMount() {
-    if (this.id) {
-      //TODO remove localStorage maybe 
-      // console.info('BMount--');
-      // //check if local storage has the key with data, else set the new key & data
-      // if (this.$localStore.get('rQuetionId') === this.id.toString()) {
-      //   console.log('LOCAL_STORE:', this.$localStore.get('rQuetionId'));
-      // } else {
-      //   this.$localStore.set('rQuetionId', this.id.toString());
-      // }
-
-      console.warn('THIS ID:', this.id);
-      // this.paramId = this.id || this.$localStore.get('rQuetionId');
-      // this.paramId = this.id;
-      // console.warn("PARA ID-Router:", this.$route.params.id);
-
-      await this.$store.dispatch('act_getOneQuestion', this.id);
-      await this.$store.dispatch('act_getAllAnswers', this.id);
-    }
+  beforeMount() {
+    this.loadData();
   },
   computed: {
     ...mapActions(['act_getAllAnswers', 'act_getOneQuestion']),
-    ...mapState(['oneQuestion', 'allAnswers', 'reloadAnswers']),
-
-    question(){
-      if(this.oneQuestion) {
-        return this.oneQuestion;
+    ...mapState(['oneQuestion', 'allAnswers']),
+  },
+  methods: {
+    async loadData() {
+      if (this.id) {
+        console.info('THIS ID:', this.id);
+        await this.$store.dispatch('act_getOneQuestion', this.id);
+        await this.$store.dispatch('act_getAllAnswers', this.id);
       }
     },
-    answers(){
-      if(this.allAnswers){
-        return this.allAnswers.listOfAnswers;
-      }
-    }
   },
   watch: {
     oneQuestion() {
-      if (this.oneQuestion && !this.oneQuestion) {
-        this.isQuestionAreLoaded = true;
+      if (this.oneQuestion && !!this.oneQuestion) {
+        this.isDataLoaded.question = true;
       } else {
-        this.isQuestionAreLoaded = false;
+        this.isDataLoaded.question = false;
       }
     },
-
     allAnswers() {
-      if (this.allAnswers) {
-        this.areAnswersLoaded = true;
+      if (this.allAnswers && this.allAnswers.listOfAnswers) {
+        this.isDataLoaded.answers = true;
       } else {
-        this.areAnswersLoaded = false;
+        this.isDataLoaded.answers = false;
       }
     },
-
-    reloadAnswers() {
-      if(this.reloadAnswers) {
-        console.warn("reload answer data");
-        this.$store.dispatch('act_getAllAnswers', this.id);
-      }
-    }
   },
 };
 </script>

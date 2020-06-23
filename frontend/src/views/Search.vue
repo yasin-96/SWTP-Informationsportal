@@ -1,7 +1,6 @@
 <template>
   <b-container v-if="this.query">
-    <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
-    <b-row v-if="!!allQueryData">
+    <b-row v-if="isDataLoaded">
       <b-col sm="12" md="12" lg="12" xl="12" class="mt-4" v-for="(item, i) in allQueryData" :key="i">
         <QuestionCard :qId="item.id" :qHeader="item.header" :qContent="item.content" :qTags="item.tags" :qDate="item.timeStamp" />
       </b-col>
@@ -39,29 +38,19 @@ export default {
   props: {
     query: {
       type: String,
-      default: '',
       required: true,
     },
   },
+  data(){
+    return { isDataLoaded: false }
+  },
   methods: {
     async sendQuery() {
-      //check if local storage has the key with data, else set the new key & data
-      if (this.$localStore.get('searchQuery') === this.query) {
-        console.log('LOCAL_STORE:', this.$localStore.get('searchQuery'));
-      } else {
-        this.$localStore.set('searchQuery', this.query);
-      }
-
-      try {
+      if(this.query.length){
         console.warn('Query:', this.query);
-        await this.$store.dispatch('act_getAllDataByQuery', this.query || this.$localStore.get('rQuetionId'));
-      } catch (error) {
-        console.error('beforeMount: ', error);
+        await this.$store.dispatch('act_getAllDataByQuery', this.query.toUpperCase().trim());
       }
     },
-    formatter(text) {
-      return text.bold().italics();
-    }
   },
   computed: { ...mapState(['allQueryData']), ...mapActions(['act_getAllDataByQuery']) },
   watch: {
@@ -70,6 +59,13 @@ export default {
         this.sendQuery();
       }
     },
+    allQueryData(){
+      if(this.allQueryData){
+        this.isDataLoaded = true;
+      }else {
+        this.isDataLoaded = false;
+      }
+    }
   },
 };
 </script>

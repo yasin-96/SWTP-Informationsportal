@@ -80,19 +80,19 @@ export default {
     },
     qEdit: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     /**
      * By clicking on the title of a question, a page is called up and all information is provided.
      */
     goToQuestion() {
-      this.$router.push(`/question/${this.$props.qId}`).catch(err => {});
+      this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
-    editQuestion(){
-      this.$router.push(`/question/edit/${this.$props.qId}`).catch(err => {});
-    }
+    editQuestion() {
+      this.$router.push(`/question/edit/${this.$props.qId}`).catch((err) => {});
+    },
   },
   computed: {
     allTags() {

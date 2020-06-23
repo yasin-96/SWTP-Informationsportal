@@ -1,3 +1,4 @@
+//TODO: gegen prüfen ob das noch gebraucht wird?
 
 import Vue from 'vue';
 import VueLocalStorage from 'vue-localstorage'
@@ -7,3 +8,4 @@ Vue.use(VueLocalStorage, {
   name: 'localStore',
   bind: true //created computed members from your variable declarations,
 });
+

@@ -32,7 +32,6 @@ export default {
       searchInput: '',
     };
   },
-  computed: { ...mapActions(['act_getAllDataByQuery']) },
   methods: {
     searchData() {
       this.$router
@@ -45,6 +44,7 @@ export default {
         .catch((err) => {});
     },
   },
+  computed: { ...mapActions(['act_getAllDataByQuery']) },
 };
 </script>
 

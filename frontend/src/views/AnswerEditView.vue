@@ -76,40 +76,17 @@ export default {
     };
   },
 
-  async mounted() {
-
-    if(this.qId && this. aId){
-      await this.$store.dispatch('act_getOneQuestion', this.qId);
-      await this.$store.dispatch('act_getOneAnswerToQuestion', { ids: [this.qId, this.aId] });
-    }
-    //check if local storage has the key with data, else set the new key & data
-    // if (this.$localStore.get('rQuetionId') === this.id.toString()) {
-    //   console.log('LOCAL_STORE:', this.$localStore.get('rQuetionId'));
-    // } else {
-    //   this.$localStore.set('rQuetionId', this.id.toString());
-    // }
-
-    // console.warn('THIS ID:', this.id);
-    // this.paramId = this.id || this.$localStore.get('rQuetionId');
-    // console.warn('PARA ID:', this.paramId);
-
-    // try {
-      
-    // } catch (error) {
-    //   console.error('beforeMount: ', error);
-    // }
+  beforeMount() {
+    this.loadData();
   },
-  computed: {
-    ...mapActions(['act_getOneQuestion', 'act_getOneAnswerToQuestion', 'act_updateAnswerFromQuestion']),
-    ...mapState(['oneAnswer', 'oneQuestion']),
 
-    anser(){
-      if(!!this.oneAnswer){
-        
-      }
-    }
-  },
   methods: {
+    async loadData() {
+      if (this.qId && this.aId) {
+        await this.$store.dispatch('act_getOneQuestion', this.qId);
+        await this.$store.dispatch('act_getOneAnswerToQuestion', { ids: [this.qId, this.aId] });
+      }
+    },
     goToDetailView() {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
@@ -122,7 +99,16 @@ export default {
           timeStamp: Date.parse(new Date()),
         });
         let response = await this.$store.dispatch('act_updateAnswerFromQuestion', this.updatedAnswer);
-        this.$router.go(`/question/${response.id}`);
+        // this.$router.go(`/question/${response.id}`);
+      }
+    },
+  },
+  computed: {
+    ...mapActions(['act_getOneQuestion', 'act_getOneAnswerToQuestion', 'act_updateAnswerFromQuestion']),
+    ...mapState(['oneAnswer', 'oneQuestion']),
+
+    anser() {
+      if (!!this.oneAnswer) {
       }
     },
   },

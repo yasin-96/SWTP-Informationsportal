@@ -26,6 +26,10 @@
                   <b-col xs="12" sm="12" md="12" lg="12">
                     <b-form-textarea v-model="newQuestion.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true" placeholder="Eine genauere Beschreibung ihrer Frage ..."></b-form-textarea>
                   </b-col>
+                  <b-col xs="12" sm="12" md="12" lg="12">
+                    <editor v-model="newQuestion.content"
+                    />
+                  </b-col>
                 </b-row>
 
                 <!-- Tags for this question -->
@@ -49,14 +53,18 @@
         </b-col>
       </b-row>
     </b-card>
+    <div>
+      
+    </div>
   </b-container>
 </template>
 
 <script>
+import VueSimplemde from 'vue-simplemde'
 import { mapState, mapActions, mapGetters } from 'vuex';
 export default {
   name: 'CreateNewQuestion',
-  components: {},
+  components: {'Editor': VueSimplemde},
   data() {
     return {
       image: require('./../assets/new_question/questions.svg'),
@@ -67,12 +75,38 @@ export default {
         content: '',
         tags: [],
       },
+      mde: {
+        previewStyle : 'tab',
+        editType: 'wysiwyg'
+      },
+      editorOptions: {
+
+      },
     };
   },
-  async mounted() {
-      await this.$store.dispatch('act_getAllTags');
+  beforeMount() {
+    this.loadData();
   },
+  methods: {
+    onEditorChange(){
+      console.warn(this.$refs.mdeEditor.invoke('getValue'));
+      this.newQuestion.content = this.$refs.mdeEditor.invoke('getValue');
+    },
+    async loadData(){
+      await this.$store.dispatch('act_getAllTags');
+    },
 
+    async createQuestion() {
+      let response = await this.$store.dispatch('act_creatNewQuestion', this.newQuestion);
+      console.log('res', response);
+      this.$router.push(`/question/${response.id}`);
+    },
+    formatter(newTag) {
+      console.warn(newTag);
+      this.newQuestion.tags = newTag.map((tag) => tag.toUpperCase());
+      console.warn(this.newQuestion.tags);
+    },
+  },
   computed: {
     ...mapActions(['act_getAllTags', 'act_creatNewQuestion']),
     ...mapGetters(['getAllTagName']),
@@ -91,18 +125,6 @@ export default {
       }
       return this.getAllTagName.map((item) => item.toUpperCase());
     },
-  },
-  methods: {
-    async createQuestion() {
-      let response = await this.$store.dispatch('act_creatNewQuestion', this.newQuestion);
-      console.log('res', response);
-      this.$router.push(`/question/${response.id}`);
-    },
-    formatter(newTag){
-      console.warn(newTag)
-      this.newQuestion.tags = newTag.map((tag) => tag.toUpperCase());
-      console.warn(this.newQuestion.tags)
-    }
   },
   watch: {
     allTags() {

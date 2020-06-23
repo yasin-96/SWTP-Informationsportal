@@ -28,15 +28,14 @@
 
           <!-- Question content -->
           <b-card-text>
+            <editor ref="markdownEditor" v-model="question.content" :search-input.sync="question.content" />
             <b-form-textarea v-model="question.content" :search-input.sync="question.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true" placeholder="Eine genauere Beschreibung ihrer Frage ..."></b-form-textarea>
           </b-card-text>
 
           <!-- Show all Tags from Question and its rating -->
           <template v-if="isTagsAreLoaded" v-slot:footer>
             <!-- Tags for this question -->
-            <b-form-tags @input="formatter($event)" v-model="question.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }">
-              
-            </b-form-tags>
+            <b-form-tags @input="formatter($event)" v-model="question.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }"> </b-form-tags>
 
             <b-datalist id="alltags" :options="filterTags"> </b-datalist>
           </template>
@@ -57,9 +56,10 @@
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
-
+import VueSimplemde from 'vue-simplemde'
 export default {
   name: 'QuestionEditView',
+  components: {'Editor': VueSimplemde},
   props: {
     id: {
       type: String,
@@ -81,22 +81,38 @@ export default {
       },
     };
   },
-
-  async beforeMount() {
-    console.info('BMount--');
-    //check if local storage has the key with data, else set the new key & data
-    if (this.$localStore.get('rQuetionId') === this.id.toString()) {
-      console.log('LOCAL_STORE:', this.$localStore.get('rQuetionId'));
-    } else {
-      this.$localStore.set('rQuetionId', this.id.toString());
-    }
-
-    console.warn('THIS ID:', this.id);
-    this.paramId = this.id || this.$localStore.get('rQuetionId');
-    console.warn('PARA ID:', this.paramId);
-
-    await this.$store.dispatch('act_getAllTags');
-    await this.$store.dispatch('act_getOneQuestion', this.paramId);
+  beforeMount() {
+    this.loadData();
+  },
+  mounted() {
+    this.mdeEditor.togglePreview(this.question.content);
+    this.mdeEditor.markdown(this.question.content);
+  },
+  methods: {
+    async loadData() {
+      if (this.id) {
+        await this.$store.dispatch('act_getAllTags');
+        await this.$store.dispatch('act_getOneQuestion', this.id);
+      }
+    },
+    goToDetailView() {
+      this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
+    },
+    async sendUpdatedQuestion() {
+      console.warn('QID in EDIT', this.question);
+      let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
+      this.$router
+        .go({
+          path: `/question/${response.id}`,
+          props: response.id,
+        })
+        .catch((err) => {});
+    },
+    formatter(newTag) {
+      console.warn(newTag);
+      this.question.tags = newTag.map((tag) => tag.toUpperCase());
+      console.warn(this.question.tags);
+    },
   },
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllTags', 'act_updateCurrentQuestion']),
@@ -110,6 +126,9 @@ export default {
         return this.getAllTagName.filter((item) => !this.question.tags.includes(item)).map((item) => item.toUpperCase());
       }
       return this.getAllTagName.map((item) => item.toUpperCase());
+    },
+     mdeEditor() {
+      return this.$refs.markdownEditor.simplemde;
     },
   },
   watch: {
@@ -138,21 +157,5 @@ export default {
       }
     },
   },
-  methods: {
-    goToDetailView() {
-      this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
-    },
-    async sendUpdatedQuestion() {
-      console.warn("QID in EDIT",this.question);
-      let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
-      this.$router.push(`/question/${response.id}`).catch((err) => {});
-    },
-    formatter(newTag){
-      console.warn(newTag)
-      this.question.tags = newTag.map((tag) => tag.toUpperCase());
-      console.warn(this.question.tags)
-    }
-  },
-  
 };
 </script>

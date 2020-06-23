@@ -9,7 +9,7 @@
       </b-card-header>
       <b-collapse :id="toggleId" ref="b-collaps-comments">
         <div v-for="(cc, i) in cComments" :key="i" flex-column align-items-start>
-          <div v-for="(c, j) in cc.comments" :key="j" class="">
+          <div v-for="c in cc.comments" :key="c.id">
             <b-card class="rounded-0" header-tag="header" footer-bg-variant="white" footer-border-variant="white" v-if="cc.id === cId">
               <b-card-sub-title>
                 <div class="d-flex justify-content-between">
@@ -57,12 +57,11 @@ export default {
   props: {
     cId: {
       type: String,
-      default: '',
+      required: true,
     },
     cComments: {
       type: Array,
       required: true,
-      default: new Array(),
     },
   },
   data() {
@@ -82,7 +81,6 @@ export default {
       iCounter: 0,
     };
   },
-
   beforeMount() {
     if (this.cComments) {
       this.cComments.forEach((cc, index) => {
@@ -91,8 +89,6 @@ export default {
       });
     }
   },
-
-  
   methods: {
     changeText() {
       this.toggelCommentBtn = this.toggelCommentBtn ? false : true;
@@ -107,43 +103,37 @@ export default {
       }
       return objectWithComment[this.iCounter].comments;
     },
-    async increaseRating(comment) {
+    async increaseRating(comment, cardId) {
       let newRating = Number(comment.rating) + 1;
 
-
-      console.warn("OBJ", comment);
+      console.warn('OBJ', comment);
 
       let newComment = {
         id: this.cId,
-        comments: [{
-          id: comment.id,
-          content: comment.content,
-          userName: comment.userName,
-          rating: newRating,
-          timestamp: Date.parse(new Date())
-        }
+        comments: [
+          {
+            id: comment.id,
+            content: comment.content,
+            userName: comment.userName,
+            rating: newRating,
+            timestamp: Date.parse(new Date()),
+          },
         ],
-        timestamp: Date.parse(new Date())
+        timestamp: Date.parse(new Date()),
       };
       await this.$store.dispatch('act_increaseCommentRating', newComment);
-      console.warn("NEW  COMMENT WIHT R", newComment);
+      console.warn('NEW  COMMENT WIHT R', newComment);
 
-      //reload page 
+      //reload page
+      console.log('cardID', comment.id);
       this.$router.go();
-
-    }
+    },
   },
   computed: {
     ...mapActions(['act_increaseCommentRating']),
     hasComments() {
       return Object.keys(this.cComments).length > 0 ? true : false;
     },
-  },
-  watch: {
-    //TODO: soll der text für die Kommentare bleiben oder sich ändern
-    // 'this.$refs.b-collaps-comments'() {
-    //   this.toggleText = this.toggleText === 'Show Comments' ? 'Hide Comments' : 'Show Comments';
-    // },
   },
 };
 </script>

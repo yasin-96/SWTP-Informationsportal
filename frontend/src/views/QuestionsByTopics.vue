@@ -1,7 +1,7 @@
 <template>
-  <b-container v-if="questions.length">
+  <b-container v-if="isDataLoaded">
     <b-row>
-      <b-col sm="12" md="6" lg="4" xl="3" v-for="quest in questions" :key="quest.id" class="mt-4">
+      <b-col sm="12" md="6" lg="4" xl="3" v-for="quest in questionsBasedOnTopics" :key="quest.id" class="mt-4">
         <QuestionCard :qId="quest.id" :qHeader="quest.header" :qContent="quest.content" :qTags="quest.tags" :qDate="quest.timeStamp" :qTrimText="true" />
       </b-col>
     </b-row>
@@ -21,24 +21,34 @@ export default {
   props: {
     tag: {
       type: String,
-      default: '',
+      required: true
     },
   },
-  async beforeMount() {
-    await this.$store.dispatch('act_getQuestionsBasedOnTopic', this.tag);
+  data() {
+    return {
+      isDataLoaded: false
+    }
   },
-  computed: {
+  mounted() {
+    this.loadData()
+  },
+ 
+  methods: {
+    async loadData(){
+      await this.$store.dispatch('act_getQuestionsBasedOnTopic', this.tag);
+    }
+  },
+   computed: {
     ...mapActions(['act_getAllQuestions']),
     ...mapState(['questionsBasedOnTopics']),
-    questions() {
-      if (!!this.questionsBasedOnTopics) {
-        return this.questionsBasedOnTopics;
-      }
-    },
   },
   watch: {
-    allQuestions() {
-      this.$forceUpdate();
+    questionsBasedOnTopics() {
+      if(this.questionsBasedOnTopics && this.questionsBasedOnTopics.length >0){
+        this.isDataLoaded =true;
+      } else{
+        this.isDataLoaded =false;
+      }
     },
   },
 };

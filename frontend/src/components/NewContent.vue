@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-4 pb-4">
+  <div class="pt-4 pb-4" v-if="id">
     <b-button-group class="d-flex">
       <b-form-textarea v-if="nIsAnswer" v-model="contentForAnswer" placeholder="Add new answer ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
       <b-form-textarea v-if="nIsComment" v-model="contentForComment" placeholder="Add new comment ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
@@ -40,35 +40,23 @@ export default {
     },
     id: {
       type: String,
-      default: '',
+      required: true,
     },
   },
   data() {
     return {
       newAnswer: {
-        id: '',
+        id: this.id,
         listOfAnswers: [],
       },
       newComment: {
-        id: '',
+        id: this.id,
         comments: [],
       },
       contentForAnswer: '',
       contentForComment: '',
     };
   },
-  beforeMount() {
-
-    // console.warn('ROUNTER -> ', this.$router.history.current.params.id);
-    console.warn('ROUNTER -> ', this.id);
-    this.newAnswer.id = this.id;
-    this.newComment.id = this.id;
-  },
-
-  computed: {
-    ...mapActions(['act_addNewAnswer', 'act_addNewComment']),
-  },
-
   methods: {
     async addNewAnswer() {
       if (this.contentForAnswer) {
@@ -80,7 +68,7 @@ export default {
         console.log('HIER:!!', this.newAnswer);
         let resp = await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
         // this.$store.dispatch('act_switchLoadingStateForAnswer', true);
-        //this.$router.go(`/question/${resp.id}`);
+        this.$router.go(`/question/${resp.id}`);
       }
     },
 
@@ -96,6 +84,9 @@ export default {
         this.$router.go(`/question/${resp.id}`);
       }
     },
+  },
+  computed: {
+    ...mapActions(['act_addNewAnswer', 'act_addNewComment']),
   },
 };
 </script>

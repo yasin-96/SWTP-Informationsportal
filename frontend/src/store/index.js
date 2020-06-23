@@ -77,22 +77,20 @@ export default new Vuex.Store({
       state.allQueryData = data;
     },
 
-    RELOAD_DATA_FOR_ONE_QUESTION(toggle){
-      state.reloadQuestions = toggle;
-    },
-
     //all mutation for answers
     SET_ALL_ANSWERS(state, data) {
       console.debug('SET_ALL_ANSWERS');
 
       state.reloadAnswers = state.reloadAnswers ? false : true;
-      
-      data.listOfAnswers.forEach((d) => {
-        console.debug('ANSWERS', d);
-        d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
-      });
 
-      state.allAnswers = Object.assign([], data);  
+      if (data) {
+        data.listOfAnswers.forEach((d) => {
+          console.debug('ANSWERS', d);
+          d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
+        });
+      }
+
+      state.allAnswers = Object.assign([], data);
     },
 
     SET_ONE_ANSWER_TO_QUESTION(state, data) {
@@ -102,18 +100,10 @@ export default new Vuex.Store({
       }
     },
 
-    RELOAD_ANSWERS_FOR_ONE_QUESTION(state, toggle) {
-      state.reloadAnswers = toggle;
-      setTimeout(() => {
-        state.reloadAnswers = false;
-      }, 15000);
-    },
-
     //all mutation for comments
     SET_ALL_COMMENTS(state, data) {
       if (data) {
         console.debug('SET_ALL_COMMENTS');
-
         console.debug('SET', data);
         console.debug('COMMENTS', data.comments);
         data.comments.forEach((dd) => {
@@ -128,10 +118,6 @@ export default new Vuex.Store({
           state.allComments.push(data);
         }
       }
-    },
-
-    RELOAD_COMMENTS_FOR_ONE_QUESTION(toggle){
-      state.reloadComments = toggle;
     },
 
     //all tags -> topics
@@ -155,9 +141,7 @@ export default new Vuex.Store({
       console.log('act_getAllQuestions');
       await RestCalls.getAllQuestions()
         .then((response) => {
-          if (response != null) {
-            commit('SET_ALL_QUESTIONS', response);
-          }
+          commit('SET_ALL_QUESTIONS', response);
         })
         .catch((error) => {
           console.error('act_getAllQuestions: ', error);
@@ -166,15 +150,15 @@ export default new Vuex.Store({
 
     async act_getOneQuestion({ commit }, questionId) {
       console.log('act_getOneQuestion()', questionId);
-        await RestCalls.getOneQuestion(questionId)
-          .then((response) => {
-            if (response != null) {
-              commit('SET_ONE_QUESTION', response);
-            }
-          })
-          .catch((error) => {
-            console.error('act_getAllQuestions: ', error);
-          });
+      await RestCalls.getOneQuestion(questionId)
+        .then((response) => {
+          if (response != null) {
+            commit('SET_ONE_QUESTION', response);
+          }
+        })
+        .catch((error) => {
+          console.error('act_getAllQuestions: ', error);
+        });
     },
 
     async act_getQuestionsBasedOnTopic({ commit }, topic) {
@@ -190,7 +174,7 @@ export default new Vuex.Store({
 
     async act_getMostActiveQuestions({ commit }) {
       console.log('act_getMostActiveQuestions()');
-      return await RestCalls.getMostActiveQuestions()
+      await RestCalls.getMostActiveQuestions()
         .then((response) => {
           commit('SET_MOST_ACTIV_QUESTIONS', response);
         })
@@ -201,21 +185,20 @@ export default new Vuex.Store({
 
     async act_getAllDataByQuery({ commit }, query) {
       console.log('act_getAllQuestionsByQuery', query);
-      if (!!query) {
-        await RestCalls.getAllDataByQuery(query)
-          .then((response) => {
-            console.warn('getAllDataByQuery', response);
-            // if (response != null) {
-            commit('SET_ALL_QUERY_DATA', response);
-            // }
-          })
-          .catch((error) => {
-            console.error('act_getAllDataByQuery: ', error);
-          });
-      }
+      await RestCalls.getAllDataByQuery(query)
+        .then((response) => {
+          // console.warn('getAllDataByQuery', response);
+          // if (response != null) {
+          commit('SET_ALL_QUERY_DATA', response);
+
+          // }
+        })
+        .catch((error) => {
+          console.error('act_getAllDataByQuery: ', error);
+        });
     },
 
-    async act_creatNewQuestion({ commit }, newQuestion) {
+    async act_creatNewQuestion({}, newQuestion) {
       console.log('act_creatNewQuestion()', newQuestion);
       return await RestCalls.addNewQuestion(newQuestion)
         .then((response) => {
@@ -223,10 +206,11 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           console.error(error);
+          return null;
         });
     },
 
-    async act_updateCurrentQuestion({ commit }, questionWithNewData) {
+    async act_updateCurrentQuestion({}, questionWithNewData) {
       console.log('act_updateCurrentQuestion()', questionWithNewData);
       return await RestCalls.updateCurrentQuestion(questionWithNewData)
         .then((response) => {
@@ -234,15 +218,18 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           console.error(error);
+          return null;
         });
     },
 
     //answers
     async act_getAllAnswers({ commit }, questionId) {
-      console.log('act_getAllAnswers');
+      console.log('act_getAllAnswers', questionId);
       await RestCalls.getAllAnswersToQuestions(questionId)
         .then((response) => {
-          commit('SET_ALL_ANSWERS', response);
+          if (response != null) {
+            commit('SET_ALL_ANSWERS', response);
+          }
         })
         .catch((error) => {
           console.error('act_getAllAnswers: ', error);
@@ -262,7 +249,7 @@ export default new Vuex.Store({
         });
     },
 
-    async act_updateAnswerFromQuestion({ commit }, updatedAnswerToQuestion) {
+    async act_updateAnswerFromQuestion({}, updatedAnswerToQuestion) {
       console.log('act_updateAnswerFromQuestion');
       await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
         .then((response) => {
@@ -273,7 +260,7 @@ export default new Vuex.Store({
         });
     },
 
-    async act_addNewAnswer({ commit }, newAnswer) {
+    async act_addNewAnswer({}, newAnswer) {
       console.log('act_addNewAnswer', newAnswer);
       return await RestCalls.addNewAnswer(newAnswer)
         .then((response) => {
@@ -281,19 +268,15 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           console.error(error);
+          return null;
         });
     },
 
-    act_switchLoadingStateForAnswer({commit}, toggle){
-      commit("RELOAD_ANSWERS_FOR_ONE_QUESTION", toggle);
-    },
-
-    async increaseRatingForAnswer({ commit, dispatch }, answer) {
+    async increaseRatingForAnswer({ dispatch }, answer) {
       console.log('increaseAnswerRating', answer);
       await RestCalls.increaseAnswerRating(answer)
         .then(() => {
-          // dispatch('act_switchLoadingStateForAnswer', true);
-          commit("RELOAD_ANSWERS_FOR_ONE_QUESTION");
+          dispatch('act_getAllAnswers', answer.id);
         })
         .catch((error) => {
           console.error(error);
@@ -305,16 +288,14 @@ export default new Vuex.Store({
       console.log('act_getAllComments');
       await RestCalls.getAllCommentsToAnswers(answerId)
         .then((response) => {
-          if (response != null) {
-            commit('SET_ALL_COMMENTS', response);
-          }
+          commit('SET_ALL_COMMENTS', response);
         })
         .catch((error) => {
           console.error('act_getAllComments: ', error);
         });
     },
 
-    async act_addNewComment({ commit }, newComment) {
+    async act_addNewComment({}, newComment) {
       console.log('act_addNewComment', newComment);
       return await RestCalls.addNewComment(newComment)
         .then((response) => {
@@ -328,8 +309,8 @@ export default new Vuex.Store({
     async act_increaseCommentRating({ dispatch }, comment) {
       console.log('act_increaseCommentRating', comment);
       return await RestCalls.increaseCommentRating(comment)
-        .then(async (reponse) => {
-          await dispatch('act_getAllComments', reponse.id);
+        .then(() => {
+          dispatch('act_getAllComments', comment.id);
         })
         .catch((error) => {
           console.error(error);

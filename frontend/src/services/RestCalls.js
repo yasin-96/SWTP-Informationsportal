@@ -38,10 +38,8 @@ const client = new axios.create({
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
+  timeout: 20000,
 });
-
-const CancelToken = axios.CancelToken;
-let cancel;
 
 /*
  * Returns the information under which address the backend is to be delivered.
@@ -66,32 +64,19 @@ switch (serverConfig.softwareDevelopState) {
 }
 
 export default {
-
   /**
-   * 
-   * @param {String} qId 
+   *
+   * @param {String} qId
    */
   async getOneQuestion(qId) {
     console.debug(`RestCall: getOneQuestion(${qId})`);
     return await client
-      .get(`/questionById/${qId}`, {
-        cancelToken: new CancelToken((c) => {
-          cancel = c;
-        }),
-      })
+      .get(`/questionById/${qId}`)
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
-        if (axios.isCancel(error)) {
-          console.log(error.message);
-        } else {
-          console.error('No Data: ', error);
-        }
         return null;
       });
   },
@@ -99,24 +84,12 @@ export default {
   async getAllQuestions() {
     console.debug('RestCall: getAllQuestions()');
     return await client
-      .get('/allQuestions', {
-        cancelToken: new CancelToken((c) => {
-          cancel = c;
-        }),
-      })
+      .get('/allQuestions')
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
-        if (axios.isCancel(error)) {
-          console.log(error.message);
-        } else {
-          console.error('No Data: ', error);
-        }
         return null;
       });
   },
@@ -126,56 +99,33 @@ export default {
     return await client
       .get(`/question/query/`, { params: { searchQuery } })
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
-        if (axios.isCancel(error)) {
-          console.log(error.message);
-        } else {
-          console.error('No Data: ', error);
-        }
         return new Array();
       });
   },
 
   async getAllAnswersToQuestions(questionId) {
     console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
-    await client
-      .get(`/answersByQuestionId/${questionId}`, {
-        cancelToken: new CancelToken((c) => {
-          cancel = c;
-        }),
-      })
+    return await client
+      .get(`/answersByQuestionId/${questionId}`)
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
-        if (axios.isCancel(error)) {
-          console.log(error.message);
-        } else {
-          console.error(error);
-        }
+        console.error(error);
         return null;
       });
   },
 
-  //TODO endpoint
+  //TODO endpoint warte noch auf hinweis
   async getOneAnswerToQuestion(ids) {
     console.debug(`RestCall: getOneAnswerToQuestion(${ids})`);
     return await client
       .get('/answer/answerTobeEdited', { ids })
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
@@ -190,9 +140,6 @@ export default {
     return await client
       .put('/answersByQuestionId/', updatedAnswer)
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
@@ -206,9 +153,6 @@ export default {
     return await client
       .get(`/commentsByAnswerId/${answerId}`)
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
@@ -220,15 +164,8 @@ export default {
   async getAllTags() {
     console.info('RestCall: getAllTags()');
     return await client
-      .get(`/getAllTags`, {
-        cancelToken: new CancelToken((c) => {
-          cancel = c;
-        }),
-      })
+      .get(`/getAllTags`)
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
@@ -243,11 +180,11 @@ export default {
   },
 
   /**
-   * 
-   * @param {*} newQuestion 
+   *
+   * @param {*} newQuestion
    */
   async addNewQuestion(newQuestion) {
-    console.debug(`RestCall: addNewQuestion(${newQuestion})`)
+    console.debug(`RestCall: addNewQuestion()`, newQuestion);
     return await client
       .post('/newQuestion', newQuestion)
       .then((response) => {
@@ -260,11 +197,11 @@ export default {
   },
 
   /**
-   * 
-   * @param {*} updatedQuestion 
+   *
+   * @param {*} updatedQuestion
    */
   async updateCurrentQuestion(updatedQuestion) {
-    console.debug(`RestCall: updateCurrentQuestion(${updatedQuestion})`)
+    console.debug(`RestCall: updateCurrentQuestion()`, updatedQuestion);
     return await client
       .put('/question', updatedQuestion)
       .then((response) => {
@@ -277,11 +214,11 @@ export default {
   },
 
   /**
-   * 
-   * @param {*} newQuestion 
+   *
+   * @param {*} newQuestion
    */
   async addNewAnswer(newQuestion) {
-    console.debug(`RestCall: addNewAnswer(${newQuestion})`)
+    console.debug(`RestCall: addNewAnswer(${newQuestion})`);
     return await client
       .post('/answer', newQuestion)
       .then((response) => {
@@ -294,11 +231,11 @@ export default {
   },
 
   /**
-   * 
-   * @param {Object} answer 
+   *
+   * @param {Object} answer
    */
   async increaseAnswerRating(answer) {
-    console.debug(`RestCall: increaseAnswerRating(${answer})`)
+    console.debug(`RestCall: increaseAnswerRating(${answer})`);
     return await client
       .post('/answer/increaseRating', answer)
       .then((response) => {
@@ -311,11 +248,11 @@ export default {
   },
 
   /**
-   * 
-   * @param {Object} newComment 
+   *
+   * @param {Object} newComment
    */
   async addNewComment(newComment) {
-    console.debug(`RestCall: addNewComment(${newComment})`)
+    console.debug(`RestCall: addNewComment(${newComment})`);
     return await client
       .post('/newComments', newComment)
       .then((response) => {
@@ -328,11 +265,11 @@ export default {
   },
 
   /**
-   * 
-   * @param {Object} comment 
+   *
+   * @param {Object} comment
    */
   async increaseCommentRating(comment) {
-    console.debug(`RestCall: increaseCommentRating(${comment})`)
+    console.debug(`RestCall: increaseCommentRating(${comment})`);
     return await client
       .post('/comment/increaseRating', comment)
       .then((response) => {
@@ -345,11 +282,11 @@ export default {
   },
 
   /**
-   * 
-   * @param {Object} question 
+   *
+   * @param {Object} question
    */
   async postNewQuestion(question) {
-    console.debug(`RestCall: postNewQuestion(${question})`)
+    console.debug(`RestCall: postNewQuestion(${question})`);
     return await client
       .post(`/newQuestion`, question)
       .then((response) => {
@@ -362,87 +299,52 @@ export default {
   },
 
   /**
-   * 
+   *
    */
   async getMostActiveQuestions() {
     console.debug('RestCall: getMostActiveQuestions()');
     return await client
-      .get('/question/getMostActiveQuestions', {
-        cancelToken: new CancelToken((c) => {
-          cancel = c;
-        }),
-      })
+      .get('/question/getMostActiveQuestions')
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
-        if (axios.isCancel(error)) {
-          console.log(error.message);
-        } else {
-          console.error('No Data: ', error);
-        }
         return null;
       });
   },
 
   /**
-   * 
+   *
    */
   async getCurrentTopics() {
     console.debug('RestCall: getCurrentTopics()');
     return await client
-      .get('/tagsWithMostQuestions', {
-        cancelToken: new CancelToken((c) => {
-          cancel = c;
-        }),
-      })
+      .get('/tagsWithMostQuestions')
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         console.warn('Topics', response.data);
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
-        if (axios.isCancel(error)) {
-          console.log(error.message);
-        } else {
-          console.error('No Data: ', error);
-        }
         return null;
       });
   },
 
   /**
-   * 
-   * @param {String} tag 
+   *
+   * @param {String} tag
    */
   async getQuestionBasedOnTopic(tag) {
     console.debug(`RestCall: getQuestionBasedOnTopic(${tag})`);
     return await client
-      .get(`/questionByTag/${tag}`, {
-        cancelToken: new CancelToken((c) => {
-          cancel = c;
-        }),
-      })
+      .get(`/questionByTag/${tag}`)
       .then((response) => {
-        if (response.data) {
-          cancel();
-        }
         console.warn('Topics', response.data);
         return response.data;
       })
       .catch((error) => {
-        if (axios.isCancel(error)) {
-          console.log(error.message);
-        } else {
-          console.error('No Data: ', error);
-        }
+        console.error('No Data: ', error);
         return null;
       });
   },

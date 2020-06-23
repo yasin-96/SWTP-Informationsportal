@@ -18,11 +18,7 @@
       </template>
 
       <!-- One answer to the question -->
-      <b-card  
-        class="mb-1"
-        footer-bg-border="white"
-        footer-border-variant="white"
-      >
+      <b-card class="mb-1" footer-bg-border="white" footer-border-variant="white">
         <b-card-text>
           <b-form-textarea id="textarea-plaintext" plaintext :rows="minCommentRows" :value="aContent"> </b-form-textarea>
           <b-button-group>
@@ -32,21 +28,19 @@
             <b-button size="sm" disabled variant="info">
               {{ aRating }}
             </b-button>
-          <b-button size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
+            <b-button size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
           </b-button-group>
         </b-card-text>
       </b-card>
 
       <b-card-body>
         <!-- Area for all Comments -->
-        <b-container>
+        <b-container v-if="isCommentsAreLoaded">
           <Comment :cComments="allComments" :cId="cId" />
         </b-container>
-        <b-container>
-        </b-container>
+        <b-container> </b-container>
       </b-card-body>
     </b-card>
-   
   </b-container>
 </template>
 
@@ -58,20 +52,17 @@ import { BIconClock, BIconChatSquareDots } from 'bootstrap-vue';
 
 export default {
   name: 'AnswerCard',
-  
   components: {
     Comment,
   },
-
   props: {
     nId: {
       type: String,
-      default: '',
+      required: true,
     },
     cId: {
       type: String,
-      default: '',
-
+      required: true,
     },
     aContent: {
       type: String,
@@ -86,7 +77,6 @@ export default {
       default: '',
     },
   },
-
   data() {
     return {
       minCommentRows: 3,
@@ -95,39 +85,42 @@ export default {
       changeAnswerObject: {
         id: '',
         listOfAnswers: [],
-        timeStamp: Date.parse(new Date())
+        timeStamp: Date.parse(new Date()),
       },
       newRating: Number(this.aRating) + 1,
-      reloadComponent: 0
     };
   },
-
-  async beforeMount() {
-    if (this.cId) {
-      await this.$store.dispatch('act_getAllComments', this.cId);
-    }
+  beforeMount() {
+    this.loadData();
   },
-
   methods: {
+    async loadData() {
+      if (this.cId) {
+        await this.$store.dispatch('act_getAllComments', this.cId);
+      }
+    },
+
     async increaseRating() {
       this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
       let currentDate = Date.parse(new Date());
       // let newRating = Number(this.aRating) + 1;
-      console.warn("NEW R", this.newRating);
+      console.warn('NEW R', this.newRating);
 
-      this.changeAnswerObject.listOfAnswers = [{
-        id: this.cId,
-        content: this.aContent,
-        rating: this.newRating,
-        timeStamp: currentDate,
-      }];
-      console.warn("INCRESE Rating AWT", this.changeAnswerObject);
+      this.changeAnswerObject.listOfAnswers = [
+        {
+          id: this.cId,
+          content: this.aContent,
+          rating: this.newRating,
+          timeStamp: currentDate,
+        },
+      ];
+      console.warn('INCRESE Rating AWT', this.changeAnswerObject);
       await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
-      
-      //reload page 
-      // this.$router.go();
+
+      //reload page
+      this.$router.go();
     },
-    editAnswer(){
+    editAnswer() {
       this.$router
         .push({
           path: '/answer/edit',
@@ -137,7 +130,7 @@ export default {
           },
         })
         .catch((err) => {});
-    }
+    },
   },
 
   computed: {
@@ -147,7 +140,7 @@ export default {
 
   watch: {
     allComments() {
-      if (this.allComments) {
+      if (this.allComments && this.allComments.length > 0) {
         this.isCommentsAreLoaded = true;
       } else {
         this.isCommentsAreLoaded = false;
