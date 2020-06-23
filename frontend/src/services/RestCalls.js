@@ -40,6 +40,9 @@ const client = new axios.create({
   },
 });
 
+const CancelToken = axios.CancelToken;
+let cancel;
+
 /*
  * Returns the information under which address the backend is to be delivered.
  * Depending on the start process. These are different under dev and prod.
@@ -63,71 +66,116 @@ switch (serverConfig.softwareDevelopState) {
 }
 
 export default {
+
+  /**
+   * 
+   * @param {String} qId 
+   */
   async getOneQuestion(qId) {
-    console.debug('RestCall: getOneQuestion()', qId);
+    console.debug(`RestCall: getOneQuestion(${qId})`);
     return await client
-      .get(`/questionById/${qId}`)
+      .get(`/questionById/${qId}`, {
+        cancelToken: new CancelToken((c) => {
+          cancel = c;
+        }),
+      })
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error('No Data: ', error);
+        }
         return null;
-      })
-      .finally(() => {
-        console.log('getOneQuestion() :> axios close ');
       });
   },
 
   async getAllQuestions() {
-    console.debug('getAllQuestions()');
+    console.debug('RestCall: getAllQuestions()');
     return await client
-      .get('/allQuestions')
+      .get('/allQuestions', {
+        cancelToken: new CancelToken((c) => {
+          cancel = c;
+        }),
+      })
       .then((response) => {
-        // console.log(response.data);
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error('No Data: ', error);
+        }
         return null;
       });
   },
 
   async getAllDataByQuery(searchQuery) {
-    console.debug('getAllDataByQuery()', searchQuery);
+    console.debug(`RestCall: getAllDataByQuery(${searchQuery})`);
     return await client
       .get(`/question/query/`, { params: { searchQuery } })
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error('No Data: ', error);
+        }
         return new Array();
       });
   },
 
   async getAllAnswersToQuestions(questionId) {
-    console.debug('getAllAnswersToQuestions():', questionId);
-    return await client
-      .get(`/answersByQuestionId/${questionId}`)
+    console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
+    await client
+      .get(`/answersByQuestionId/${questionId}`, {
+        cancelToken: new CancelToken((c) => {
+          cancel = c;
+        }),
+      })
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error(error);
+        }
         return null;
-      })
-      .finally(() => {
-        console.log('getAllAnswersToQuestions() :> axios close ');
       });
   },
 
   //TODO endpoint
   async getOneAnswerToQuestion(ids) {
-    console.debug('getOneAnswerToQuestion():', ids);
+    console.debug(`RestCall: getOneAnswerToQuestion(${ids})`);
     return await client
       .get('/answer/answerTobeEdited', { ids })
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
@@ -142,6 +190,9 @@ export default {
     return await client
       .put('/answersByQuestionId/', updatedAnswer)
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
@@ -151,10 +202,13 @@ export default {
   },
 
   async getAllCommentsToAnswers(answerId) {
-    console.info('getAllCommentsToAnswers()', answerId);
+    console.info(`RestCall: getAllCommentsToAnswers(${answerId})`);
     return await client
       .get(`/commentsByAnswerId/${answerId}`)
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
@@ -164,19 +218,36 @@ export default {
   },
 
   async getAllTags() {
-    console.info('getAllTags()');
+    console.info('RestCall: getAllTags()');
     return await client
-      .get(`/getAllTags`)
+      .get(`/getAllTags`, {
+        cancelToken: new CancelToken((c) => {
+          cancel = c;
+        }),
+      })
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error('No Data: ', error);
+        }
         return null;
       });
   },
 
+  /**
+   * 
+   * @param {*} newQuestion 
+   */
   async addNewQuestion(newQuestion) {
+    console.debug(`RestCall: addNewQuestion(${newQuestion})`)
     return await client
       .post('/newQuestion', newQuestion)
       .then((response) => {
@@ -188,7 +259,12 @@ export default {
       });
   },
 
+  /**
+   * 
+   * @param {*} updatedQuestion 
+   */
   async updateCurrentQuestion(updatedQuestion) {
+    console.debug(`RestCall: updateCurrentQuestion(${updatedQuestion})`)
     return await client
       .put('/question', updatedQuestion)
       .then((response) => {
@@ -200,7 +276,12 @@ export default {
       });
   },
 
+  /**
+   * 
+   * @param {*} newQuestion 
+   */
   async addNewAnswer(newQuestion) {
+    console.debug(`RestCall: addNewAnswer(${newQuestion})`)
     return await client
       .post('/answer', newQuestion)
       .then((response) => {
@@ -212,7 +293,12 @@ export default {
       });
   },
 
+  /**
+   * 
+   * @param {Object} answer 
+   */
   async increaseAnswerRating(answer) {
+    console.debug(`RestCall: increaseAnswerRating(${answer})`)
     return await client
       .post('/answer/increaseRating', answer)
       .then((response) => {
@@ -220,10 +306,16 @@ export default {
       })
       .catch((error) => {
         console.error(error);
+        return null;
       });
   },
 
+  /**
+   * 
+   * @param {Object} newComment 
+   */
   async addNewComment(newComment) {
+    console.debug(`RestCall: addNewComment(${newComment})`)
     return await client
       .post('/newComments', newComment)
       .then((response) => {
@@ -231,18 +323,33 @@ export default {
       })
       .catch((error) => {
         console.error(error);
+        return null;
       });
   },
 
+  /**
+   * 
+   * @param {Object} comment 
+   */
   async increaseCommentRating(comment) {
-    return await client.post('/comment/increaseRating', comment).then((response) => {
-      return response.data;
-    }).catch((error) => {
-      console.error('increaseCommentRating():', error);
-    });
+    console.debug(`RestCall: increaseCommentRating(${comment})`)
+    return await client
+      .post('/comment/increaseRating', comment)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('increaseCommentRating():', error);
+        return null;
+      });
   },
 
+  /**
+   * 
+   * @param {Object} question 
+   */
   async postNewQuestion(question) {
+    console.debug(`RestCall: postNewQuestion(${question})`)
     return await client
       .post(`/newQuestion`, question)
       .then((response) => {
@@ -254,37 +361,88 @@ export default {
       });
   },
 
+  /**
+   * 
+   */
   async getMostActiveQuestions() {
+    console.debug('RestCall: getMostActiveQuestions()');
     return await client
-      .get('/question/getMostActiveQuestions')
+      .get('/question/getMostActiveQuestions', {
+        cancelToken: new CancelToken((c) => {
+          cancel = c;
+        }),
+      })
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         return response.data;
       })
       .catch((error) => {
+        console.error('No Data: ', error);
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error('No Data: ', error);
+        }
         return null;
       });
   },
 
+  /**
+   * 
+   */
   async getCurrentTopics() {
+    console.debug('RestCall: getCurrentTopics()');
     return await client
-      .get('/tagsWithMostQuestions')
+      .get('/tagsWithMostQuestions', {
+        cancelToken: new CancelToken((c) => {
+          cancel = c;
+        }),
+      })
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         console.warn('Topics', response.data);
         return response.data;
       })
       .catch((error) => {
+        console.error('No Data: ', error);
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error('No Data: ', error);
+        }
         return null;
       });
   },
 
+  /**
+   * 
+   * @param {String} tag 
+   */
   async getQuestionBasedOnTopic(tag) {
+    console.debug(`RestCall: getQuestionBasedOnTopic(${tag})`);
     return await client
-      .get(`/questionByTag/${tag}`)
+      .get(`/questionByTag/${tag}`, {
+        cancelToken: new CancelToken((c) => {
+          cancel = c;
+        }),
+      })
       .then((response) => {
+        if (response.data) {
+          cancel();
+        }
         console.warn('Topics', response.data);
         return response.data;
       })
       .catch((error) => {
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error('No Data: ', error);
+        }
         return null;
       });
   },
