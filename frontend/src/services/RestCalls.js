@@ -124,7 +124,7 @@ export default {
   async getOneAnswerToQuestion(ids) {
     console.debug(`RestCall: getOneAnswerToQuestion(${ids})`);
     return await client
-      .get('/answer/answerTobeEdited', { ids })
+      .post('/answer/answerTobeEdited', ids )
       .then((response) => {
         return response.data;
       })
@@ -349,17 +349,17 @@ export default {
       });
   },
 
-  async getRendertHtmlFromMarkdown(mdText) {
-    console.debug('Parse MD');
-    return await axios({
-      methode: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      url: ' https://gitlab.com/api/v4/markdown',
-      data: { text: mdText, gfm: true },
-    }).then((response) => {
-      console.warn('Data raw', response);
-      console.warn('Data->data', response.data);
-      return response.data;
-    });
-  },
+  // async getRendertHtmlFromMarkdown(mdText) {
+  //   console.debug('Parse MD');
+  //   return await axios({
+  //     methode: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     url: ' https://gitlab.com/api/v4/markdown',
+  //     data: { text: mdText, gfm: true },
+  //   }).then((response) => {
+  //     console.warn('Data raw', response);
+  //     console.warn('Data->data', response.data);
+  //     return response.data;
+  //   });
+  // },
 };

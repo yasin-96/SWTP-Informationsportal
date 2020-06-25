@@ -35,7 +35,7 @@
 
       <b-card-body>
         <!-- Area for all Comments -->
-        <b-container v-if="isCommentsAreLoaded">
+        <b-container>
           <Comment :cComments="allComments" :cId="cId" />
         </b-container>
         <b-container> </b-container>
@@ -81,7 +81,6 @@ export default {
     return {
       minCommentRows: 3,
       maxCommentRows: 10,
-      isCommentsAreLoaded: false,
       changeAnswerObject: {
         id: '',
         listOfAnswers: [],
@@ -136,16 +135,6 @@ export default {
   computed: {
     ...mapActions(['act_getAllComments', 'increaseRatingForAnswer']),
     ...mapState(['allComments']),
-  },
-
-  watch: {
-    allComments() {
-      if (this.allComments && this.allComments.length > 0) {
-        this.isCommentsAreLoaded = true;
-      } else {
-        this.isCommentsAreLoaded = false;
-      }
-    },
   },
 };
 </script>
