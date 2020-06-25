@@ -13,7 +13,6 @@
             ><fai icon="clock" />
             {{ qDate }}
           </small>
-          <b-button v-if="qEdit" @click="editQuestion()"><fai icon="edit"></fai></b-button>
         </b-col>
       </b-row>
     </template>
@@ -26,7 +25,7 @@
     <!-- Question content -->
     <b-card-text>
       <!-- Displayed for edited/detailed view -->
-        <Editor v-show="displayContent" class="questionCardEditor" ref="mde" v-model="qContent" :configs="mdeConfig" />
+      <Editor v-show="displayContent" class="questionCardEditor" ref="mde" v-model="qContent" :configs="mdeConfig" />
     </b-card-text>
 
     <!-- Show all Tags from Question and its rating -->
@@ -39,7 +38,6 @@
 <script>
 import { BCard, BFormTags } from 'bootstrap-vue';
 import VueSimplemde from 'vue-simplemde';
-import {getRendertHtmlFromMarkdown} from '@/services/RestCalls.js';
 
 export default {
   name: 'QuestionCard',
@@ -94,12 +92,11 @@ export default {
         // styleSelectedText: false,
         shortcuts: {},
       },
-      test: ""
+      test: '',
     };
   },
   mounted() {
     this.$refs.mde.simplemde.togglePreview();
-    
   },
   data() {
     return {};
@@ -120,22 +117,22 @@ export default {
       return this.qTags.map((tag) => tag.name);
       this.test = getRendertHtmlFromMarkdown(this.qContent);
     },
-  }
+  },
 };
 </script>
 
 <style scoped>
 .questionCardEditor >>> .CodeMirror {
- background-color: #fff;
- border: none;
+  background-color: #fff;
+  border: none;
 }
 
-.questionCardEditor >>> .editor-preview, .editor-preview-side {
-    background: #fff;
+.questionCardEditor >>> .editor-preview,
+.editor-preview-side {
+  background: #fff;
 }
 
 .changeMouse {
   cursor: pointer;
 }
-
 </style>

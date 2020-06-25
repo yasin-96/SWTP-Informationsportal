@@ -47,7 +47,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 import QuestionCard from '@/components/QuestionCard';
-
+import VueSimplemde from 'vue-simplemde';
 export default {
   name: 'AnswerEditView',
   components: { QuestionCard },

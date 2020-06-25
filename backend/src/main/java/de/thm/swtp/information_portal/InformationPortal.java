@@ -61,9 +61,8 @@ public class InformationPortal extends WebSecurityConfigurerAdapter  {
 		// 	return new JwtAuthenticationToken(jwt);
 		// });
 		
-		http.cors().and().oauth2ResourceServer().jwt().jwtAuthenticationConverter((jwt) -> new JwtAuthenticationToken(jwt));
-
-		http.csrf().disable();
+		// http.cors().and().oauth2ResourceServer().jwt().jwtAuthenticationConverter((jwt) -> new JwtAuthenticationToken(jwt));
+		http.cors().and().csrf().disable();
 	}
 }
 
