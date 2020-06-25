@@ -40,6 +40,9 @@ const client = new axios.create({
   },
 });
 
+// const cancelToken = axios.CancelToken;
+// const source = cancelToken.source();
+
 /*
  * Returns the information under which address the backend is to be delivered.
  * Depending on the start process. These are different under dev and prod.
@@ -73,9 +76,8 @@ export default {
       .catch((error) => {
         console.error('No Data: ', error);
         return null;
-      })
-      .finally(() => {
-        console.log('getOneQuestion() :> axios close ');
+      }).finally(()=> {
+        console.log("getOneQuestion() :> axios close ");
       });
   },
 
@@ -96,8 +98,9 @@ export default {
   async getAllDataByQuery(searchQuery) {
     console.debug('getAllDataByQuery()', searchQuery);
     return await client
-      .get(`/question/query/`, { params: { searchQuery } })
+      .get(`/question/query/`,  { params: { searchQuery}})
       .then((response) => {
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -111,42 +114,14 @@ export default {
     return await client
       .get(`/answersByQuestionId/${questionId}`)
       .then((response) => {
+        // console.log('getAllAnswersToQuestions:', response.data);
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
         return null;
-      })
-      .finally(() => {
-        console.log('getAllAnswersToQuestions() :> axios close ');
-      });
-  },
-
-  //TODO endpoint
-  async getOneAnswerToQuestion(ids) {
-    console.debug('getOneAnswerToQuestion():', ids);
-    return await client
-      .get('/answer/answerTobeEdited', { ids })
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('No Data: ', error);
-        return null;
-      });
-  },
-
-  //TODO endpoint
-  async setOneAnswerToQuestion(updatedAnswer) {
-    console.debug('setOneAnswerToQuestion():', updatedAnswer);
-    return await client
-      .put('/answersByQuestionId/', updatedAnswer)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('No Data: ', error);
-        return null;
+      }).finally(()=> {
+        console.log("getAllAnswersToQuestions() :> axios close ");
       });
   },
 
@@ -155,11 +130,14 @@ export default {
     return await client
       .get(`/commentsByAnswerId/${answerId}`)
       .then((response) => {
+        console.warn('RESP:', response.data);
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
         return null;
+      }).finally(()=> {
+        console.log("getAllCommentsToAnswers() :> axios close ");
       });
   },
 
@@ -168,6 +146,7 @@ export default {
     return await client
       .get(`/getAllTags`)
       .then((response) => {
+        console.warn('RESP:', response);
         return response.data;
       })
       .catch((error) => {
@@ -177,9 +156,11 @@ export default {
   },
 
   async addNewQuestion(newQuestion) {
+    console.warn('newQuestion', newQuestion);
     return await client
       .post('/newQuestion', newQuestion)
       .then((response) => {
+        console.log('addNewQuestion', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -189,9 +170,11 @@ export default {
   },
 
   async updateCurrentQuestion(updatedQuestion) {
+    console.warn('updateCurrentQuestion', updatedQuestion);
     return await client
       .put('/question', updatedQuestion)
       .then((response) => {
+        console.log('updateCurrentQuestion', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -201,9 +184,11 @@ export default {
   },
 
   async addNewAnswer(newQuestion) {
+    console.warn('addNewAnswer()', newQuestion);
     return await client
       .post('/answer', newQuestion)
       .then((response) => {
+        console.log('addNewAnswer', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -213,79 +198,46 @@ export default {
   },
 
   async increaseAnswerRating(answer) {
-    return await client
-      .post('/answer/increaseRating', answer)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    console.warn("increaseAnswerRating()", answer);
+    try {
+      let serverResponse = await client.post('/answer/increaseRating', answer);
+      console.log("answer with increased comment", serverResponse.data);
+      return serverResponse.data;
+    } catch (error) {
+      console.error("increaseAnswerRating():", error)
+    }
   },
 
   async addNewComment(newComment) {
-    return await client
-      .post('/newComments', newComment)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    console.warn("addNewComment()", newComment);
+    try {
+      let serverResponse = await client.post('/newComments', newComment);
+      console.log("addNewComment", serverResponse.data);
+      return serverResponse.data;
+    } catch (error) {
+      console.error("addNewComment():", error)
+    }
   },
 
   async increaseCommentRating(comment) {
-    return await client.post('/comment/increaseRating', comment).then((response) => {
-      return response.data;
-    }).catch((error) => {
-      console.error('increaseCommentRating():', error);
-    });
+    console.warn("increaseCommentRating()", comment);
+    try {
+      let serverResponse = await client.post('/comment/increaseRating', comment);
+      console.log("comment with increased comment", serverResponse.data);
+      return serverResponse.data;
+    } catch (error) {
+      console.error("increaseCommentRating():", error)
+    }
   },
+
 
   async postNewQuestion(question) {
-    return await client
-      .post(`/newQuestion`, question)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error(error);
-        return null;
-      });
-  },
-
-  async getMostActiveQuestions() {
-    return await client
-      .get('/question/getMostActiveQuestions')
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        return null;
-      });
-  },
-
-  async getCurrentTopics() {
-    return await client
-      .get('/tagsWithMostQuestions')
-      .then((response) => {
-        console.warn('Topics', response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        return null;
-      });
-  },
-
-  async getQuestionBasedOnTopic(tag) {
-    return await client
-      .get(`/questionByTag/${tag}`)
-      .then((response) => {
-        console.warn('Topics', response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        return null;
-      });
-  },
+    try {
+      let serverResponse = await client.post(`/newQuestion`, question);
+      return serverResponse.data;
+    } catch (error) {
+      console.error(info.message);
+      return null;
+    }
+  }
 };

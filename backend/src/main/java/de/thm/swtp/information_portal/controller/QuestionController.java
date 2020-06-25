@@ -1,47 +1,48 @@
 package de.thm.swtp.information_portal.controller;
 
 
+import static java.util.stream.Collectors.toMap;
+
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-
-
-import de.thm.swtp.information_portal.models.Answer;
-import de.thm.swtp.information_portal.models.Answers;
-import de.thm.swtp.information_portal.models.Tag;
-import de.thm.swtp.information_portal.service.AnswerService;
-import de.thm.swtp.information_portal.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.models.Question;
+import de.thm.swtp.information_portal.service.AnswerService;
 import de.thm.swtp.information_portal.service.QuestionService;
-import java.util.Collections;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import static java.util.stream.Collectors.*;
+import lombok.var;
 
 
 
 @RestController
 @RequestMapping("/api")
 public class QuestionController {
-
-	@Autowired
-	private TagService tagService;
-
+	
 	@Autowired
 	private QuestionService questionService;
 
@@ -106,8 +107,6 @@ public class QuestionController {
 	@Async
 	@PutMapping("/question")
 	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException{
-		List<Tag> tagList = tagService.checkIfTagsExist(questionBody.getTags());
-		questionBody.setTags(tagList);
 		Question question = questionService.editQuestion(questionBody);
 		return CompletableFuture.completedFuture(ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question));
 	}
@@ -150,7 +149,7 @@ public class QuestionController {
 			answers.ifPresent(value -> myMap.put(item, value.getListOfAnswers().size()));
 		}
 			mostActiveQuestions = getListOfMostActiveQuestions(myMap);
-		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions, HttpStatus.OK));
+		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions,HttpStatus.OK));
 	}
 
 	public List<Question> getListOfMostActiveQuestions(Map<Question,Integer> myMap){

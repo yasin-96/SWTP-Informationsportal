@@ -32,7 +32,6 @@
             <b-button size="sm" disabled variant="info">
               {{ aRating }}
             </b-button>
-          <b-button size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
           </b-button-group>
         </b-card-text>
       </b-card>
@@ -71,7 +70,6 @@ export default {
     cId: {
       type: String,
       default: '',
-
     },
     aContent: {
       type: String,
@@ -104,7 +102,11 @@ export default {
 
   async beforeMount() {
     if (this.cId) {
-      await this.$store.dispatch('act_getAllComments', this.cId);
+      try {
+        await this.$store.dispatch('act_getAllComments', this.cId);
+      } catch (error) {
+        console.error(error.error);
+      }
     }
   },
 
@@ -125,18 +127,7 @@ export default {
       await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
       
       //reload page 
-      // this.$router.go();
-    },
-    editAnswer(){
-      this.$router
-        .push({
-          path: '/answer/edit',
-          query: {
-            qId: `${this.nId}`,
-            aId: `${this.cId}`,
-          },
-        })
-        .catch((err) => {});
+      this.$router.go();
     }
   },
 

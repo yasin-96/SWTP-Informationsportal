@@ -9,7 +9,7 @@
           <!-- <b-avatar variant="primary" text="BV"></b-avatar> -->
         </b-col>
         <b-col cols="9" sm="10" md="10" lg="11">
-          <strong>Frage</strong> erstell am <br /><small class="ml-3"
+          <strong>Frage</strong> vom User <br /><small class="ml-3"
             ><fai icon="clock" />
             {{ qDate }}
           </small>
@@ -82,6 +82,9 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {};
   },
   methods: {
     /**

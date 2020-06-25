@@ -1,9 +1,13 @@
 package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
 
+// import org.springframework.data.annotation.Id;
+// import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
@@ -12,7 +16,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Answer{
+public class Answer {
 	
 	
 	private String id;
@@ -34,5 +38,4 @@ public class Answer{
 		this.rating = rating;
 		this.timeStamp = Instant.now().getEpochSecond()*1000;
 	}
-
 }

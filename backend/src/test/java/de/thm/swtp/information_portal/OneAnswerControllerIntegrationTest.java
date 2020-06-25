@@ -7,6 +7,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.repositories.OneAnswerRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Disabled
 class OneAnswerControllerIntegrationTest {
 
 	@LocalServerPort

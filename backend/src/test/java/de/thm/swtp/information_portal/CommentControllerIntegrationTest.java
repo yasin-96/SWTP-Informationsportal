@@ -99,6 +99,21 @@ class CommentControllerIntegrationTest {
 				.postForEntity("http://localhost:" + port + "/api/newComments", comments , String.class);
 		Assertions.assertEquals(201, responseEntity.getStatusCodeValue());
 	}
+	
+	@Test
+	public void shouldincreaseCommentRatingIntegrationTest() throws Exception {		
+
+		Comments comments= new Comments(
+				Arrays.asList(new Comment("Comment3", "USER3" , 10),
+							  new Comment("Comment4", "USER4" , 20)), "2S");
+
+		commentRepository.save(comments);
+
+		ResponseEntity<String> responseEntity = this.restTemplate
+				.postForEntity("http://localhost:" + port + "/api/comment/increaseRating", comments, String.class);
+		Assertions.assertEquals(200, responseEntity.getStatusCodeValue());
+
+	}
 
 	/**
 	 * 

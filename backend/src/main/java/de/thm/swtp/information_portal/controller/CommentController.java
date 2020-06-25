@@ -3,16 +3,16 @@ package de.thm.swtp.information_portal.controller;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,14 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.thm.swtp.information_portal.models.Answer;
-import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.models.Comment;
 import de.thm.swtp.information_portal.models.Comments;
-import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.service.CommentService;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -57,21 +52,10 @@ public class CommentController {
 	@GetMapping("/commentsByAnswerId/{id}")
 	public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable String id)  throws InterruptedException {
 		Optional<Comments> comments = commentService.findByAnswerId(id);
-		if(comments.isPresent()){
-			List<Comment> allComments = comments.get().getComments();
-			allComments.sort(compareByRating);
-		}
 		ResponseEntity<Comments> resComments = comments.map(response -> ResponseEntity.ok().body(response))
-				.orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return CompletableFuture.completedFuture(resComments);
 	}
-
-	Comparator<Comment> compareByRating = new Comparator<Comment>() {
-		@Override
-		public int compare(Comment o1, Comment o2) {
-			return o2.getRating() - o1.getRating();
-		}
-	};
 
 	@Async
 	@PostMapping("/comment/increaseRating")
@@ -87,7 +71,7 @@ public class CommentController {
 		}));
 		commentsToBeModified.get().setComments(listOfComments);
 		ResponseEntity<Comments> comRes = commentsToBeModified.map(response -> ResponseEntity.ok().body(response))
-				.orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		commentService.postComments(commentsToBeModified.get());
 		return CompletableFuture.completedFuture(comRes);
 	}

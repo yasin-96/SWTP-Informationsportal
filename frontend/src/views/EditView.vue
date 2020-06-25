@@ -59,7 +59,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'QuestionEditView',
+  name: 'EditView',
   props: {
     id: {
       type: String,
