@@ -1,9 +1,12 @@
 package de.thm.swtp.information_portal;
 
+import static org.mockito.Mockito.when;
+
 /**
  * A Integration test : TagController
  */
 import java.net.URI;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 
+import de.thm.swtp.information_portal.models.Answer;
+import de.thm.swtp.information_portal.models.Answers;
+import de.thm.swtp.information_portal.models.Question;
 import de.thm.swtp.information_portal.models.Tag;
+import de.thm.swtp.information_portal.repositories.AnswerRepository;
+import de.thm.swtp.information_portal.repositories.QuestionRepository;
 import de.thm.swtp.information_portal.repositories.TagRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,9 +40,13 @@ class TagControllerIntegrationTest {
 	@Autowired
 	private TagRepository tagRepository ;
 
+	@Autowired
+	private QuestionRepository questionRepository;
+
 	@BeforeEach
 	public void Setup() {
 		tagRepository.deleteAll();
+		questionRepository.deleteAll();
 	}
 
 	/**
@@ -45,7 +57,7 @@ class TagControllerIntegrationTest {
 	@Order(1)
 	public void shouldGetAllTagsIntegrationTest() throws Exception{
 
-		
+
 		tagRepository.save(new Tag("Tag1"));
 		tagRepository.save(new Tag("Tag2"));
 		tagRepository.save(new Tag("Tag3"));
@@ -59,6 +71,28 @@ class TagControllerIntegrationTest {
 		Assertions.assertEquals("Tag1", tags[0].getName());
 	}
 
+	
+	@Test
+	@Order(3)
+	public void shouldGetTagsWithMostQuestionsIntegrationTest() throws Exception{
+
+		tagRepository.save(new Tag("Tag1")); 
+		tagRepository.save(new Tag("Tag2"));
+		tagRepository.save(new Tag("Tag3"));
+		
+		questionRepository.save(new Question("Header 1", "Content 1", Arrays.asList( new Tag("Tag 1"),new Tag("Tag 2"))));
+		questionRepository.save(new Question("Header 2", "Content 2", Arrays.asList( new Tag("Tag 3"),new Tag("Tag 4"))));
+
+
+		final String baseUrl = "http://localhost:" + port + "/api/tagsWithMostQuestions";
+		URI uri = new URI(baseUrl);
+		Tag[] tags= restTemplate.getForObject(uri, Tag[].class);
+
+		Assertions.assertNotNull(tags);	
+		Assertions.assertEquals(0 , tags.length);
+		//Assertions.assertEquals("Tag1", tags[0].getName());
+	}
+
 	/**
 	 * Test method for checkTags 
 	 * @throws Exception
@@ -70,7 +104,7 @@ class TagControllerIntegrationTest {
 		tagRepository.save(new Tag("Tag1"));
 		tagRepository.save(new Tag("Tag2"));
 		tagRepository.save(new Tag("Tag3"));
-		
+
 		final String baseUrl = "http://localhost:" + port + "/api/checkTags/Tag1" ;
 		URI uri = new URI(baseUrl);
 		Tag tag = restTemplate.getForObject(uri, Tag.class);

@@ -41,6 +41,9 @@ const client = new axios.create({
   timeout: 20000,
 });
 
+// const cancelToken = axios.CancelToken;
+// const source = cancelToken.source();
+
 /*
  * Returns the information under which address the backend is to be delivered.
  * Depending on the start process. These are different under dev and prod.
@@ -97,8 +100,9 @@ export default {
   async getAllDataByQuery(searchQuery) {
     console.debug(`RestCall: getAllDataByQuery(${searchQuery})`);
     return await client
-      .get(`/question/query/`, { params: { searchQuery } })
+      .get(`/question/query/`,  { params: { searchQuery}})
       .then((response) => {
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -112,6 +116,7 @@ export default {
     return await client
       .get(`/answersByQuestionId/${questionId}`)
       .then((response) => {
+        // console.log('getAllAnswersToQuestions:', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -153,11 +158,14 @@ export default {
     return await client
       .get(`/commentsByAnswerId/${answerId}`)
       .then((response) => {
+        console.warn('RESP:', response.data);
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
         return null;
+      }).finally(()=> {
+        console.log("getAllCommentsToAnswers() :> axios close ");
       });
   },
 
@@ -166,6 +174,7 @@ export default {
     return await client
       .get(`/getAllTags`)
       .then((response) => {
+        console.warn('RESP:', response);
         return response.data;
       })
       .catch((error) => {
@@ -188,6 +197,7 @@ export default {
     return await client
       .post('/newQuestion', newQuestion)
       .then((response) => {
+        console.log('addNewQuestion', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -205,6 +215,7 @@ export default {
     return await client
       .put('/question', updatedQuestion)
       .then((response) => {
+        console.log('updateCurrentQuestion', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -222,6 +233,7 @@ export default {
     return await client
       .post('/answer', newQuestion)
       .then((response) => {
+        console.log('addNewAnswer', response.data);
         return response.data;
       })
       .catch((error) => {

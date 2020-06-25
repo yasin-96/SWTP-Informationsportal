@@ -81,6 +81,8 @@ export default {
       } else {
         this.isDataLoaded.answers = false;
       }
+      console.warn("Data for Answer changed");
+      //  this.$mount();
     },
   },
 };
