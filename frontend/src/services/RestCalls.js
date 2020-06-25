@@ -348,4 +348,18 @@ export default {
         return null;
       });
   },
+
+  async getRendertHtmlFromMarkdown(mdText) {
+    console.debug('Parse MD');
+    return await axios({
+      methode: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      url: ' https://gitlab.com/api/v4/markdown',
+      data: { text: mdText, gfm: true },
+    }).then((response) => {
+      console.warn('Data raw', response);
+      console.warn('Data->data', response.data);
+      return response.data;
+    });
+  },
 };

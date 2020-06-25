@@ -25,4 +25,9 @@ body {
   padding: 0;
   margin: 0;
 }
+
+/* 
+.editor-preview .editor-preview-active >>> h1 {
+  font-size: 40px;
+} */
 </style>

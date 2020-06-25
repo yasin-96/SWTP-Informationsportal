@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\frontend"
+		},
+		{
+			"path": "..\\swtp-sose2020-gateway"
+		},
+		{
+			"path": "..\\swtp-sose2020-helloservice"
+		}
+	]
+}

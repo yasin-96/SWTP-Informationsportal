@@ -1,5 +1,5 @@
 <template>
-  <b-container class="mt-5" background="primary">
+  <b-container background="primary">
     <b-card border-variant="white">
       <b-row class="justify-content-xs-top justify-content-sm-center justify-content-center">
         <!-- Imgage for card -->
@@ -23,12 +23,11 @@
                   </b-col>
                 </b-row>
                 <b-row class="justify-content-center pt-4">
+                  <!-- <b-col xs="12" sm="12" md="12" lg="12">
+                    <b-form-textarea v-model="newQuestion.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true" placeholder="Eine genauere "></b-form-textarea>
+                  </b-col> -->
                   <b-col xs="12" sm="12" md="12" lg="12">
-                    <b-form-textarea v-model="newQuestion.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true" placeholder="Eine genauere Beschreibung ihrer Frage ..."></b-form-textarea>
-                  </b-col>
-                  <b-col xs="12" sm="12" md="12" lg="12">
-                    <editor v-model="newQuestion.content"
-                    />
+                    <editor v-model="newQuestion.content" :configs="mdeConfig"/>
                   </b-col>
                 </b-row>
 
@@ -53,9 +52,6 @@
         </b-col>
       </b-row>
     </b-card>
-    <div>
-      
-    </div>
   </b-container>
 </template>
 
@@ -75,9 +71,8 @@ export default {
         content: '',
         tags: [],
       },
-      mde: {
-        previewStyle : 'tab',
-        editType: 'wysiwyg'
+      mdeConfig: {
+        placeholder: "Beschreibung ihrer Frage ..."
       },
       editorOptions: {
 
@@ -140,4 +135,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>

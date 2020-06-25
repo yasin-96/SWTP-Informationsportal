@@ -25,8 +25,8 @@
 
     <!-- Question content -->
     <b-card-text>
-      <p v-if="qTrimText">{{ qContent.substr(0, qShowMaxText) + ' .....' }}</p>
-      <p v-else>{{ qContent }}</p>
+      <!-- Displayed for edited/detailed view -->
+        <Editor v-show="displayContent" class="questionCardEditor" ref="mde" v-model="qContent" :configs="mdeConfig" />
     </b-card-text>
 
     <!-- Show all Tags from Question and its rating -->
@@ -38,11 +38,15 @@
 
 <script>
 import { BCard, BFormTags } from 'bootstrap-vue';
+import VueSimplemde from 'vue-simplemde';
+import {getRendertHtmlFromMarkdown} from '@/services/RestCalls.js';
+
 export default {
   name: 'QuestionCard',
   components: {
     'b-card': BCard,
     'b-form-tags': BFormTags,
+    Editor: VueSimplemde,
   },
   props: {
     qId: {
@@ -60,7 +64,7 @@ export default {
     },
     qTags: {
       type: Array,
-      default: Array,
+      default: [],
     },
     qDate: {
       type: String,
@@ -74,7 +78,7 @@ export default {
       type: Number,
       default: 50,
     },
-    qTrimText: {
+    displayContent: {
       type: Boolean,
       default: false,
     },
@@ -82,6 +86,20 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  data() {
+    return {
+      mdeConfig: {
+        toolbar: null,
+        // styleSelectedText: false,
+        shortcuts: {},
+      },
+      test: ""
+    };
+  },
+  mounted() {
+    this.$refs.mde.simplemde.togglePreview();
+    
   },
   methods: {
     /**
@@ -97,13 +115,24 @@ export default {
   computed: {
     allTags() {
       return this.qTags.map((tag) => tag.name);
+      this.test = getRendertHtmlFromMarkdown(this.qContent);
     },
-  },
+  }
 };
 </script>
 
-<style>
+<style scoped>
+.questionCardEditor >>> .CodeMirror {
+ background-color: #fff;
+ border: none;
+}
+
+.questionCardEditor >>> .editor-preview, .editor-preview-side {
+    background: #fff;
+}
+
 .changeMouse {
   cursor: pointer;
 }
+
 </style>
