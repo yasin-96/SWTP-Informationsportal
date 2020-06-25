@@ -147,7 +147,7 @@ class QuestionControllerTest {
 		question.get().setHeader("Header 20");
 		List<Tag> tags = question.get().getTags();
 		tags.get(0).setName("tag 22");
-		tags.get(0).setCounter(122);
+	//	tags.get(0).setCounter(122);
 		question.get().setTags(tags);		
 		
 		MvcResult mvcResult = mockMvc.perform(

@@ -27,7 +27,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 //https://spring.io/guides/gs/async-method/
 @SpringBootApplication
 @EnableAsync
-public class InformationPortal extends WebSecurityConfigurerAdapter  {
+public class InformationPortal   {
 	public static void main(String[] args) {
 		SpringApplication.run(InformationPortal.class, args);
 	}
@@ -53,44 +53,28 @@ public class InformationPortal extends WebSecurityConfigurerAdapter  {
 	}
 
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		// http.cors().and().oauth2ResourceServer().jwt().jwtAuthenticationConverter((jwt) -> {
-		// 	System.out.println(jwt.getClaimAsString("name"));
 
-		// 	return new JwtAuthenticationToken(jwt);
-		// });
-		
-		// http.cors().and().oauth2ResourceServer().jwt().jwtAuthenticationConverter((jwt) -> new JwtAuthenticationToken(jwt));
-		http.cors().and().csrf().disable();
-	}
+
+
+
+ @Configuration
+ class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+	 @Override
+	 protected void configure(HttpSecurity http) throws Exception {
+		 http.authorizeRequests().anyRequest().permitAll()
+				 .and()
+				 .oauth2ResourceServer()
+				 .jwt()
+				 .jwtAuthenticationConverter(jwt -> {
+
+
+			 System.out.println(jwt.getClaimAsString("name"));
+			 return new JwtAuthenticationToken(jwt);
+		 });
+
+		 http.csrf().disable();
+	 }
+
+ }
 }
-
-
-// @Configuration
-// class SecurityConfig  {
-
-//     @Override
-//     protected void configure(HttpSecurity http) throws Exception {
-//         http.authorizeRequests().anyRequest().permitAll()
-//                 .and()
-//                 .oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwt -> {
-
-//                      /** Pseudocode .... Bearbeitung imer bei jedem Request
-//                      User user = userRepository.findById(jwt.getSubject());
-//                      if (user != null) {
-//                         ... Aktualisieren
-//                      } else {
-//                         ... Erstmalig speichern
-//                         userRepositry.save(new User(jwt.getSubject(), getClaimAsString("name")))
-//                      }
-
-//                     */
-
-//             System.out.println(jwt.getClaimAsString("name"));
-//             return new JwtAuthenticationToken(jwt);
-//         });
-
-//         http.csrf().disable();
-//     }
-// }
