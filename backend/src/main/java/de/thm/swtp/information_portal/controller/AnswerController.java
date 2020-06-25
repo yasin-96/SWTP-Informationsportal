@@ -58,7 +58,7 @@ public class AnswerController {
 	}
 
 	@Async
-	@GetMapping("/answer/answerTobeEdited")
+	@PostMapping("/answer/answerTobeEdited")
 	public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(@Valid @RequestBody String[] ids) {
 		Optional<Answers> answers = answerService.findByQuestionId(ids[0]);
 		List<Answer> answerList = answers.get().getListOfAnswers();
@@ -69,11 +69,7 @@ public class AnswerController {
 				
 			}
 		}
-		if(foundAnswer != null){
-			return CompletableFuture.completedFuture(new ResponseEntity<Answer>(foundAnswer, HttpStatus.OK));
-		} else {
-			return CompletableFuture.completedFuture(new ResponseEntity<Answer>(new Answer(), HttpStatus.NO_CONTENT));
-		}
+		return CompletableFuture.completedFuture(new ResponseEntity<Answer>(foundAnswer, HttpStatus.OK));
 	}
 
 
