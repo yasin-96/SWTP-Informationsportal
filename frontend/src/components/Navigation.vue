@@ -19,7 +19,7 @@
                 <b-avatar rounded variant="primary" text="BV"></b-avatar>
               </template>
               <b-dropdown-item href="#">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+              <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -33,7 +33,7 @@
                 <b-avatar variant="primary" text="BV"></b-avatar>
               </template>
               <b-dropdown-item href="#">Profile</b-dropdown-item>
-              <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+              <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-collapse>
         </b-navbar-nav>
@@ -45,9 +45,9 @@
           <b-navbar-nav class="mx-auto">
             <b-navbar-brand>Informationsportal</b-navbar-brand>
             <b-nav-item href="/home">Home</b-nav-item>
-            <b-nav-item href="/new">Neue Frage stellen</b-nav-item>
-            <b-nav-item href="/questions">Alle Fragen anzeigen</b-nav-item>
-            <b-nav-item href="/">Aktuelle Themen</b-nav-item>
+            <b-nav-item href="/new">New</b-nav-item>
+            <b-nav-item href="/questions">General</b-nav-item>
+            <b-nav-item href="/topics">Topics</b-nav-item>
             <b-nav-item href="/about">About</b-nav-item>
           </b-navbar-nav>
         </b-navbar>
@@ -59,13 +59,6 @@
 <script>
 import Searching from '@/components/Searching';
 import { BNavbar } from 'bootstrap-vue';
-
-// import Vue from 'vue'
-// import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
-
-// Vue.use(BootstrapVue)
-// Vue.use(BootstrapVueIcons)
-
 import { mapActions } from 'vuex';
 
 export default {

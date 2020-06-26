@@ -27,6 +27,9 @@
 
           <!-- Answer content -->
           <b-card-text>
+
+            <Editor v-model="currentAnswer.content"/>
+
             <b-form-textarea v-model="currentAnswer.content" :search-input.sync="currentAnswer.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true"></b-form-textarea>
           </b-card-text>
         </b-card>
@@ -35,7 +38,7 @@
     <!-- Save option -->
     <b-row class="justify-content-center pt-4">
       <b-col cols="12" sm="6" md="6" lg="6">
-        <b-button block variant="success" @click="sendUpdatedQuestion()">Save</b-button>
+        <b-button block variant="success" @click="sendUpdatedAnswer()">Save</b-button>
       </b-col>
       <b-col cols="12" sm="6" md="6" lg="6">
         <b-button block variant="danger" @click="goToDetailView()">Abort</b-button>
@@ -50,7 +53,7 @@ import QuestionCard from '@/components/QuestionCard';
 import VueSimplemde from 'vue-simplemde';
 export default {
   name: 'AnswerEditView',
-  components: { QuestionCard },
+  components: { QuestionCard, Editor: VueSimplemde},
   props: {
     qId: {
       type: String,
@@ -70,7 +73,7 @@ export default {
       componentCounter: 0,
       currentAnswer: {},
       updatedAnswer: {
-        id: '',
+        id: this.qId,
         listOfAnswers: [],
       },
     };
@@ -91,32 +94,26 @@ export default {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
     async sendUpdatedAnswer() {
-      if (this.contentForAnswer) {
+      if (this.currentAnswer.content) {
         this.updatedAnswer.listOfAnswers.push({
-          id: '',
-          content: this.contentForAnswer,
+          id: this.aId,
+          content: this.currentAnswer.content,
           rating: 0,
           timeStamp: Date.parse(new Date()),
         });
         let response = await this.$store.dispatch('act_updateAnswerFromQuestion', this.updatedAnswer);
-        // this.$router.go(`/question/${response.id}`);
+        this.$router.push(`/question/${response.id}`);
       }
     },
   },
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getOneAnswerToQuestion', 'act_updateAnswerFromQuestion']),
     ...mapState(['oneAnswer', 'oneQuestion']),
-
-    anser() {
-      if (!!this.oneAnswer) {
-      }
-    },
   },
   watch: {
-    answer() {
-      if (!!this.oneAnswer) {
-        return this.this.oneAnswer;
-        this.isAnswerLoaded = true;
+    oneAnswer() {
+      if (this.oneAnswer) {
+        this.currentAnswer = Object.assign({}, this.oneAnswer)
       }
     },
     oneQuestion() {

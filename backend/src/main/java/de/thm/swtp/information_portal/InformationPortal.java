@@ -62,7 +62,7 @@ public class InformationPortal   {
 
 	 @Override
 	 protected void configure(HttpSecurity http) throws Exception {
-		 http.authorizeRequests().anyRequest().permitAll()
+		 http.cors().and().authorizeRequests().anyRequest().permitAll()
 				 .and()
 				 .oauth2ResourceServer()
 				 .jwt()

@@ -18,9 +18,13 @@
       </template>
 
       <!-- One answer to the question -->
-      <b-card class="mb-1" footer-bg-border="white" footer-border-variant="white">
-        <b-card-text>
-          <b-form-textarea id="textarea-plaintext" plaintext :rows="minCommentRows" :value="aContent"> </b-form-textarea>
+      <!-- <b-card class="mb-1" footer-bg-border="white" footer-border-variant="white">
+        <b-card-text> -->
+          
+          <Editor ref="mde" class="answerCardEditor" v-model="aContent" :configs="mdeConfig"/>
+
+
+          <!-- <b-form-textarea id="textarea-plaintext" plaintext :rows="minCommentRows" :value="aContent"> </b-form-textarea> -->
           <b-button-group>
             <b-button size="sm" variant="info" @click="increaseRating()">
               <fai icon="thumbs-up" />
@@ -30,8 +34,8 @@
             </b-button>
             <b-button size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
           </b-button-group>
-        </b-card-text>
-      </b-card>
+        <!-- </b-card-text>
+      </b-card> -->
 
       <b-card-body>
         <!-- Area for all Comments -->
@@ -47,6 +51,7 @@
 <script>
 import Comment from '@/components/Comment';
 import { mapState, mapActions } from 'vuex';
+import VueSimplemde from 'vue-simplemde';
 
 import { BIconClock, BIconChatSquareDots } from 'bootstrap-vue';
 
@@ -54,6 +59,7 @@ export default {
   name: 'AnswerCard',
   components: {
     Comment,
+    Editor: VueSimplemde
   },
   props: {
     nId: {
@@ -87,10 +93,18 @@ export default {
         timeStamp: Date.parse(new Date()),
       },
       newRating: Number(this.aRating) + 1,
+      mdeConfig: {
+        toolbar: null,
+        // styleSelectedText: false,
+        shortcuts: {},
+      },
     };
   },
   beforeMount() {
     this.loadData();
+  },
+  mounted() {
+    this.$refs.mde.simplemde.togglePreview();
   },
   methods: {
     async loadData() {
@@ -117,7 +131,7 @@ export default {
       await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
 
       //reload page
-      this.$router.go();
+      this.$router.go(0);
     },
     editAnswer() {
       this.$router
@@ -139,4 +153,20 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+
+.answerCardEditor >>> .CodeMirror {
+  min-height: 0;
+  max-height: 250px;
+}
+
+.answerCardEditor >>> .CodeMirror {
+  background-color: #fff;
+  border: none;
+}
+
+.answerCardEditor >>> .editor-preview,
+.answerCardEditor >>> .editor-preview-side {
+  background: #fff;
+}
+</style>

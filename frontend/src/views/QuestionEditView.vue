@@ -51,6 +51,9 @@
         <b-button block variant="danger" @click="goToDetailView()">Abort</b-button>
       </b-col>
     </b-row>
+    <div>
+      <h1 data-sourcepos="1:1-1:8\">fgfdgd</h1><h2 data-sourcepos="2:1-2:9\">asdasd</h2><hr data-sourcepos="5:1-6:0\"><table data-sourcepos="7:1-10:34\"><thead><tr data-sourcepos="7:1-7:34\"><th data-sourcepos="7:2-7:11\">Column 1</th><th data-sourcepos="7:13-7:22\">Column 2</th><th data-sourcepos="7:24-7:33\">Column 3</th></tr></thead><tbody><tr data-sourcepos="9:1-9:34\"><td data-sourcepos="9:2-9:11\">John</td><td data-sourcepos="9:13-9:22\">Doe</td><td data-sourcepos="9:24-9:33\">Male</td></tr><tr data-sourcepos="10:1-10:34\"><td data-sourcepos="10:2-10:11\">Mary</td><td data-sourcepos="10:13-10:22\">Smith</td><td data-sourcepos="10:24-10:33\">Female</td></tr></tbody></table><p data-sourcepos="12:1-12:34\">Or without aligning the columns...</p><table data-sourcepos="14:1-17:25\"><thead><tr data-sourcepos="14:1-14:34\"><th data-sourcepos="14:2-14:11\">Column 1</th><th data-sourcepos="14:13-14:22\">Column 2</th><th data-sourcepos="14:24-14:33\">Column 3</th></tr></thead><tbody><tr data-sourcepos="16:1-16:21\"><td data-sourcepos="16:2-16:7\">John</td><td data-sourcepos="16:9-16:13\">Doe</td><td data-sourcepos="16:15-16:20\">Male</td></tr><tr data-sourcepos="17:1-17:25\"><td data-sourcepos="17:2-17:7\">Mary</td><td data-sourcepos="17:9-17:15\">Smith</td><td data-sourcepos="17:17-17:24\">Female</td></tr></tbody></table><p data-sourcepos="20:1-20:6\">:tada:</p>\n<p data-sourcepos="23:1-23:159\"><img src="http://image.jimcdn.com/app/cms/image/transf/dimension=1920x400:format=jpg/path/sff0b929dc64ab22e/image/i9e9dc80402e9026a/version/1557436730/image.jpg\" alt="test\"></p>
+    </div>
   </b-container>
 </template>
 

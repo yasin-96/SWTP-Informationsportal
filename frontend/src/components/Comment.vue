@@ -126,7 +126,7 @@ export default {
 
       //reload page
       console.log('cardID', comment.id);
-      this.$router.go();
+      this.$router.go(0);
     },
   },
   computed: {

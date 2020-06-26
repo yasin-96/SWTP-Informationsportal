@@ -24,6 +24,7 @@ const serverConfig = {
   apiPort: process.env.VUE_APP_API_PORT,
   apiInterface: process.env.VUE_APP_API_INTERFACE,
   apiUrl: process.env.VUE_APP_API_URL,
+  // apiAddress: process.env.VUE_APP_API_UI_URL,
   apiAddress: process.env.VUE_APP_API_URL,
   softwareDevelopState: process.env.VUE_APP_API_STATE,
 };
@@ -40,9 +41,6 @@ const client = new axios.create({
   },
   timeout: 20000,
 });
-
-// const cancelToken = axios.CancelToken;
-// const source = cancelToken.source();
 
 /*
  * Returns the information under which address the backend is to be delivered.
@@ -100,9 +98,8 @@ export default {
   async getAllDataByQuery(searchQuery) {
     console.debug(`RestCall: getAllDataByQuery(${searchQuery})`);
     return await client
-      .get(`/question/query/`,  { params: { searchQuery}})
+      .get(`/question/query/`, { params: { searchQuery } })
       .then((response) => {
-        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -116,7 +113,6 @@ export default {
     return await client
       .get(`/answersByQuestionId/${questionId}`)
       .then((response) => {
-        // console.log('getAllAnswersToQuestions:', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -126,11 +122,12 @@ export default {
   },
 
   //TODO endpoint warte noch auf hinweis
-  async getOneAnswerToQuestion(ids) {
-    console.debug(`RestCall: getOneAnswerToQuestion(${ids})`);
+  async getOneAnswerToQuestion(id) {
+    console.debug(`RestCall: getOneAnswerToQuestion(${id})`,id);
     return await client
-      .post('/answer/answerTobeEdited', ids )
+      .post('/answer/answerTobeEdited', id.ids )
       .then((response) => {
+        console.log(response.data)
         return response.data;
       })
       .catch((error) => {
@@ -143,7 +140,7 @@ export default {
   async setOneAnswerToQuestion(updatedAnswer) {
     console.debug('setOneAnswerToQuestion():', updatedAnswer);
     return await client
-      .put('/answersByQuestionId/', updatedAnswer)
+      .put('/answer/', updatedAnswer)
       .then((response) => {
         return response.data;
       })
@@ -158,14 +155,11 @@ export default {
     return await client
       .get(`/commentsByAnswerId/${answerId}`)
       .then((response) => {
-        console.warn('RESP:', response.data);
         return response.data;
       })
       .catch((error) => {
         console.error('No Data: ', error);
         return null;
-      }).finally(()=> {
-        console.log("getAllCommentsToAnswers() :> axios close ");
       });
   },
 
@@ -174,7 +168,6 @@ export default {
     return await client
       .get(`/getAllTags`)
       .then((response) => {
-        console.warn('RESP:', response);
         return response.data;
       })
       .catch((error) => {
@@ -197,7 +190,6 @@ export default {
     return await client
       .post('/newQuestion', newQuestion)
       .then((response) => {
-        console.log('addNewQuestion', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -215,7 +207,6 @@ export default {
     return await client
       .put('/question', updatedQuestion)
       .then((response) => {
-        console.log('updateCurrentQuestion', response.data);
         return response.data;
       })
       .catch((error) => {
@@ -233,7 +224,6 @@ export default {
     return await client
       .post('/answer', newQuestion)
       .then((response) => {
-        console.log('addNewAnswer', response.data);
         return response.data;
       })
       .catch((error) => {
