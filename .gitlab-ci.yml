@@ -1,17 +1,17 @@
-image: openjdk:11-jdk
+#image: openjdk:11-jdk
 
-stages:
-  - build-backend
-  - deliver
-  - deploy
+#stages:
+#  - build-backend
+#  - deliver
+#  - deploy
 
 before_script:
   - chmod +x mvnw
 
-build_backend:
+job1:
   stage: build-backend
   script:
-    - ./mvnw test
+    - ./mvn test
   only:
     changes:
       - ./backend/
