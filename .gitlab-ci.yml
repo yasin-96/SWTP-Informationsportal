@@ -1,3 +1,5 @@
+image: openjdk:11-jdk
+
 stages:
   - build-backend
   - deliver
@@ -7,10 +9,9 @@ before_script:
   - chmod +x mvnw
 
 build_backend:
-  image: openjdk:11-jdk
   stage: build-backend
   script:
-    - ./gradlew build -x test
+    - ./mvnw test
   only:
     changes:
       - ./backend/
