@@ -6,9 +6,9 @@
 #  - deploy
 
 before_script:
-  - chmod +x mvnw
+  - chmod +x mvn
 
-job1:
+job:
   stage: build-backend
   script:
     - ./mvn test
