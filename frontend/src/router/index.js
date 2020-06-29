@@ -17,7 +17,7 @@ Vue.use(VueRouter );
 export default new VueRouter ({
   mode: 'history',
   // eslint-disable-next-line no-undef
-  // base: '',
+  base: '/info-portal',
   // other options could be: 'reload', 'throw' and default to `throw` to avoid breaking changes
   duplicateNavigationPolicy: 'reload',
   routes: [

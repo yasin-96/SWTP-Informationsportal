@@ -24,8 +24,8 @@ const serverConfig = {
   apiPort: process.env.VUE_APP_API_PORT,
   apiInterface: process.env.VUE_APP_API_INTERFACE,
   apiUrl: process.env.VUE_APP_API_URL,
-  // apiAddress: process.env.VUE_APP_API_UI_URL,
-  apiAddress: process.env.VUE_APP_API_URL,
+  apiAddress: process.env.VUE_APP_API_UI_URL,
+  // apiAddress: process.env.VUE_APP_API_URL,
   softwareDevelopState: process.env.VUE_APP_API_STATE,
 };
 
@@ -364,4 +364,14 @@ export default {
   //     return response.data;
   //   });
   // },
+
+  async getUserInfo(){
+    console.log('userinfo:');
+
+    await client.get("/user").then((response)=>{
+      console.log(response.data);
+    }).catch((error)=> {
+      console.error(error);
+    });
+  }
 };

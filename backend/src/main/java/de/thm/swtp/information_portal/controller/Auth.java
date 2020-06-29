@@ -28,9 +28,9 @@ import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 @RequestMapping("/api")
 public class Auth {
 
-    @GetMapping("/auth")
+    @GetMapping("/user")
     public String checkAuth(@AuthenticationPrincipal Jwt jwt) {
-        return jwt.getClaimAsString("name");
+        return jwt.getClaims().toString();
     }
 
 }

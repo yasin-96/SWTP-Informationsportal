@@ -10,10 +10,14 @@
 
 <script>
 import Navigation from "@/components/Navigation";
+import RestCalls from "@/services/RestCalls"
 
 export default {
   name: 'App',
   components: { Navigation },
+  created() {
+    RestCalls.getUserInfo();
+  }
 }
 </script>
 
