@@ -3,7 +3,6 @@ stages:
   - test
 
 job 0:
-  image: openjdk:11-jdk
   stage: build
   script:
     - ./mvnw clean install
