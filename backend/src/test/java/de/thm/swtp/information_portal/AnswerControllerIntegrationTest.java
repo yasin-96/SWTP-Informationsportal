@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;

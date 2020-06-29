@@ -12,7 +12,6 @@ import de.thm.swtp.information_portal.models.User;
 import de.thm.swtp.information_portal.repositories.UserRepository;
 import de.thm.swtp.information_portal.service.UserService;
 
-
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 

@@ -7,11 +7,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().authorizeRequests().anyRequest().permitAll()
+        http.cors().and().authorizeRequests().anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer()
                 .jwt()
@@ -24,9 +25,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             System.out.println("Lastname: "+jwt.getClaimAsString("family_name"));
             System.out.println("Username: " +jwt.getClaimAsString("preferred_username"));
             System.out.println("Email: "+jwt.getClaimAsString("email"));
+
+
+            
+
             return new JwtAuthenticationToken(jwt);
         });
-
-        http.csrf().disable();
+        http.sessionManagement();
+        // http.httpBasic();
+        // http.csrf().disable();
     }
 }

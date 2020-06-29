@@ -49,7 +49,7 @@ public class QuestionService {
 
 	public Question postQuestion(Question question) {
 		List<Tag> newQuestionTags = tagService.checkIfTagsExist(question.getTags());
-		Question newQuestion = new Question(question.getHeader(), question.getContent(), newQuestionTags, question.getUserName());
+		Question newQuestion = new Question(question.getHeader(), question.getContent(), newQuestionTags, question.getUserId());
 		return questionRepository.save(newQuestion);
 	}
 

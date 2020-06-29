@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,11 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.thm.swtp.information_portal.models.Answer;
-import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.models.Comment;
 import de.thm.swtp.information_portal.models.Comments;
-import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.service.CommentService;
 
 import javax.validation.Valid;
@@ -55,9 +53,10 @@ public class CommentController {
 	 */
 	@Async
 	@GetMapping("/commentsByAnswerId/{id}")
-	public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable String id)  throws InterruptedException {
+	public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable String id)
+			throws InterruptedException {
 		Optional<Comments> comments = commentService.findByAnswerId(id);
-		if(comments.isPresent()){
+		if (comments.isPresent()) {
 			List<Comment> allComments = comments.get().getComments();
 			allComments.sort(compareByRating);
 		}
@@ -75,14 +74,14 @@ public class CommentController {
 
 	@Async
 	@PostMapping("/comment/increaseRating")
-	public CompletableFuture<ResponseEntity<Comments>> increaseCommentRating(@Valid @RequestBody Comments commentList){
+	public CompletableFuture<ResponseEntity<Comments>> increaseCommentRating(@Valid @RequestBody Comments commentList) {
 		Optional<Comments> commentsToBeModified = commentService.findByAnswerId(commentList.getId());
 		Comment modifiedComment = commentList.getComments().get(0);
 		List<Comment> listOfComments = commentsToBeModified.get().getComments();
 		listOfComments.forEach((item -> {
-			if(item.getId().equals(modifiedComment.getId())){
+			if (item.getId().equals(modifiedComment.getId())) {
 				int index = listOfComments.indexOf(item);
-				listOfComments.set(index,modifiedComment);
+				listOfComments.set(index, modifiedComment);
 			}
 		}));
 		commentsToBeModified.get().setComments(listOfComments);
@@ -91,7 +90,6 @@ public class CommentController {
 		commentService.postComments(commentsToBeModified.get());
 		return CompletableFuture.completedFuture(comRes);
 	}
-
 
 	/**
 	 * 
@@ -102,13 +100,14 @@ public class CommentController {
 	 */
 	@Async
 	@PostMapping("/newComments")
-	public CompletableFuture<ResponseEntity<Comments>> postComments(@RequestBody Comments commentList)
+	public CompletableFuture<ResponseEntity<Comments>> postComments(@RequestBody Comments commentList, @AuthenticationPrincipal Jwt jwt)
 			throws URISyntaxException, InterruptedException {
 		Optional<Comments> comments = commentService.findByAnswerId(commentList.getId());
 		Comment existingComment = commentList.getComments().get(0);
 		if (!comments.isPresent()) {
 			List<Comment> newCommentList = new ArrayList<Comment>();
-			Comment newComment = new Comment(existingComment.getContent(),existingComment.getUserName(),existingComment.getRating());
+			Comment newComment = new Comment(existingComment.getContent(), jwt.getClaimAsString("sub"),
+					existingComment.getRating());
 			newCommentList.add(newComment);
 			Comments newComments = new Comments(newCommentList, commentList.getId());
 			commentService.postComments(newComments);
@@ -118,7 +117,8 @@ public class CommentController {
 
 		else {
 			List<Comment> commentsPresent = comments.get().getComments();
-			Comment newComment = new Comment(existingComment.getContent(),existingComment.getUserName(),existingComment.getRating());
+			Comment newComment = new Comment(existingComment.getContent(), jwt.getClaimAsString("sub"),
+					existingComment.getRating());
 			commentsPresent.add(newComment);
 			comments.get().setComments(commentsPresent);
 			commentService.postComments(comments.get());

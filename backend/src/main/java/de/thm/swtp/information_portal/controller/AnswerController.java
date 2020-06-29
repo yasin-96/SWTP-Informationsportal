@@ -5,11 +5,12 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import de.thm.swtp.information_portal.models.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Answer;
@@ -17,8 +18,6 @@ import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.service.AnswerService;
 
 import javax.validation.Valid;
-
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 @RestController
 @RequestMapping("/api")
@@ -36,12 +35,12 @@ public class AnswerController {
 	 */
 	@Async
 	@PostMapping("/answer")
-	public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList)
+	public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList, @AuthenticationPrincipal Jwt jwt)
 			throws URISyntaxException, InterruptedException {
 		Optional<Answers> answers = answerService.findByQuestionId(answerList.getId());
 		if (answers.isEmpty()) {
 			List<Answer> newAnswerList = new ArrayList<Answer>();
-			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), 0);
+			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), jwt.getClaimAsString("sub"),0);
 			newAnswerList.add(newAnswer);
 			Answers newAnswers = new Answers(newAnswerList, answerList.getId());
 			answerService.postAnswer(newAnswers);
@@ -49,7 +48,7 @@ public class AnswerController {
 					ResponseEntity.created(new URI("/api/answer" + newAnswers.getId())).body(newAnswers));
 		} else {
 			List<Answer> answersPresent = answers.get().getListOfAnswers();
-			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), 0);
+			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), jwt.getClaimAsString("sub"), 0);
 			answersPresent.add(newAnswer);
 			answerService.postAnswer(answers.get());
 			return CompletableFuture.completedFuture(
@@ -63,33 +62,33 @@ public class AnswerController {
 		Optional<Answers> answers = answerService.findByQuestionId(ids[0]);
 		List<Answer> answerList = answers.get().getListOfAnswers();
 		var foundAnswer = new Answer();
-		for(var answer : answerList){
-			if(answer.getId().equals(ids[1])){
+		for (var answer : answerList) {
+			if (answer.getId().equals(ids[1])) {
 				foundAnswer = answer;
-				
+
 			}
 		}
 		return CompletableFuture.completedFuture(new ResponseEntity<Answer>(foundAnswer, HttpStatus.OK));
 	}
 
-
 	@Async
 	@PutMapping("/answer")
-	public CompletableFuture<ResponseEntity<Answers>> editAnswer(@Valid @RequestBody Answers answersBody) throws URISyntaxException{
+	public CompletableFuture<ResponseEntity<Answers>> editAnswer(@Valid @RequestBody Answers answersBody)
+			throws URISyntaxException {
 		Optional<Answers> answersToBeModified = answerService.findByQuestionId(answersBody.getId());
 		Answer modifiedAnswer = answersBody.getListOfAnswers().get(0);
 		List<Answer> listOfAnswers = answersToBeModified.get().getListOfAnswers();
-		listOfAnswers.forEach((item-> {
-			if(item.getId().equals(modifiedAnswer.getId())){
+		listOfAnswers.forEach((item -> {
+			if (item.getId().equals(modifiedAnswer.getId())) {
 				int index = listOfAnswers.indexOf(item);
-				listOfAnswers.set(index,modifiedAnswer);
+				listOfAnswers.set(index, modifiedAnswer);
 			}
 		}));
 		answersToBeModified.get().setListOfAnswers(listOfAnswers);
 		answerService.postAnswer(answersToBeModified.get());
-		return CompletableFuture.completedFuture(ResponseEntity.created(new URI("/api/answer/" + answersToBeModified.get().getId())).body(answersToBeModified.get()));
+		return CompletableFuture.completedFuture(ResponseEntity
+				.created(new URI("/api/answer/" + answersToBeModified.get().getId())).body(answersToBeModified.get()));
 	}
-
 
 	/**
 	 * 
@@ -100,9 +99,10 @@ public class AnswerController {
 	 */
 	@Async
 	@GetMapping("/answersByQuestionId/{id}")
-	public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable String id) throws InterruptedException, InterruptedException {
+	public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable String id)
+			throws InterruptedException, InterruptedException {
 		Optional<Answers> answers = answerService.findByQuestionId(id);
-		if(answers.isPresent()) {
+		if (answers.isPresent()) {
 			List<Answer> allAnswers = answers.get().getListOfAnswers();
 			allAnswers.sort(compareByRating);
 		}
@@ -120,14 +120,14 @@ public class AnswerController {
 
 	@Async
 	@PostMapping("/answer/increaseRating")
-	public CompletableFuture<ResponseEntity<Answers>> increaseAnswerRating(@RequestBody Answers answerList){
+	public CompletableFuture<ResponseEntity<Answers>> increaseAnswerRating(@RequestBody Answers answerList) {
 		Optional<Answers> answersToBeModified = answerService.findByQuestionId(answerList.getId());
 		Answer modifiedAnswer = answerList.getListOfAnswers().get(0);
 		List<Answer> listOfAnswers = answersToBeModified.get().getListOfAnswers();
 		listOfAnswers.forEach((item -> {
-			if(item.getId().equals(modifiedAnswer.getId())){
+			if (item.getId().equals(modifiedAnswer.getId())) {
 				int index = listOfAnswers.indexOf(item);
-				listOfAnswers.set(index,modifiedAnswer);
+				listOfAnswers.set(index, modifiedAnswer);
 			}
 		}));
 		answersToBeModified.get().setListOfAnswers(listOfAnswers);

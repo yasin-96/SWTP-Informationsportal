@@ -13,13 +13,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Data
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
 @Document(collection = "question")
 public class Question {
-	
+
 	// UUID for every question
-	
 	private String id;
 
 	// the question asked by any person
@@ -27,22 +29,22 @@ public class Question {
 
 	// a more detailed description of the question asked
 	private String content;
-	
-	//private User frageSteller;
-	private String userName;
+
+	// Creator of this Queston ->
+	private String userId;
 
 	// keywords for this question
 	private List<Tag> tags;
 
-	//save currentdate in unix timestamp 
+	// save currentdate in unix timestamp
 	private Long timeStamp;
 
-	public Question(String header, String content, List<Tag> tags, String userName) {
+	public Question(String header, String content, List<Tag> tags, String userId) {
 		this.id = UUID.randomUUID().toString();
 		this.header = header;
 		this.content = content;
 		this.tags = tags;
-		this.timeStamp = Instant.now().getEpochSecond()*1000;
-		this.userName = userName;
+		this.timeStamp = Instant.now().getEpochSecond() * 1000;
+		this.userId = userId;
 	}
 }
