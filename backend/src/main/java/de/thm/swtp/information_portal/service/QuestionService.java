@@ -11,7 +11,6 @@ import de.thm.swtp.information_portal.models.Question;
 import de.thm.swtp.information_portal.models.Tag;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 import de.thm.swtp.information_portal.repositories.TagRepository;
-import lombok.experimental.PackagePrivate;
 
 @Service
 public class QuestionService {
@@ -50,7 +49,7 @@ public class QuestionService {
 
 	public Question postQuestion(Question question) {
 		List<Tag> newQuestionTags = tagService.checkIfTagsExist(question.getTags());
-		Question newQuestion = new Question(question.getHeader(), question.getContent(), newQuestionTags);
+		Question newQuestion = new Question(question.getHeader(), question.getContent(), newQuestionTags, question.getUserName());
 		return questionRepository.save(newQuestion);
 	}
 
