@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Question;
@@ -98,8 +100,11 @@ public class QuestionController {
 	 */
 	@Async
 	@PostMapping("/newQuestion")
-	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Valid @RequestBody Question questionBody) throws URISyntaxException, InterruptedException{
-		Question question = questionService.postQuestion(questionBody);
+	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Valid @RequestBody Question questionBody, Jwt jwt) throws URISyntaxException, InterruptedException{
+
+		Question quest = new Question(questionBody.getHeader(), questionBody.getContent(), questionBody.getTags(), jwt.getClaim("sub"));
+
+		Question question = questionService.postQuestion(quest);
 		return CompletableFuture.completedFuture( ResponseEntity.created(new URI("/api/question" + question.getId())).body(question));
 	}
 
