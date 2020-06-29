@@ -29,20 +29,20 @@ public class Question {
 	private String content;
 	
 	//private User frageSteller;
+	private String userName;
 
 	// keywords for this question
 	private List<Tag> tags;
 
 	//save currentdate in unix timestamp 
 	private Long timeStamp;
-	
-	public Question(String header, String content, List<Tag> tags) {
+
+	public Question(String header, String content, List<Tag> tags, String userName) {
 		this.id = UUID.randomUUID().toString();
 		this.header = header;
 		this.content = content;
 		this.tags = tags;
 		this.timeStamp = Instant.now().getEpochSecond()*1000;
+		this.userName = userName;
 	}
-	
-	
 }
