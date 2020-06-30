@@ -101,7 +101,7 @@ export default {
       }
     },
     goToDetailView() {
-      this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
+      this.$router.push(`/info-portal/question/${this.$props.qId}`).catch((err) => {});
     },
     async sendUpdatedQuestion() {
       console.warn('QID in EDIT', this.question);

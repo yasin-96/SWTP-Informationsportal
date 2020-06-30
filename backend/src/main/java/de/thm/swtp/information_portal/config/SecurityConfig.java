@@ -1,38 +1,51 @@
 package de.thm.swtp.information_portal.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().authorizeRequests().anyRequest().authenticated()
-                .and()
+        // http.cors().and().authorizeRequests().anyRequest().authenticated().and()
+        
+        http.authorizeRequests().anyRequest().permitAll().and()
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwt -> {
-            System.out.println(jwt.toString());
-            System.out.println(jwt.getClaims().toString());
-            System.out.println("Fullname: " +jwt.getClaimAsString("name"));
-
-            System.out.println("Firstname: "+ jwt.getClaimAsString("given_name"));
-            System.out.println("Lastname: "+jwt.getClaimAsString("family_name"));
-            System.out.println("Username: " +jwt.getClaimAsString("preferred_username"));
-            System.out.println("Email: "+jwt.getClaimAsString("email"));
-
-
+                    
+                    try {
+                        System.out.println("TOKEN: "+ jwt.getTokenValue());
+                        System.out.println(jwt.getClaims().toString());
+                        // System.out.println("\nname: " +jwt.getClaimAsString("name"));
             
-
-            return new JwtAuthenticationToken(jwt);
+                        // System.out.println("given-name: "+ jwt.getClaimAsString("given_name"));
+                        // System.out.println("family-name: "+jwt.getClaimAsString("family_name"));
+                        // System.out.println("preferred-username: " +jwt.getClaimAsString("preferred_username"));
+                        // System.out.println("email: "+jwt.getClaimAsString("email"));
+            
+                       
+                    } catch(Exception e){
+                        e.printStackTrace();
+                    } 
+                    var jwtAuthTOken = new JwtAuthenticationToken(jwt);
+                    System.out.println("NEW Auth-TOKEN  "+ jwtAuthTOken);
+                    jwtAuthTOken.setAuthenticated(true);
+                    return jwtAuthTOken;
+           
         });
-        http.sessionManagement();
-        // http.httpBasic();
-        // http.csrf().disable();
+        http.csrf().disable();
     }
+
+    @Bean
+    public RequestContextListener requestContextListener(){
+        return new RequestContextListener();
+    } 
 }

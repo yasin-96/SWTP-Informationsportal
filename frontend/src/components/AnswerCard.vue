@@ -9,7 +9,7 @@
             <h1><fai icon="user-circle" /></h1>
           </b-col>
           <b-col cols="9" sm="10" md="10" lg="11">
-            <strong>Antwort</strong> vom User <br /><small class="ml-3">
+            <strong>Antwort</strong> von {{aUserId}} <br /><small class="ml-3">
               <fai icon="clock" />
               {{ aDate }}
             </small>
@@ -32,7 +32,7 @@
             <b-button size="sm" disabled variant="info">
               {{ aRating }}
             </b-button>
-            <b-button size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
+            <b-button v-if="aUserId" size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
           </b-button-group>
         <!-- </b-card-text>
       </b-card> -->
@@ -81,6 +81,10 @@ export default {
     aDate: {
       type: String,
       default: '',
+    },
+    aUserId: {
+      type: String,
+      required: true
     },
   },
   data() {

@@ -24,9 +24,10 @@ const serverConfig = {
   apiPort: process.env.VUE_APP_API_PORT,
   apiInterface: process.env.VUE_APP_API_INTERFACE,
   apiUrl: process.env.VUE_APP_API_URL,
-  apiAddress: process.env.VUE_APP_API_UI_URL,
-  // apiAddress: process.env.VUE_APP_API_URL,
+  apiAddress: process.env.VUE_APP_API_URL,
+  uiAddress: process.env.VUE_APP_API_UI_URL,
   softwareDevelopState: process.env.VUE_APP_API_STATE,
+  baseurl: process.env.BASE_URL
 };
 
 /* Set: Axios Instance
@@ -50,6 +51,7 @@ switch (serverConfig.softwareDevelopState) {
   case 'dev':
     isDebugEnabled = true;
     console.debug(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.apiAddress} .`);
+    console.debug(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.baseUrl} .`);
     break;
 
   case 'release':
@@ -367,9 +369,9 @@ export default {
 
   async getUserInfo(){
     console.log('userinfo:');
-
-    await client.get("/user").then((response)=>{
+    return await client.get("/user").then((response)=>{
       console.log(response.data);
+      return response.data;
     }).catch((error)=> {
       console.error(error);
     });

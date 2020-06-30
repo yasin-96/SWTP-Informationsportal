@@ -3,12 +3,12 @@
     <b-row>
       <b-col>
         <b-input-group>
-          <b-form-input v-model="searchInput" placeholder="Search by tags, header or content ..."></b-form-input>
           <b-input-group-append>
-            <b-button variant="outline-success" @click="searchData()">
+            <b-button variant="success" @click="searchData()">
               <fai icon="search" />
             </b-button>
           </b-input-group-append>
+          <b-form-input v-model="searchInput" placeholder="Search by tags"></b-form-input>
         </b-input-group>
       </b-col>
     </b-row>

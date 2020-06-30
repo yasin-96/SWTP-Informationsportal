@@ -1,10 +1,12 @@
 module.exports = {
   lintOnSave: false,
   transpileDependencies: ['vuetify'],
-  outputDir: './dist/',
+  outputDir: './dist',
   filenameHashing: false,
   productionSourceMap: false,
 
+  publicPath: "/info-portal/",
+  
   chainWebpack: config => {
     config.module
       .rule('vue')

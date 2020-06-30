@@ -2,7 +2,7 @@
   <b-container v-if="isDataLoaded">
     <b-row>
       <b-col sm="12" md="6" lg="4" xl="3" v-for="quest in activeQuestions" :key="quest.id" class="mt-4">
-        <QuestionCard :qId="quest.id" :qHeader="quest.header" :qContent="quest.content" :qTags="quest.tags" :qDate="quest.timeStamp" :qTrimText="true" />
+        <QuestionCard :qId="quest.id" :qHeader="quest.header" :qContent="quest.content" :qTags="quest.tags" :qDate="quest.timeStamp" :qTrimText="true" :qUserId="quest.userId"/>
       </b-col>
     </b-row>
   </b-container>

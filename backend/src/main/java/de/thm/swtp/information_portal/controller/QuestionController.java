@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
+// import javax.validation.Valid;
 import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.models.Tag;
 import de.thm.swtp.information_portal.service.AnswerService;
@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import de.thm.swtp.information_portal.models.Question;
 import de.thm.swtp.information_portal.service.QuestionService;
@@ -26,7 +27,8 @@ import java.util.Map;
 import static java.util.stream.Collectors.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/info-portal/api")
+@CrossOrigin(origins = "*")
 public class QuestionController {
 
 	@Autowired
@@ -89,7 +91,8 @@ public class QuestionController {
 	 */
 	@Async
 	@PostMapping("/newQuestion")
-	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Valid @RequestBody Question questionBody, @AuthenticationPrincipal Jwt jwt)
+	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Validated @RequestBody Question questionBody,
+			@AuthenticationPrincipal Jwt jwt)
 			throws URISyntaxException, InterruptedException {
 
 		Question quest = new Question(questionBody.getHeader(), questionBody.getContent(), questionBody.getTags(),
@@ -102,7 +105,7 @@ public class QuestionController {
 
 	@Async
 	@PutMapping("/question")
-	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Valid @RequestBody Question questionBody)
+	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Validated @RequestBody Question questionBody)
 			throws URISyntaxException {
 		List<Tag> tagList = tagService.checkIfTagsExist(questionBody.getTags());
 		questionBody.setTags(tagList);
@@ -113,7 +116,7 @@ public class QuestionController {
 
 	@Async
 	@GetMapping("/question/query")
-	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Valid @RequestParam String searchQuery)
+	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Validated @RequestParam String searchQuery)
 			throws URISyntaxException, InterruptedException {
 
 		List<String> listQuery = Arrays.stream(searchQuery.split(" ")).filter(item -> !item.isEmpty())

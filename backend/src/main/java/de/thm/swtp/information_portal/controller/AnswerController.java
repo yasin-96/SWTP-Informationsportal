@@ -11,16 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.service.AnswerService;
 
-import javax.validation.Valid;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/info-portal/api")
+@CrossOrigin(origins = "*")
 public class AnswerController {
 
 	@Autowired
@@ -35,12 +35,13 @@ public class AnswerController {
 	 */
 	@Async
 	@PostMapping("/answer")
-	public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList, @AuthenticationPrincipal Jwt jwt)
-			throws URISyntaxException, InterruptedException {
+	public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList,
+			@AuthenticationPrincipal Jwt jwt) throws URISyntaxException, InterruptedException {
 		Optional<Answers> answers = answerService.findByQuestionId(answerList.getId());
 		if (answers.isEmpty()) {
 			List<Answer> newAnswerList = new ArrayList<Answer>();
-			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), jwt.getClaimAsString("sub"),0);
+			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(),
+					jwt.getClaimAsString("sub"), 0);
 			newAnswerList.add(newAnswer);
 			Answers newAnswers = new Answers(newAnswerList, answerList.getId());
 			answerService.postAnswer(newAnswers);
@@ -48,7 +49,8 @@ public class AnswerController {
 					ResponseEntity.created(new URI("/api/answer" + newAnswers.getId())).body(newAnswers));
 		} else {
 			List<Answer> answersPresent = answers.get().getListOfAnswers();
-			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(), jwt.getClaimAsString("sub"), 0);
+			Answer newAnswer = new Answer(answerList.getListOfAnswers().get(0).getContent(),
+					jwt.getClaimAsString("sub"), 0);
 			answersPresent.add(newAnswer);
 			answerService.postAnswer(answers.get());
 			return CompletableFuture.completedFuture(
@@ -58,7 +60,7 @@ public class AnswerController {
 
 	@Async
 	@PostMapping("/answer/answerTobeEdited")
-	public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(@Valid @RequestBody String[] ids) {
+	public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(@Validated @RequestBody String[] ids) {
 		Optional<Answers> answers = answerService.findByQuestionId(ids[0]);
 		List<Answer> answerList = answers.get().getListOfAnswers();
 		var foundAnswer = new Answer();
@@ -73,7 +75,7 @@ public class AnswerController {
 
 	@Async
 	@PutMapping("/answer")
-	public CompletableFuture<ResponseEntity<Answers>> editAnswer(@Valid @RequestBody Answers answersBody)
+	public CompletableFuture<ResponseEntity<Answers>> editAnswer(@Validated @RequestBody Answers answersBody)
 			throws URISyntaxException {
 		Optional<Answers> answersToBeModified = answerService.findByQuestionId(answersBody.getId());
 		Answer modifiedAnswer = answersBody.getListOfAnswers().get(0);

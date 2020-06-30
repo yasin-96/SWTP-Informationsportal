@@ -27,8 +27,14 @@ export default new Vuex.Store({
     //tags
     allTags: [],
     topicsBasedOnTags: [],
+
+    //user
+    currentUser: {}
   },
   mutations: {
+    
+    //#region questions 
+
     //all mutation for questions
     SET_ALL_QUESTIONS(state, data) {
       console.debug('SET_ALL_QUESTIONS');
@@ -77,6 +83,10 @@ export default new Vuex.Store({
       state.allQueryData = data;
     },
 
+    //#endregion question
+
+    //#region answer
+
     //all mutation for answers
     SET_ALL_ANSWERS(state, data) {
       console.debug('SET_ALL_ANSWERS');
@@ -100,6 +110,9 @@ export default new Vuex.Store({
       }
     },
 
+    //#endregion answers
+
+    //#region comments
     //all mutation for comments
     SET_ALL_COMMENTS(state, data) {
       if (data) {
@@ -120,6 +133,10 @@ export default new Vuex.Store({
       }
     },
 
+    //#endregion comments
+
+    //#region tags
+
     //all tags -> topics
     SET_ALL_TAGS(state, data) {
       console.debug('SET_ALL_TAGS');
@@ -134,8 +151,17 @@ export default new Vuex.Store({
         state.topicsBasedOnTags = data;
       }
     },
+
+    //#endregion tags
+    
+    SET_USER_INFO(state, data){
+      state.currentUser = data;
+    }
   },
   actions: {
+
+    //#region question
+    
     //questions
     async act_getAllQuestions({ commit }) {
       console.log('act_getAllQuestions');
@@ -222,6 +248,10 @@ export default new Vuex.Store({
         });
     },
 
+    //#endregion question
+
+    //#region answer
+
     //answers
     async act_getAllAnswers({ commit }, questionId) {
       console.log('act_getAllAnswers', questionId);
@@ -283,6 +313,9 @@ export default new Vuex.Store({
         });
     },
 
+    //#endregion answer
+
+    //#region comment
     //comments
     async act_getAllComments({ commit }, answerId) {
       console.log('act_getAllComments');
@@ -317,6 +350,11 @@ export default new Vuex.Store({
         });
     },
 
+    //#endregion comment
+
+
+    //#region tags
+
     //tags
     async act_getAllTags({ commit }) {
       await RestCalls.getAllTags()
@@ -340,6 +378,14 @@ export default new Vuex.Store({
           console.error(error);
         });
     },
+
+    //#endregion tags
+
+    async act_getUserInfo({commit}){
+      await RestCalls.getUserInfo().then((response) => {
+        commit("SET_USER_INFO", response);
+      })
+    }
   },
 
   getters: {

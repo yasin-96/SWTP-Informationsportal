@@ -16,8 +16,10 @@ import de.thm.swtp.information_portal.repositories.TagRepository;
 import de.thm.swtp.information_portal.service.TagService;
 import static java.util.stream.Collectors.toMap;
 
+// import javax.validation.Valid;
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/info-portal/api")
+@CrossOrigin(origins = "*")
 public class TagController {
 
 	@Autowired

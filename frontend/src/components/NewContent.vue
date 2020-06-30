@@ -68,7 +68,7 @@ export default {
         console.log('HIER:!!', this.newAnswer);
         let resp = await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
         // this.$store.dispatch('act_switchLoadingStateForAnswer', true);
-        this.$router.go(`/question/${resp.id}`);
+        this.$router.go(`/info-portal/question/${resp.id}`);
       }
     },
 
@@ -81,7 +81,7 @@ export default {
         });
         console.log('HIER:!!', this.newComment);
         let resp = await this.$store.dispatch('act_addNewComment', this.newComment);
-        this.$router.go(`/question/${resp.id}`);
+        this.$router.go(`/info-portal/question/${resp.id}`);
       }
     },
   },
