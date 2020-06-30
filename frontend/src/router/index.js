@@ -16,7 +16,7 @@ Vue.use(VueRouter );
 
 export default new VueRouter ({
   mode: 'history',
-  base: 'info-portal',
+  base: `/${process.env.VUE_APP_INFO_PORTAL_INTERFACE}/`,
   duplicateNavigationPolicy: 'reload',
   routes: [
     {

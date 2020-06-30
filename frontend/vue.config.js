@@ -5,7 +5,7 @@ module.exports = {
   filenameHashing: false,
   productionSourceMap: false,
 
-  publicPath: "/info-portal/",
+  publicPath: `/${process.env.VUE_APP_INFO_PORTAL_INTERFACE}/`,
   
   chainWebpack: config => {
     config.module
