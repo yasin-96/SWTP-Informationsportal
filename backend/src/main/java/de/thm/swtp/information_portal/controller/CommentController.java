@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import de.thm.swtp.information_portal.models.Comment;
 import de.thm.swtp.information_portal.models.Comments;
 import de.thm.swtp.information_portal.service.CommentService;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/info-portal/api")
@@ -76,7 +75,8 @@ public class CommentController {
 
 	@Async
 	@PostMapping("/comment/increaseRating")
-	public CompletableFuture<ResponseEntity<Comments>> increaseCommentRating(@Valid @RequestBody Comments commentList) {
+	public CompletableFuture<ResponseEntity<Comments>> increaseCommentRating(
+			@Validated @RequestBody Comments commentList) {
 		Optional<Comments> commentsToBeModified = commentService.findByAnswerId(commentList.getId());
 		Comment modifiedComment = commentList.getComments().get(0);
 		List<Comment> listOfComments = commentsToBeModified.get().getComments();
