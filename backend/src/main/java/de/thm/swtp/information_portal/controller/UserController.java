@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @Async
-    @GetMapping("/nameFromId")
+    @PostMapping("/nameFromId")
     CompletableFuture<ResponseEntity<String>> getNameFromId(@RequestBody String id){
         Optional<User> user = userService.getUser(id);
         String name = user.get().getName();
