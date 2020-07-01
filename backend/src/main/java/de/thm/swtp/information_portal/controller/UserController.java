@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @Async
-    @PostMapping(value = "/nameFromId", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/nameFromId")
     CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody String id){
         Optional<User> user = userService.getUser(id);
         ResponseUser responseUser = new ResponseUser(user.get().getName());
