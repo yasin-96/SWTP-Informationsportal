@@ -4,6 +4,7 @@ import de.thm.swtp.information_portal.models.Question;
 import org.apache.catalina.realm.AuthenticatedUserRealm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @Async
-    @PostMapping(value = "/nameFromId", produces = "application/json")
+    @PostMapping(value = "/nameFromId", produces = MediaType.APPLICATION_JSON_VALUE)
     CompletableFuture<ResponseEntity<String>> getNameFromId(@RequestBody String id){
         Optional<User> user = userService.getUser(id);
         String name = user.get().getName();
