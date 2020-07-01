@@ -22,12 +22,6 @@ public class User {
     // Fullname of Person
     private String name;
 
-    // Firstname
-    private String given_name;
-
-    // Lastname
-    private String family_name;
-
     private String email;
 
     // Nickname
@@ -36,11 +30,9 @@ public class User {
     // Creation Date as Unix-Timestamp
     private Long timestamp;
 
-    public User(String sub, String name, String given_name, String family_name, String email,
+    public User(String sub, String name,String email,
             String preferred_username) {
         this.name = name;
-        this.given_name = given_name;
-        this.family_name = family_name;
         this.email = email;
         this.preferred_username = preferred_username;
         this.timestamp = Instant.now().getEpochSecond() * 1000;
