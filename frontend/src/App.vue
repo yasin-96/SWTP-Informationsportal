@@ -23,6 +23,11 @@ export default {
     };
   },
   created() {
+
+    //run once
+    this.reloadAllData();
+    this.refreshUser();
+
     console.warn('VUE INSTANCE created()');
 
     this.pullUserWithIntervall();
