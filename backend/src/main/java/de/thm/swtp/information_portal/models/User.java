@@ -1,6 +1,8 @@
 package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +19,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     // Jwt.claims(Sub)
+    @Id
     private String id;
 
     // Fullname of Person
