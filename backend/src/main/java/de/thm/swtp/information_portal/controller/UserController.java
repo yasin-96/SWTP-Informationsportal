@@ -1,6 +1,7 @@
 package de.thm.swtp.information_portal.controller;
 
 import de.thm.swtp.information_portal.models.Question;
+import de.thm.swtp.information_portal.models.ResponseUser;
 import org.apache.catalina.realm.AuthenticatedUserRealm;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +48,10 @@ public class UserController {
 
     @Async
     @PostMapping(value = "/nameFromId", produces = MediaType.APPLICATION_JSON_VALUE)
-    CompletableFuture<ResponseEntity<String>> getNameFromId(@RequestBody String id){
+    CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody String id){
         Optional<User> user = userService.getUser(id);
-        String name = user.get().getName();
-        return CompletableFuture.completedFuture(new ResponseEntity<>(JSONObject.quote(name), HttpStatus.OK));
+        ResponseUser responseUser = new ResponseUser(user.get().getName());
+        return CompletableFuture.completedFuture(new ResponseEntity<ResponseUser>(responseUser,HttpStatus.OK));
     }
 
 
