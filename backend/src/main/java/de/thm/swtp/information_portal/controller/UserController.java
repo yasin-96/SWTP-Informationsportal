@@ -2,6 +2,7 @@ package de.thm.swtp.information_portal.controller;
 
 import de.thm.swtp.information_portal.models.Question;
 import org.apache.catalina.realm.AuthenticatedUserRealm;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,7 +50,7 @@ public class UserController {
     CompletableFuture<ResponseEntity<String>> getNameFromId(@RequestBody String id){
         Optional<User> user = userService.getUser(id);
         String name = user.get().getName();
-        return CompletableFuture.completedFuture(new ResponseEntity<String>(name, HttpStatus.OK));
+        return CompletableFuture.completedFuture(new ResponseEntity<>(JSONObject.quote(name), HttpStatus.OK));
     }
 
 
