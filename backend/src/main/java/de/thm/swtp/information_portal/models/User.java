@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     // Jwt.claims(Sub)
-    @Id
+
     private String id;
 
     // Fullname of Person
@@ -35,6 +35,7 @@ public class User {
 
     public User(String sub, String name,String email,
             String preferred_username) {
+        this.id = sub;
         this.name = name;
         this.email = email;
         this.preferred_username = preferred_username;
