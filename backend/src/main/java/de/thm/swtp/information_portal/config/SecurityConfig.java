@@ -21,9 +21,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     System.out.println("TOKEN: "+ jwt.getTokenValue());
                     System.out.println(jwt.getClaims().toString());
             
-                    var jwtAuthTOken = new JwtAuthenticationToken(jwt);
-                    jwtAuthTOken.setAuthenticated(true);
-                    return jwtAuthTOken;
+                    var jwtAuthToken = new JwtAuthenticationToken(jwt);
+                    jwtAuthToken.setAuthenticated(true);
+                    return jwtAuthToken;
            
         });
         http.csrf().disable();

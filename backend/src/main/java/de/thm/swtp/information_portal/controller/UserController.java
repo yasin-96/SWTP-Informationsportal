@@ -17,6 +17,7 @@ import de.thm.swtp.information_portal.service.UserService;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -40,6 +41,14 @@ public class UserController {
         else{
             return  saveUserIfNotExists(jwt);
         }
+    }
+
+    @Async
+    @GetMapping("/nameFromId")
+    CompletableFuture<ResponseEntity<String>> getNameFromId(@RequestBody String id){
+        Optional<User> user = userService.getUser(id);
+        String name = user.get().getName();
+        return CompletableFuture.completedFuture(new ResponseEntity<String>(name, HttpStatus.OK));
     }
 
 
