@@ -14,6 +14,8 @@
 .apt_generated
 
 .sts4-cache/
+.idea/
+information_portal.iml
 
 
 ### Java ###
