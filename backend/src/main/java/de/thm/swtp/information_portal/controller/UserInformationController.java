@@ -47,7 +47,7 @@ public class UserInformationController {
             UserInformation newUserInfo = new UserInformation(user,questionsOfUser.size());
             userInformationService.addUserInfo(newUserInfo);
             return CompletableFuture
-                    .completedFuture(ResponseEntity.created(new URI("/info-portal/api" + newUserInfo.getUserId())).body(newUserInfo));
+                    .completedFuture(ResponseEntity.created(new URI("/info-portal/api" + newUserInfo.getId())).body(newUserInfo));
         }
     }
 }

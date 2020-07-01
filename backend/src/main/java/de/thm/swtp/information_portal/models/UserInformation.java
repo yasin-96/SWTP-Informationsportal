@@ -10,12 +10,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 public class UserInformation {
 
-    String userId;
-
+    //String userId;
+    String id;
     int numberOfQuestions;
 
-    public UserInformation(String userId, int numberOfQuestions){
-        this.userId=userId;
+    public UserInformation(String id, int numberOfQuestions){
+        this.id=id;
         this.numberOfQuestions=numberOfQuestions;
     }
 
