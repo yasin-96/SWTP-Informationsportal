@@ -1,15 +1,23 @@
 stages:
-  - build
   - test
-
-job 0:
-  stage: build
-  script:
-    - ./mvnw clean install
-
-job 1:
+  - build
+  
+test:
   image: openjdk:11-jdk
+  tags:
+    - java
   stage: test
+  before_script:
+    - cd backend
   script:
     - ./mvnw test
-   
+  
+build:
+  image: openjdk:11-jdk
+  tags:
+    - java
+  stage: build
+  before_script:
+    - cd backend
+  script:
+    - ./mvnw clean install -DskipTests
