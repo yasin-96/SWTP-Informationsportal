@@ -133,7 +133,7 @@ export default {
       console.warn('AUFRUf-> parseIdToName ');
       return await this.$store.dispatch('act_getUserNameFromID', id).then((response) => {
         console.log('FUN', response);
-        return response.name;
+        return response;
       });
     },
   },

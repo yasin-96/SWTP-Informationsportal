@@ -16,7 +16,7 @@
         <b-container v-if="isDataLoaded.answers">
           <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index">
             <AnswerCard :nId="oneQuestion.id" :aContent="answer.content" :aRating="answer.rating" :aDate="answer.timeStamp" :cId="answer.id"
-            :aUserId="oneQuestion.userId"
+            :aUserId="answer.userId"
             :userEdit="oneQuestion.userId === getUserId" class="pb-3" />
           </b-container>
         </b-container>

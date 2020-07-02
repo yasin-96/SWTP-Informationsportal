@@ -165,19 +165,6 @@ export default new Vuex.Store({
       console.log('act_getAllQuestions');
       await RestCalls.getAllQuestions()
         .then((response) => {
-
-          // console.log('response:', response);
-          
-          // response.forEach((data, index) => {
-          //   console.log('data:', data, 'index:', index);
-            
-          //   let parsedUserName = dispatch('act_getUserNameFromID', data.userId).then((response) => {return response});
-          //   console.log('parsedUserName:', parsedUserName);
-            
-          //   response[index]['userName'] = parsedUserName;
-          // })
-          
-
           commit('SET_ALL_QUESTIONS', response);
         })
         .catch((error) => {
@@ -401,7 +388,7 @@ export default new Vuex.Store({
       return await RestCalls.getUserNameFromId(id)
         .then((response) => {
           console.warn('STORE ID->NAME', response);
-          return response;
+          return response.userName;
         })
         .catch((error) => {
           console.error(error);
@@ -425,6 +412,7 @@ export default new Vuex.Store({
     },
 
     getUserId: (state) => {
+      
       return state.currentUser.id;
     },
 

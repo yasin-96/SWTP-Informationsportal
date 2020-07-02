@@ -79,6 +79,7 @@ export default {
       },
       toggleText: 'Show Comments',
       iCounter: 0,
+      userName: ''
     };
   },
   beforeMount() {
@@ -128,9 +129,16 @@ export default {
       console.log('cardID', comment.id);
       this.$router.go(0);
     },
+    async parseIdToName(id) {
+      console.warn('AUFRUf-> parseIdToName ');
+      return await this.$store.dispatch('act_getUserNameFromID', id).then((response) => {
+        console.log('FUN', response);
+        return response.name;
+      });
+    },
   },
   computed: {
-    ...mapActions(['act_increaseCommentRating']),
+    ...mapActions(['act_increaseCommentRating', 'act_getUserNameFromID']),
     hasComments() {
       return Object.keys(this.cComments).length > 0 ? true : false;
     },
