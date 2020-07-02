@@ -2,7 +2,9 @@
   <b-container class="mt-3" v-if="id && isDataLoaded.question">
     <b-row>
       <b-col>
-        <QuestionCard :qId="oneQuestion.id" :qHeader="oneQuestion.header" :qContent="oneQuestion.content" :qTags="oneQuestion.tags" :qDate="oneQuestion.timeStamp" :qUserId="oneQuestion.userId" :qFooter="true" :qEdit="true" :displayContent="true"/>
+        <QuestionCard :qId="oneQuestion.id" :qHeader="oneQuestion.header" :qContent="oneQuestion.content" :qTags="oneQuestion.tags" :qDate="oneQuestion.timeStamp" :qUserId="oneQuestion.userId" :qFooter="true" :qEdit="true" :displayContent="true"
+        :userEdit="oneQuestion.userId === getUserId"
+        />
 
         <!-- 
             By clicking on the title of a question, a page is called up and all information is provided.
@@ -14,7 +16,8 @@
         <b-container v-if="isDataLoaded.answers">
           <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index">
             <AnswerCard :nId="oneQuestion.id" :aContent="answer.content" :aRating="answer.rating" :aDate="answer.timeStamp" :cId="answer.id"
-            :aUserId="oneQuestion.userId" class="pb-3" />
+            :aUserId="oneQuestion.userId"
+            :userEdit="oneQuestion.userId === getUserId" class="pb-3" />
           </b-container>
         </b-container>
       </b-col>
@@ -57,6 +60,7 @@ export default {
   },
   computed: {
     ...mapActions(['act_getAllAnswers', 'act_getOneQuestion']),
+    ...mapGetters(['getUserId']),
     ...mapState(['oneQuestion', 'allAnswers']),
   },
   methods: {

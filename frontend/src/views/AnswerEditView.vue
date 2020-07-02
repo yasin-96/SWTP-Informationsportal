@@ -11,26 +11,25 @@
           <!-- Information about user & creation date -->
           <template v-slot:header>
             <b-row class="justify-content-left">
-              <b-col cols="3" sm="2" md="2" lg="1">
-                <!-- <b-iuser class="mr-2" font-scale="3"></b-iuser> -->
-                <h1><fai icon="user-circle" /></h1>
-                <!-- <b-avatar variant="primary" text="BV"></b-avatar> -->
-              </b-col>
-              <b-col cols="9" sm="10" md="10" lg="11">
-                <strong>Frage</strong> vom User <br /><small class="ml-3"
-                  ><fai icon="clock" />
-                  {{ currentAnswer.timeStamp }}
-                </small>
+              <b-col>
+                <b-button-group>
+                  <h2><fai icon="user-circle" /></h2>
+                  <b-button size="sm" disabled variant="white"> </b-button>
+                  <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{ currentAnswer.userId }} <small class="ml-3"> </small> </b-button>
+                  <b-button size="sm" disabled variant="white">
+                    <small>
+                      <fai icon="clock" />
+                      {{ currentAnswer.timeStamp }}
+                    </small>
+                  </b-button>
+                </b-button-group>
               </b-col>
             </b-row>
           </template>
 
           <!-- Answer content -->
           <b-card-text>
-
-            <Editor v-model="currentAnswer.content"/>
-
-            <b-form-textarea v-model="currentAnswer.content" :search-input.sync="currentAnswer.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true"></b-form-textarea>
+            <Editor v-model="currentAnswer.content" :configs="mdeConfig" />
           </b-card-text>
         </b-card>
       </b-col>
@@ -53,7 +52,7 @@ import QuestionCard from '@/components/QuestionCard';
 import VueSimplemde from 'vue-simplemde';
 export default {
   name: 'AnswerEditView',
-  components: { QuestionCard, Editor: VueSimplemde},
+  components: { QuestionCard, Editor: VueSimplemde },
   props: {
     qId: {
       type: String,
@@ -75,6 +74,9 @@ export default {
       updatedAnswer: {
         id: this.qId,
         listOfAnswers: [],
+      },
+      mdeConfig: {
+        spellChecker: false,
       },
     };
   },
@@ -113,7 +115,7 @@ export default {
   watch: {
     oneAnswer() {
       if (this.oneAnswer) {
-        this.currentAnswer = Object.assign({}, this.oneAnswer)
+        this.currentAnswer = Object.assign({}, this.oneAnswer);
       }
     },
     oneQuestion() {

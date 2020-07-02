@@ -2,14 +2,17 @@
   <b-card header-tag="header" header-bg-variant="#DFE8DF" header-border-variant="white" class="bCard">
     <template v-slot:header>
       <b-row class="justify-content-center">
-        <b-col cols="3" sm="2" md="2" lg="1">
-          <!-- <h1><fai icon="" /></h1> -->
-        </b-col>
-        <b-col cols="9" sm="10" md="10" lg="11">
-          <strong>Topic</strong> erstellt am <br /><small class="ml-3"
-            ><fai icon="clock" />
-            {{ tDate }}
-          </small>
+        <b-col>
+          <b-button-group>
+            <b-button size="sm" disabled variant="white"> </b-button>
+            <b-button size="sm" disabled variant="white"> <strong>Topic </strong> </b-button>
+            <b-button size="sm" disabled variant="white">
+              <small>
+                <fai icon="clock" />
+                {{ tDate }}
+              </small>
+            </b-button>
+          </b-button-group>
         </b-col>
       </b-row>
     </template>

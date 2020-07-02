@@ -4,15 +4,18 @@
       <!-- Information about user & creation date -->
       <template v-slot:header>
         <b-row class="justify-content-left">
-          <b-col cols="3" sm="2" md="2" lg="1">
-            <!-- <b-iuser class="mr-2" font-scale="3"></b-iuser> -->
-            <h1><fai icon="user-circle" /></h1>
-          </b-col>
-          <b-col cols="9" sm="10" md="10" lg="11">
-            <strong>Antwort</strong> von {{aUserId}} <br /><small class="ml-3">
-              <fai icon="clock" />
-              {{ aDate }}
-            </small>
+          <b-col>
+            <b-button-group>
+            <h2><fai icon="user-circle" /></h2>
+            <b-button size="sm" disabled variant="white"> </b-button>
+            <b-button size="sm" disabled variant="white"> <strong>Antwort </strong> erstellt von {{ aUserId }} <small class="ml-3"> </small> </b-button>
+            <b-button size="sm" disabled variant="white">
+              <small>
+                <fai icon="clock" />
+                {{ aDate }}
+              </small>
+            </b-button>
+          </b-button-group>
           </b-col>
         </b-row>
       </template>
@@ -32,7 +35,7 @@
             <b-button size="sm" disabled variant="info">
               {{ aRating }}
             </b-button>
-            <b-button v-if="aUserId" size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
+            <b-button v-if="userEdit" size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
           </b-button-group>
         <!-- </b-card-text>
       </b-card> -->
@@ -86,6 +89,10 @@ export default {
       type: String,
       required: true
     },
+    userEdit: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {

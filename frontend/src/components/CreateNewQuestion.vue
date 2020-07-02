@@ -72,7 +72,8 @@ export default {
         tags: [],
       },
       mdeConfig: {
-        placeholder: "Beschreibung ihrer Frage ..."
+        placeholder: "Beschreibung ihrer Frage ...",
+        spellChecker: false
       },
       editorOptions: {
 

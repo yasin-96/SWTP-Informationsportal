@@ -3,16 +3,21 @@
     <!-- Information about user & creation date -->
     <template v-slot:header>
       <b-row class="justify-content-left">
-        <b-col cols="3" sm="2" md="2" lg="1">
-          <!-- <b-iuser class="mr-2" font-scale="3"></b-iuser> -->
-          <h1><fai icon="user-circle" /></h1>
-          <!-- <b-avatar variant="primary" text="BV"></b-avatar> -->
+        <b-col>
+          <b-button-group>
+            <h2><fai icon="user-circle" /></h2>
+            <b-button size="sm" disabled variant="white"> </b-button>
+            <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{}} <small class="ml-3"> </small> </b-button>
+            <b-button size="sm" disabled variant="white">
+              <small>
+                <fai icon="clock" />
+                {{ qDate }}
+              </small>
+            </b-button>
+          </b-button-group>
         </b-col>
-        <b-col cols="9" sm="10" md="10" lg="11">
-          <strong>Frage </strong> erstellt von {{qUserId}} am <br /><small class="ml-3"
-            ><fai icon="clock" />
-            {{ qDate }}
-          </small>
+        <b-col cols="mx-auto">
+          <b-button variant="outline-secondary" v-if="userEdit" size="sm" @click="editQuestion()"><fai icon="pen"></fai></b-button>
         </b-col>
       </b-row>
     </template>
@@ -38,6 +43,8 @@
 <script>
 import { BCard, BFormTags } from 'bootstrap-vue';
 import VueSimplemde from 'vue-simplemde';
+
+import { mapActions } from 'vuex';
 
 export default {
   name: 'QuestionCard',
@@ -82,9 +89,17 @@ export default {
     },
     qUserId: {
       type: String,
-      required: true
+      required: true,
     },
+    // qUserName: {
+    //   type: String,
+    //   required: true
+    // },
     qEdit: {
+      type: Boolean,
+      default: false,
+    },
+    userEdit: {
       type: Boolean,
       default: false,
     },
@@ -101,6 +116,7 @@ export default {
   },
   mounted() {
     this.$refs.mde.simplemde.togglePreview();
+    this.test = this.parseIdToName(this.qUserId);
   },
   methods: {
     /**
@@ -112,8 +128,16 @@ export default {
     editQuestion() {
       this.$router.push(`/question/edit/${this.$props.qId}`).catch((err) => {});
     },
+    async parseIdToName(id) {
+      console.warn('AUFRUf-> parseIdToName ');
+      return await this.$store.dispatch('act_getUserNameFromID', id).then((response) => {
+        console.log('FUN', response);
+        return response.name;
+      });
+    },
   },
   computed: {
+    ...mapActions(['act_getUserNameFromID']),
     allTags() {
       return this.qTags.map((tag) => tag.name);
       this.test = getRendertHtmlFromMarkdown(this.qContent);
