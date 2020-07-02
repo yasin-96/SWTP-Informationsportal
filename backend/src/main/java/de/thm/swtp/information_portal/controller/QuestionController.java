@@ -116,13 +116,13 @@ public class QuestionController {
 
 	@Async
 	@GetMapping("/question/query")
-	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Validated @RequestParam String searchQuery)
+	public CompletableFuture<ResponseEntity<HashSet<Question>>> getDataByQuery(@Validated @RequestParam String searchQuery)
 			throws URISyntaxException, InterruptedException {
 
 		List<String> listQuery = Arrays.stream(searchQuery.split(" ")).filter(item -> !item.isEmpty())
 				.collect(Collectors.toList());
 
-		var filteredQuestions = new ArrayList<Question>();
+		var filteredQuestions = new HashSet<Question>();
 
 		for (var query : listQuery) {
 			try {
@@ -135,6 +135,7 @@ public class QuestionController {
 				System.out.println(e);
 			}
 		}
+		
 		return CompletableFuture.completedFuture(new ResponseEntity<>(filteredQuestions, HttpStatus.OK));
 	}
 
