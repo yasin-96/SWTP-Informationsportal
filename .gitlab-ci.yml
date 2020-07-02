@@ -8,6 +8,7 @@ test:
     - maven
   stage: test
   before_script:
+    - ls /bin/
     - cd backend
     
   script:
