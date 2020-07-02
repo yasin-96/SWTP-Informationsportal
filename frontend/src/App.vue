@@ -1,7 +1,7 @@
 <template>
   <b-container id="app" fluid>
     <Navigation />
-      <b-container fluid>
+      <b-container fluid class="mt-5">
         <router-view />
       </b-container>
   </b-container>
@@ -53,7 +53,8 @@ export default {
       this.initAllData = setInterval(async () => {
         console.log('pullAllDataWithIntervall()');
         await this.reloadAllData();
-      }, 600000);
+      // }, 600000);
+      }, 60000);
     },
 
     async reloadAllData(){
@@ -83,13 +84,9 @@ export default {
 </script>
 
 <style>
-body {
-  background-color: #DFE8DF;
-}
-#app {
-  padding: 0;
-  margin: 0;
-}
+
+
+
 
 /* 
 .editor-preview .editor-preview-active >>> h1 {

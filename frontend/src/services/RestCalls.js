@@ -27,7 +27,7 @@ const serverConfig = {
   apiAddress: process.env.VUE_APP_API_URL,
   uiAddress: process.env.VUE_APP_API_UI_URL,
   softwareDevelopState: process.env.VUE_APP_API_STATE,
-  baseurl: process.env.BASE_URL
+  baseurl: process.env.BASE_URL,
 };
 
 /* Set: Axios Instance
@@ -125,11 +125,11 @@ export default {
 
   //TODO endpoint warte noch auf hinweis
   async getOneAnswerToQuestion(id) {
-    console.debug(`RestCall: getOneAnswerToQuestion(${id})`,id);
+    console.debug(`RestCall: getOneAnswerToQuestion(${id})`, id);
     return await client
-      .post('/answer/answerTobeEdited', id.ids )
+      .post('/answer/answerTobeEdited', id.ids)
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         return response.data;
       })
       .catch((error) => {
@@ -367,13 +367,29 @@ export default {
   //   });
   // },
 
-  async getUserInfo(){
-    console.log('userinfo:');
-    return await client.get("/user").then((response)=>{
-      console.log(response.data);
-      return response.data;
-    }).catch((error)=> {
-      console.error(error);
-    });
-  }
+  async getUserInfo() {
+    return await client
+      .get('/user')
+      .then((response) => {
+        console.log('userinfo:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+
+  async getUserNameFromId(id) {
+    return await client
+      .post('/nameFromId', id)
+      .then((response) => {
+        console.log('Name from id all:', response);
+        console.log('Name from id:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return id;
+      });
+  },
 };

@@ -14,6 +14,3 @@ export default {
     components: { CreateNewQuestion }
 }
 </script>
-
-<style>
-</style>

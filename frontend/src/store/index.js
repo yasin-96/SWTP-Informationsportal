@@ -29,11 +29,10 @@ export default new Vuex.Store({
     topicsBasedOnTags: [],
 
     //user
-    currentUser: {}
+    currentUser: {},
   },
   mutations: {
-    
-    //#region questions 
+    //#region questions
 
     //all mutation for questions
     SET_ALL_QUESTIONS(state, data) {
@@ -153,20 +152,32 @@ export default new Vuex.Store({
     },
 
     //#endregion tags
-    
-    SET_USER_INFO(state, data){
+
+    SET_USER_INFO(state, data) {
       state.currentUser = data;
-    }
+    },
   },
   actions: {
-
     //#region question
-    
+
     //questions
-    async act_getAllQuestions({ commit }) {
+    async act_getAllQuestions({ commit, dispatch }) {
       console.log('act_getAllQuestions');
       await RestCalls.getAllQuestions()
         .then((response) => {
+
+          // console.log('response:', response);
+          
+          // response.forEach((data, index) => {
+          //   console.log('data:', data, 'index:', index);
+            
+          //   let parsedUserName = dispatch('act_getUserNameFromID', data.userId).then((response) => {return response});
+          //   console.log('parsedUserName:', parsedUserName);
+            
+          //   response[index]['userName'] = parsedUserName;
+          // })
+          
+
           commit('SET_ALL_QUESTIONS', response);
         })
         .catch((error) => {
@@ -352,7 +363,6 @@ export default new Vuex.Store({
 
     //#endregion comment
 
-
     //#region tags
 
     //tags
@@ -381,11 +391,24 @@ export default new Vuex.Store({
 
     //#endregion tags
 
-    async act_getUserInfo({commit}){
+    async act_getUserInfo({ commit }) {
       await RestCalls.getUserInfo().then((response) => {
-        commit("SET_USER_INFO", response);
-      })
-    }
+        commit('SET_USER_INFO', response);
+      });
+    },
+
+    async act_getUserNameFromID({}, id) {
+      return await RestCalls.getUserNameFromId(id)
+        .then((response) => {
+          console.warn('STORE ID->NAME', response);
+          return response;
+        })
+        .catch((error) => {
+          console.error(error);
+          return id;
+        });
+
+    },
   },
 
   getters: {
@@ -400,6 +423,18 @@ export default new Vuex.Store({
     getAllTagName: (state) => {
       return state.allTags.map((n) => n.name);
     },
+
+    getUserId: (state) => {
+      return state.currentUser.id;
+    },
+
+    getFirstLetterFromUser: (state) => {
+      if(state.currentUser.name) {
+        let raw = state.currentUser.name.split(' ');
+        return `${raw[0].charAt(0)}${raw[1].charAt(0)}`
+      }
+      return ""
+    }
   },
   modules: {},
 });

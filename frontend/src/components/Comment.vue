@@ -138,6 +138,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$border-radius-root: none;
-</style>
+//style lang="scss">
+// $border-radius-root: none;
+// </style>

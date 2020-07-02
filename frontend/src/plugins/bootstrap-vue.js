@@ -4,6 +4,9 @@ import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+//Add custom style
+import '@/assets/css/infop.css';
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchMinus, faSearchPlus, faExclamationTriangle, faEdit, faPen} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome';

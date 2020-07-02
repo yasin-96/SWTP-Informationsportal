@@ -1,7 +1,7 @@
 <template>
  <b-container v-if="!!topics && topics.length">
    <b-row>
-     <b-col sm="12" md="6" lg="4" xl="3" v-for="topic in topics" :key="topic.id" class="mt-4">
+     <b-col sm="12" md="6" lg="4" xl="4" v-for="topic in topics" :key="topic.id" class="mt-4">
       <TagCard 
         :tId="topic.id"
         :tName="topic.name"

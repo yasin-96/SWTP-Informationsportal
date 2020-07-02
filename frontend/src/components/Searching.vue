@@ -4,7 +4,7 @@
       <b-col>
         <b-input-group>
           <b-input-group-append>
-            <b-button variant="success" @click="searchData()">
+            <b-button variant="success" v-on:enter="searchData()" @click="searchData()">
               <fai icon="search" />
             </b-button>
           </b-input-group-append>
