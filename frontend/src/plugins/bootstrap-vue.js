@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchMinus, faSearchPlus, faExclamationTriangle, faEdit} from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchMinus, faSearchPlus, faExclamationTriangle, faEdit, faPen} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome';
 
 //VUE Markdown editor
@@ -15,7 +15,7 @@ import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fort
 import 'simplemde/dist/simplemde.min.css'
 
 
-library.add(faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchPlus, faSearchMinus, faExclamationTriangle, faEdit);
+library.add(faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchPlus, faSearchMinus, faExclamationTriangle, faEdit, faPen);
 
 Vue.component('fai', FontAwesomeIcon);
 Vue.component('falayers', FontAwesomeLayers);
