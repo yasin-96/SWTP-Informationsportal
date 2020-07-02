@@ -34,5 +34,6 @@ build:
   stage: build
   before_script:
     - cd frontend
+    - npm i
   script:
     - npm run build
