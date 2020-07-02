@@ -3,9 +3,8 @@ stages:
   - build
   
 test:
-  image: maven:3-openjdk-11
   tags:
-    - java
+    - maven
   stage: test
   before_script:
     - cd backend
@@ -14,9 +13,8 @@ test:
     - mvn test 
   
 build:
-  image: maven:3-openjdk-11
   tags:
-    - java
+    - maven
   stage: build
   before_script:
     - cd backend
