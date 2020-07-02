@@ -381,7 +381,7 @@ export default {
 
   async getUserNameFromId(id) {
     return await client
-      .post('/nameFromId', id)
+      .post('/userNameFromId', id)
       .then((response) => {
         console.log('Name from id all:', response);
         console.log('Name from id:', response.data);
