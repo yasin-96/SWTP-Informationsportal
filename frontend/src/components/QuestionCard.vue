@@ -7,7 +7,7 @@
           <b-button-group>
             <h2><fai icon="user-circle" /></h2>
             <b-button size="sm" disabled variant="white"> </b-button>
-            <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{}} <small class="ml-3"> </small> </b-button>
+            <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{userName}} <small class="ml-3"> </small> </b-button>
             <b-button size="sm" disabled variant="white">
               <small>
                 <fai icon="clock" />
@@ -112,11 +112,12 @@ export default {
         shortcuts: {},
       },
       test: '',
+      userName:''
     };
   },
-  mounted() {
+  async mounted() {
     this.$refs.mde.simplemde.togglePreview();
-    this.test = this.parseIdToName(this.qUserId);
+    this.userName = await this.parseIdToName(this.qUserId);
   },
   methods: {
     /**

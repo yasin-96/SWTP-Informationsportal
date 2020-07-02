@@ -8,7 +8,7 @@
             <b-button-group>
             <h2><fai icon="user-circle" /></h2>
             <b-button size="sm" disabled variant="white"> </b-button>
-            <b-button size="sm" disabled variant="white"> <strong>Antwort </strong> erstellt von {{ aUserId }} <small class="ml-3"> </small> </b-button>
+            <b-button size="sm" disabled variant="white"> <strong>Antwort </strong> erstellt von {{ userName }} <small class="ml-3"> </small> </b-button>
             <b-button size="sm" disabled variant="white">
               <small>
                 <fai icon="clock" />
@@ -109,13 +109,15 @@ export default {
         // styleSelectedText: false,
         shortcuts: {},
       },
+      userName: ''
     };
   },
   beforeMount() {
     this.loadData();
   },
-  mounted() {
+  async mounted() {
     this.$refs.mde.simplemde.togglePreview();
+    this.userName = await this.parseIdToName(this.aUserId);
   },
   methods: {
     async loadData() {
@@ -155,10 +157,17 @@ export default {
         })
         .catch((err) => {});
     },
+    async parseIdToName(id) {
+      console.warn('AUFRUf-> parseIdToName ');
+      return await this.$store.dispatch('act_getUserNameFromID', id).then((response) => {
+        console.log('FUN', response);
+        return response.name;
+      });
+    },
   },
 
   computed: {
-    ...mapActions(['act_getAllComments', 'increaseRatingForAnswer']),
+    ...mapActions(['act_getAllComments', 'increaseRatingForAnswer','act_getUserNameFromID']),
     ...mapState(['allComments']),
   },
 };
