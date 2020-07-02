@@ -11,6 +11,11 @@
 
 <script>
 import { mapActions } from 'vuex';
+import send from '@/mixins/socketStomp.js';
+import connect from '@/mixins/socketStomp.js';
+import disconnect from '@/mixins/socketStomp.js';
+import tickleConnection from '@/mixins/socketStomp.js';
+
 export default {
   name: 'NewContent',
   props: {
@@ -43,6 +48,7 @@ export default {
       required: true,
     },
   },
+  mixins: [send, connect, disconnect, tickleConnection],
   data() {
     return {
       newAnswer: {
@@ -66,9 +72,11 @@ export default {
           timeStamp: Date.parse(new Date()),
         });
         console.log('HIER:!!', this.newAnswer);
+        this.connect();
+        this.send(this.id);
         let resp = await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
         // this.$store.dispatch('act_switchLoadingStateForAnswer', true);
-        this.$router.go(`/question/${resp.id}`);
+        // this.$router.go(`/question/${resp.id}`);
       }
     },
 
@@ -81,6 +89,7 @@ export default {
         });
         console.log('HIER:!!', this.newComment);
         let resp = await this.$store.dispatch('act_addNewComment', this.newComment);
+        this.send(testID);
         this.$router.go(`/question/${resp.id}`);
       }
     },

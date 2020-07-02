@@ -13,7 +13,7 @@
             <b-card class="rounded-0" header-tag="header" footer-bg-variant="white" footer-border-variant="white" v-if="cc.id === cId">
               <b-card-sub-title>
                 <div class="d-flex justify-content-between">
-                  <h5 class=""><fai icon="comment-alt" /> {{ c.userId }} </h5>
+                  <h5 class=""><fai icon="comment-alt" /> {{ parseIdToName(c.userId) }} </h5>
                 </div>
               </b-card-sub-title>
               <b-card-text>
@@ -82,7 +82,7 @@ export default {
       userName: ''
     };
   },
-  beforeMount() {
+  async beforeMount() {
     if (this.cComments) {
       this.cComments.forEach((cc, index) => {
         console.log('BM:', index, cc);
