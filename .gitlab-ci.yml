@@ -9,6 +9,8 @@ test:
   stage: test
   before_script:
     - cd backend
+    - chmod +x ./mvnw
+    
   script:
     - ./mvnw test
   
