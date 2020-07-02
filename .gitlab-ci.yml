@@ -1,15 +1,39 @@
+# stages:
+#   - test
+#   - build
+  
+# test:
+#   image: openjdk:11-jdk
+#   tags:
+#     - maven
+#   stage: test
+#   before_script:
+#     - ls /bin/
+#     - cd backend
+    
+#   script:
+#     - mvn test 
+  
+# build:
+#   image: openjdk:11-jdk
+#   tags:
+#     - maven
+#   stage: build
+#   before_script:
+#     - cd backend
+#   script:
+#     - mvn clean install -DskipTests
+
+
 stages:
   - build
-  - test
-
-job 0:
+  
+build:
+  tags:
+    - npm
   stage: build
+  before_script:
+    - cd frontend
+    - npm i
   script:
-    - ./mvnw clean install
-
-job 1:
-  image: openjdk:11-jdk
-  stage: test
-  script:
-    - ./mvnw test
-   
+    - npm run build

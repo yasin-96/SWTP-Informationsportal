@@ -2,7 +2,7 @@
   <b-container v-if="this.query">
     <b-row v-if="isDataLoaded">
       <b-col sm="12" md="12" lg="12" xl="12" class="mt-4" v-for="(item, i) in allQueryData" :key="i">
-        <QuestionCard :qId="item.id" :qHeader="item.header" :qContent="item.content" :qTags="item.tags" :qDate="item.timeStamp" />
+        <QuestionCard :qId="item.id" :qHeader="item.header" :qContent="item.content" :qTags="item.tags" :qDate="item.timeStamp" :qUserId="item.userId" />
       </b-col>
       <b-row> </b-row>
     </b-row>
