@@ -1,14 +1,14 @@
 package de.thm.swtp.information_portal.controller;
 
-import de.thm.swtp.information_portal.models.Question;
-import de.thm.swtp.information_portal.models.User;
-import de.thm.swtp.information_portal.models.UserInformation;
+import de.thm.swtp.information_portal.models.*;
+import de.thm.swtp.information_portal.repositories.AnswerRepository;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 import de.thm.swtp.information_portal.repositories.UserInformationRepository;
 import de.thm.swtp.information_portal.service.UserInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -28,6 +28,9 @@ public class UserInformationController {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private AnswerRepository answerRepository;
+
     @GetMapping("/{user}/info")
     public CompletableFuture<ResponseEntity<UserInformation>> getUserInfo(@PathVariable String user) throws URISyntaxException {
         Optional<UserInformation> userInfo = userInformationService.getUserInfo(user);
@@ -44,10 +47,29 @@ public class UserInformationController {
                     questionsOfUser.add(question);
                 }
             }
-            UserInformation newUserInfo = new UserInformation(user,questionsOfUser.size());
+            int numberOfAnswers= getNumberOfAnswers(user);
+            UserInformation newUserInfo = new UserInformation(user,questionsOfUser.size(),numberOfAnswers);
             userInformationService.addUserInfo(newUserInfo);
             return CompletableFuture
                     .completedFuture(ResponseEntity.created(new URI("/info-portal/api" + newUserInfo.getId())).body(newUserInfo));
         }
+    }
+
+    int getNumberOfAnswers(String id) {
+        List<Answers> allAnswers = answerRepository.findAll();
+        List<Answer> allSingleAnswers = new ArrayList<>();
+        List<Answer> userAnswers = new ArrayList<>();
+        for(Answers answers:allAnswers){
+            List<Answer> answersOfOneAnswersObject = answers.getListOfAnswers();
+            allSingleAnswers.addAll(answersOfOneAnswersObject);
+        }
+
+        for(Answer answer:allSingleAnswers){
+            if(answer.getUserId().equals(id)){
+                userAnswers.add(answer);
+            }
+        }
+
+        return userAnswers.size();
     }
 }

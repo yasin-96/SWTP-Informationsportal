@@ -13,10 +13,12 @@ public class UserInformation {
     //String userId;
     String id;
     int numberOfQuestions;
+    int numberOfAnswers;
 
-    public UserInformation(String id, int numberOfQuestions){
+    public UserInformation(String id, int numberOfQuestions,int numberOfAnswers){
         this.id=id;
         this.numberOfQuestions=numberOfQuestions;
+        this.numberOfAnswers = numberOfAnswers;
     }
 
 
