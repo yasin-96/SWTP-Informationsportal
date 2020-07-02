@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 public class ResponseUser {
     String userName;
 
-    public ResponseUser(String name){
+    public ResponseUser(String userName){
         this.userName = userName;
     }
 }
