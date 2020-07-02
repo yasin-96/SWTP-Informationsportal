@@ -69,7 +69,6 @@ public class UserInformationController {
                 userAnswers.add(answer);
             }
         }
-
         return userAnswers.size();
     }
 }

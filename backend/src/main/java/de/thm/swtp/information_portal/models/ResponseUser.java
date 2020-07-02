@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ResponseUser {
-    String name;
+    String userName;
 
     public ResponseUser(String name){
-        this.name = name;
+        this.userName = userName;
     }
 }

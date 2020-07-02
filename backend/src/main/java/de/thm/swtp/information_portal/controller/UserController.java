@@ -49,10 +49,10 @@ public class UserController {
 
 
     @Async
-    @PostMapping("/nameFromId")
+    @PostMapping("/userNameFromId")
     CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody String id){
         Optional<User> user = userService.getUser(id);
-        ResponseUser responseUser = new ResponseUser(user.get().getName());
+        ResponseUser responseUser = new ResponseUser(user.get().getPreferred_username());
         return CompletableFuture.completedFuture(new ResponseEntity<ResponseUser>(responseUser,HttpStatus.OK));
     }
 
