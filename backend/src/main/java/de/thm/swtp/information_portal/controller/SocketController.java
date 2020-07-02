@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -38,13 +39,11 @@ public class SocketController {
     @SendTo("/notify")
     public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String id){
         Optional<Answers> answers = answerRepository.findById(id);
-        List<User> users = new ArrayList<>();
-        List<Answer> answersOfQuestinon = answers.get().getListOfAnswers();
-        for(Answer answer:answersOfQuestinon){
-            if(answer.getUserId().equals(id)){
-                Optional<User> userToBeAdded = userRepository.findById(answer.getId());
+        var users = new HashSet<User>();
+        List<Answer> answersOfQuestion = answers.get().getListOfAnswers();
+        for(Answer answer:answersOfQuestion){
+                Optional<User> userToBeAdded = userRepository.findById(answer.getUserId());
                 users.add(userToBeAdded.get());
-            }
         }
         String headerOfQuestion = questionRepository.findById(id).get().getHeader();
         SocketResponse socketResponse = new SocketResponse(users,headerOfQuestion);
