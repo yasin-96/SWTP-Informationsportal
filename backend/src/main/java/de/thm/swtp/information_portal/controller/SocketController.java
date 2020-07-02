@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.user.UserDestinationResolver;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("info-portal/api")
+@RequestMapping("/info-portal/api")
+@CrossOrigin(origins = "*")
 public class SocketController {
 
     @Autowired
