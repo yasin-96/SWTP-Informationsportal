@@ -1,25 +1,38 @@
+# stages:
+#   - test
+#   - build
+  
+# test:
+#   image: openjdk:11-jdk
+#   tags:
+#     - maven
+#   stage: test
+#   before_script:
+#     - ls /bin/
+#     - cd backend
+    
+#   script:
+#     - mvn test 
+  
+# build:
+#   image: openjdk:11-jdk
+#   tags:
+#     - maven
+#   stage: build
+#   before_script:
+#     - cd backend
+#   script:
+#     - mvn clean install -DskipTests
+
+
 stages:
-  - test
   - build
   
-test:
-  image: openjdk:11-jdk
-  tags:
-    - maven
-  stage: test
-  before_script:
-    - ls /bin/
-    - cd backend
-    
-  script:
-    - mvn test 
-  
 build:
-  image: openjdk:11-jdk
   tags:
-    - maven
+    - npm
   stage: build
   before_script:
-    - cd backend
+    - cd frontend
   script:
-    - mvn clean install -DskipTests
+    - npm run build:local
