@@ -3,23 +3,22 @@ stages:
   - build
   
 test:
-  image: openjdk:11-jdk
+  image: maven:3-openjdk-11
   tags:
     - java
   stage: test
   before_script:
     - cd backend
-    - chmod +x ./mvnw
     
   script:
-    - ./mvnw test
+    - mvn test 
   
 build:
-  image: openjdk:11-jdk
+  image: maven:3-openjdk-11
   tags:
     - java
   stage: build
   before_script:
     - cd backend
   script:
-    - ./mvnw clean install -DskipTests
+    - mvn clean install -DskipTests
