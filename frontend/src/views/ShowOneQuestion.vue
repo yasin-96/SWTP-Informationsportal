@@ -2,22 +2,32 @@
   <b-container class="mt-3" v-if="id && isDataLoaded.question">
     <b-row>
       <b-col>
-        <QuestionCard :qId="oneQuestion.id" :qHeader="oneQuestion.header" :qContent="oneQuestion.content" :qTags="oneQuestion.tags" :qDate="oneQuestion.timeStamp" :qUserId="oneQuestion.userId" :qFooter="true" :qEdit="true" :displayContent="true"
-        :userEdit="oneQuestion.userId === getUserId"
-        />
-
         <!-- 
             By clicking on the title of a question, a page is called up and all information is provided.
             All answers and comments made. 
         -->
+        <QuestionCard
+          :qId="oneQuestion.id"
+          :qHeader="oneQuestion.header"
+          :qContent="oneQuestion.content"
+          :qTags="oneQuestion.tags"
+          :qDate="oneQuestion.timeStamp"
+          :qUserId="oneQuestion.userId"
+          :qUserName="oneQuestion.userName"
+          :qFooter="true"
+          :qEdit="true"
+          :displayContent="true"
+          :userEdit="oneQuestion.userId === getUserId"
+        />
 
+        
+        <!-- Add new Answer to this Question -->
         <NewContent bTextSize="lg" :nRows="2" :id="oneQuestion.id" :nIsAnswer="true" />
 
-        <b-container v-if="isDataLoaded.answers">
+        <!-- Display all available Answers  -->
+        <b-container v-if="isDataLoaded.answers && !!allAnswers.listOfAnswers">
           <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index">
-            <AnswerCard :nId="oneQuestion.id" :aContent="answer.content" :aRating="answer.rating" :aDate="answer.timeStamp" :cId="answer.id"
-            :aUserId="answer.userId"
-            :userEdit="oneQuestion.userId === getUserId" class="pb-3" />
+            <AnswerCard :nId="oneQuestion.id" :aContent="answer.content" :aRating="answer.rating" :aDate="answer.timeStamp" :cId="answer.id" :aUserId="answer.userId" :aUserName="answer.userName" :userEdit="oneQuestion.userId === getUserId" class="pb-3" />
           </b-container>
         </b-container>
       </b-col>
@@ -27,7 +37,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import NewContent from '@/components/NewContent';
 import QuestionCard from '@/components/QuestionCard';
 import AnswerCard from '@/components/AnswerCard';
@@ -54,8 +63,7 @@ export default {
       },
     };
   },
-
-  beforeMount() {
+  mounted() {
     this.loadData();
   },
   computed: {
@@ -64,6 +72,9 @@ export default {
     ...mapState(['oneQuestion', 'allAnswers']),
   },
   methods: {
+    /**
+     * All data for displaying the question and answer is requested asynchronously.
+     */
     async loadData() {
       if (this.id) {
         console.info('THIS ID:', this.id);

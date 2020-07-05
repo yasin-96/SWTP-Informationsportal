@@ -6,42 +6,36 @@
         <b-row class="justify-content-left">
           <b-col>
             <b-button-group>
-            <h2><fai icon="user-circle" /></h2>
-            <b-button size="sm" disabled variant="white"> </b-button>
-            <b-button size="sm" disabled variant="white"> <strong>Antwort </strong> erstellt von {{ userName }} <small class="ml-3"> </small> </b-button>
-            <b-button size="sm" disabled variant="white">
-              <small>
-                <fai icon="clock" />
-                {{ aDate }}
-              </small>
-            </b-button>
-          </b-button-group>
+              <h2><fai icon="user-circle" /></h2>
+              <b-button size="sm" disabled variant="white"> </b-button>
+              <b-button size="sm" disabled variant="white"> <strong>Antwort </strong> erstellt von {{ aUserName }} <small class="ml-3"> </small> </b-button>
+              <b-button size="sm" disabled variant="white">
+                <small>
+                  <fai icon="clock" />
+                  {{ aDate }}
+                </small>
+              </b-button>
+            </b-button-group>
           </b-col>
         </b-row>
       </template>
 
       <!-- One answer to the question -->
-      <!-- <b-card class="mb-1" footer-bg-border="white" footer-border-variant="white">
-        <b-card-text> -->
-          
-          <Editor ref="mde" class="answerCardEditor" v-model="aContent" :configs="mdeConfig"/>
+      <Editor ref="mde" class="answerCardEditor" v-model="aContent" :configs="mdeConfig" />
 
+      <!-- Edit or like this Answer -->
+      <b-button-group>
+        <b-button size="sm" variant="info" @click="increaseRating()">
+          <fai icon="thumbs-up" />
+        </b-button>
+        <b-button size="sm" disabled variant="info">
+          {{ aRating }}
+        </b-button>
+        <b-button v-if="userEdit" size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
+      </b-button-group>
 
-          <!-- <b-form-textarea id="textarea-plaintext" plaintext :rows="minCommentRows" :value="aContent"> </b-form-textarea> -->
-          <b-button-group>
-            <b-button size="sm" variant="info" @click="increaseRating()">
-              <fai icon="thumbs-up" />
-            </b-button>
-            <b-button size="sm" disabled variant="info">
-              {{ aRating }}
-            </b-button>
-            <b-button v-if="userEdit" size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
-          </b-button-group>
-        <!-- </b-card-text>
-      </b-card> -->
-
+      <!-- Area for all Comments -->
       <b-card-body>
-        <!-- Area for all Comments -->
         <b-container>
           <Comment :cComments="allComments" :cId="cId" />
         </b-container>
@@ -62,7 +56,7 @@ export default {
   name: 'AnswerCard',
   components: {
     Comment,
-    Editor: VueSimplemde
+    Editor: VueSimplemde,
   },
   props: {
     nId: {
@@ -87,12 +81,16 @@ export default {
     },
     aUserId: {
       type: String,
-      required: true
+      required: true,
+    },
+    aUserName: {
+      type: String,
+      required: true,
     },
     userEdit: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -106,10 +104,8 @@ export default {
       newRating: Number(this.aRating) + 1,
       mdeConfig: {
         toolbar: null,
-        // styleSelectedText: false,
         shortcuts: {},
       },
-      userName: ''
     };
   },
   beforeMount() {
@@ -117,17 +113,23 @@ export default {
   },
   async mounted() {
     this.$refs.mde.simplemde.togglePreview();
-    this.userName = await this.parseIdToName(this.aUserId);
   },
   methods: {
+    /**
+     * If the property was passed by the response, the comments can also be loaded.
+     */
     async loadData() {
       if (this.cId) {
         await this.$store.dispatch('act_getAllComments', this.cId);
       }
     },
 
+    /**
+     * 
+     */
     async increaseRating() {
-      this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
+      // this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
+      this.changeAnswerObject.id = this.nId;
       let currentDate = Date.parse(new Date());
       // let newRating = Number(this.aRating) + 1;
       console.warn('NEW R', this.newRating);
@@ -140,12 +142,18 @@ export default {
           timeStamp: currentDate,
         },
       ];
+      //TODO das geht noch nicht in place
       console.warn('INCRESE Rating AWT', this.changeAnswerObject);
       await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
 
+      this.changeAnswerObject.listOfAnswers = [];
       //reload page
-      this.$router.go(0);
+      // this.$router.go(0);
     },
+
+    /**
+     * 
+     */
     editAnswer() {
       this.$router
         .push({
@@ -157,24 +165,15 @@ export default {
         })
         .catch((err) => {});
     },
-    async parseIdToName(id) {
-      console.warn('AUFRUf-> parseIdToName ');
-      return await this.$store.dispatch('act_getUserNameFromID', id).then((response) => {
-        console.log('FUN', response);
-        return response;
-      });
-    },
   },
-
   computed: {
-    ...mapActions(['act_getAllComments', 'increaseRatingForAnswer','act_getUserNameFromID']),
+    ...mapActions(['act_getAllComments', 'increaseRatingForAnswer']),
     ...mapState(['allComments']),
   },
 };
 </script>
 
 <style scoped>
-
 .answerCardEditor >>> .CodeMirror {
   min-height: 0;
   max-height: 250px;

@@ -3,7 +3,8 @@
     <b-row>
       <b-col sm="12" md="4" lg="4" xl="4" v-for="quest in allQuestions" :key="quest.id" class="mt-4">
         <QuestionCard :qId="quest.id" :qHeader="quest.header" :qContent="quest.content" :qTags="quest.tags" :qDate="quest.timeStamp"
-        :qUserId="quest.userId"/>
+        :qUserId="quest.userId"
+        :qUserName="quest.userName"/>
       </b-col>
     </b-row>
   </b-container>

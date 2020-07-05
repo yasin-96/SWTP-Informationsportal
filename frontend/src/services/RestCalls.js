@@ -40,7 +40,7 @@ const client = new axios.create({
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
-  timeout: 20000,
+  // timeout: 20000,
 });
 
 /*
@@ -84,6 +84,9 @@ export default {
       });
   },
 
+  /**
+   * 
+   */
   async getAllQuestions() {
     console.debug('RestCall: getAllQuestions()');
     return await client
@@ -97,6 +100,10 @@ export default {
       });
   },
 
+  /**
+   * 
+   * @param {Strings} searchQuery 
+   */
   async getAllDataByQuery(searchQuery) {
     console.debug(`RestCall: getAllDataByQuery(${searchQuery})`);
     return await client
@@ -110,6 +117,10 @@ export default {
       });
   },
 
+  /**
+   * 
+   * @param {String} questionId 
+   */
   async getAllAnswersToQuestions(questionId) {
     console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
     return await client
@@ -123,7 +134,10 @@ export default {
       });
   },
 
-  //TODO endpoint warte noch auf hinweis
+  /**
+   * 
+   * @param {String} id 
+   */
   async getOneAnswerToQuestion(id) {
     console.debug(`RestCall: getOneAnswerToQuestion(${id})`, id);
     return await client
@@ -138,7 +152,10 @@ export default {
       });
   },
 
-  //TODO endpoint
+  /**
+   * 
+   * @param {Answer} updatedAnswer 
+   */
   async setOneAnswerToQuestion(updatedAnswer) {
     console.debug('setOneAnswerToQuestion():', updatedAnswer);
     return await client
@@ -152,6 +169,10 @@ export default {
       });
   },
 
+  /**
+   * 
+   * @param {String} answerId 
+   */
   async getAllCommentsToAnswers(answerId) {
     console.info(`RestCall: getAllCommentsToAnswers(${answerId})`);
     return await client
@@ -165,6 +186,9 @@ export default {
       });
   },
 
+  /**
+   * 
+   */
   async getAllTags() {
     console.info('RestCall: getAllTags()');
     return await client
@@ -236,7 +260,7 @@ export default {
 
   /**
    *
-   * @param {Object} answer
+   * @param {Answer} answer
    */
   async increaseAnswerRating(answer) {
     console.debug(`RestCall: increaseAnswerRating(${answer})`);
@@ -253,7 +277,7 @@ export default {
 
   /**
    *
-   * @param {Object} newComment
+   * @param {Comment} newComment
    */
   async addNewComment(newComment) {
     console.debug(`RestCall: addNewComment(${newComment})`);
@@ -270,7 +294,7 @@ export default {
 
   /**
    *
-   * @param {Object} comment
+   * @param {Comment} comment
    */
   async increaseCommentRating(comment) {
     console.debug(`RestCall: increaseCommentRating(${comment})`);
@@ -287,7 +311,7 @@ export default {
 
   /**
    *
-   * @param {Object} question
+   * @param {Question} question
    */
   async postNewQuestion(question) {
     console.debug(`RestCall: postNewQuestion(${question})`);
@@ -367,6 +391,9 @@ export default {
   //   });
   // },
 
+  /**
+   * 
+   */
   async getUserInfo() {
     return await client
       .get('/user')
@@ -379,6 +406,10 @@ export default {
       });
   },
 
+  /**
+   * 
+   * @param {String} id 
+   */
   async getUserNameFromId(id) {
     return await client
       .post('/userNameFromId', id)

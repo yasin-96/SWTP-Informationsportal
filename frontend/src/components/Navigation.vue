@@ -14,7 +14,7 @@
         <b-navbar toggleable="md">
           <b-navbar-nav>
             <b-navbar-brand to="/">
-              <img src="https://www.thm.de/_thm/logos/thm.svg" fluid  width="92" height="38" alt="THM LOGO" />
+              <img src="https://www.thm.de/_thm/logos/thm.svg" fluid  :width="imgX" :height="imgY" alt="THM LOGO" />
             </b-navbar-brand>
             <b-nav-item to="/home">Home</b-nav-item>
             <b-nav-item to="/new">New</b-nav-item>
@@ -56,6 +56,8 @@ export default {
       disableSearchBar: true,
       searchInput: '',
       isHovered: false,
+      imgX: 92,
+      imgY: 38
     };
   },
 

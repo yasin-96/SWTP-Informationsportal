@@ -7,7 +7,7 @@
           <b-button-group>
             <h2><fai icon="user-circle" /></h2>
             <b-button size="sm" disabled variant="white"> </b-button>
-            <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{userName}} <small class="ml-3"> </small> </b-button>
+            <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{qUserName}} <small class="ml-3"> </small> </b-button>
             <b-button size="sm" disabled variant="white">
               <small>
                 <fai icon="clock" />
@@ -43,8 +43,6 @@
 <script>
 import { BCard, BFormTags } from 'bootstrap-vue';
 import VueSimplemde from 'vue-simplemde';
-
-import { mapActions } from 'vuex';
 
 export default {
   name: 'QuestionCard',
@@ -91,10 +89,10 @@ export default {
       type: String,
       required: true,
     },
-    // qUserName: {
-    //   type: String,
-    //   required: true
-    // },
+    qUserName: {
+      type: String,
+      required: true
+    },
     qEdit: {
       type: Boolean,
       default: false,
@@ -112,12 +110,10 @@ export default {
         shortcuts: {},
       },
       test: '',
-      userName:''
     };
   },
   async mounted() {
     this.$refs.mde.simplemde.togglePreview();
-    this.userName = await this.parseIdToName(this.qUserId);
   },
   methods: {
     /**
@@ -129,16 +125,8 @@ export default {
     editQuestion() {
       this.$router.push(`/question/edit/${this.$props.qId}`).catch((err) => {});
     },
-    async parseIdToName(id) {
-      console.warn('AUFRUf-> parseIdToName ');
-      return await this.$store.dispatch('act_getUserNameFromID', id).then((response) => {
-        console.log('FUN', response);
-        return response;
-      });
-    },
   },
   computed: {
-    ...mapActions(['act_getUserNameFromID']),
     allTags() {
       return this.qTags.map((tag) => tag.name);
       this.test = getRendertHtmlFromMarkdown(this.qContent);

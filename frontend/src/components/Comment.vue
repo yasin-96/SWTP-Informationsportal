@@ -4,16 +4,19 @@
     <NewContent v-if="cId" :nRows="2" :nIsComment="true" :id="cId" />
 
     <b-card no-body class="mb-1" v-if="hasComments">
+      <!-- Toggle all comments -->
       <b-card-header header-tag="header" class="p-1" role="tab" variant="white">
         <b-button block v-b-toggle="toggleId" variant="white"> {{ toggleText }} </b-button>
       </b-card-header>
+
+
       <b-collapse :id="toggleId" ref="b-collaps-comments">
         <div v-for="(cc, i) in cComments" :key="i" flex-column align-items-start>
           <div v-for="c in cc.comments" :key="c.id">
             <b-card class="rounded-0" header-tag="header" footer-bg-variant="white" footer-border-variant="white" v-if="cc.id === cId">
               <b-card-sub-title>
                 <div class="d-flex justify-content-between">
-                  <h5 class=""><fai icon="comment-alt" /> {{ parseIdToName(c.userId) }} </h5>
+                  <h5 class=""><fai icon="comment-alt" /> {{ c.userName }} </h5>
                 </div>
               </b-card-sub-title>
               <b-card-text>
@@ -79,7 +82,6 @@ export default {
       },
       toggleText: 'Show Comments',
       iCounter: 0,
-      userName: ''
     };
   },
   async beforeMount() {
@@ -123,22 +125,10 @@ export default {
         timestamp: Date.parse(new Date()),
       };
       await this.$store.dispatch('act_increaseCommentRating', newComment);
-      console.warn('NEW  COMMENT WIHT R', newComment);
-
-      //reload page
-      console.log('cardID', comment.id);
-      this.$router.go(0);
-    },
-    async parseIdToName(id) {
-      console.warn('AUFRUf-> parseIdToName ');
-      return await this.$store.dispatch('act_getUserNameFromID', id).then((response) => {
-        console.log('FUN', response);
-        return response.name;
-      });
     },
   },
   computed: {
-    ...mapActions(['act_increaseCommentRating', 'act_getUserNameFromID']),
+    ...mapActions(['act_increaseCommentRating']),
     hasComments() {
       return Object.keys(this.cComments).length > 0 ? true : false;
     },

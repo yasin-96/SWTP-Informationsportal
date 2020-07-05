@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    
     //questions
     allQuestions: {},
     oneQuestion: {},
@@ -18,7 +19,6 @@ export default new Vuex.Store({
     //anwser
     allAnswers: {},
     oneAnswer: {},
-    reloadAnswers: false,
 
     //comments
     allComments: [],
@@ -89,17 +89,7 @@ export default new Vuex.Store({
     //all mutation for answers
     SET_ALL_ANSWERS(state, data) {
       console.debug('SET_ALL_ANSWERS');
-
-      state.reloadAnswers = state.reloadAnswers ? false : true;
-
-      if (data) {
-        data.listOfAnswers.forEach((d) => {
-          console.debug('ANSWERS', d);
-          d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
-        });
-      }
-
-      state.allAnswers = Object.assign([], data);
+      state.allAnswers = data;
     },
 
     SET_ONE_ANSWER_TO_QUESTION(state, data) {
@@ -108,6 +98,7 @@ export default new Vuex.Store({
         state.oneAnswer = data;
       }
     },
+
 
     //#endregion answers
 
@@ -251,11 +242,17 @@ export default new Vuex.Store({
     //#region answer
 
     //answers
-    async act_getAllAnswers({ commit }, questionId) {
+    async act_getAllAnswers({ commit, dispatch }, questionId) {
       console.log('act_getAllAnswers', questionId);
       await RestCalls.getAllAnswersToQuestions(questionId)
         .then((response) => {
-          if (response != null) {
+
+          if(response){
+            response.listOfAnswers.forEach((d) => {
+              console.debug('ANSWERS', d);
+              d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
+            });
+            
             commit('SET_ALL_ANSWERS', response);
           }
         })
@@ -288,11 +285,12 @@ export default new Vuex.Store({
         });
     },
 
-    async act_addNewAnswer({}, newAnswer) {
+    async act_addNewAnswer({dispatch}, newAnswer) {
       console.log('act_addNewAnswer', newAnswer);
-      return await RestCalls.addNewAnswer(newAnswer)
-        .then((response) => {
-          return response;
+      await RestCalls.addNewAnswer(newAnswer)
+        .then(async (response) => {
+          // return response;
+          await dispatch('act_getAllAnswers', newAnswer.id);
         })
         .catch((error) => {
           console.error(error);
@@ -300,11 +298,13 @@ export default new Vuex.Store({
         });
     },
 
-    async increaseRatingForAnswer({ dispatch }, answer) {
+    async increaseRatingForAnswer({ state, dispatch }, answer) {
       console.log('increaseAnswerRating', answer);
+
       await RestCalls.increaseAnswerRating(answer)
-        .then(() => {
-          dispatch('act_getAllAnswers', answer.id);
+        .then(async () => {
+          state.allAnswers = [];
+          await dispatch('act_getAllAnswers', answer.id);
         })
         .catch((error) => {
           console.error(error);
@@ -315,10 +315,18 @@ export default new Vuex.Store({
 
     //#region comment
     //comments
-    async act_getAllComments({ commit }, answerId) {
+    async act_getAllComments({ commit, dispatch }, answerId) {
       console.log('act_getAllComments');
       await RestCalls.getAllCommentsToAnswers(answerId)
         .then((response) => {
+          
+          if(response && response.comments){
+            response.comments.forEach((dd) => {
+              console.debug(dd);
+              dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
+            });
+          }
+          
           commit('SET_ALL_COMMENTS', response);
         })
         .catch((error) => {
@@ -326,22 +334,26 @@ export default new Vuex.Store({
         });
     },
 
-    async act_addNewComment({}, newComment) {
+    async act_addNewComment({ state, dispatch}, newComment) {
       console.log('act_addNewComment', newComment);
-      return await RestCalls.addNewComment(newComment)
-        .then((response) => {
-          return response;
+      await RestCalls.addNewComment(newComment)
+        .then(async (response) => {
+          console.log('response',response);
+          state.allComments = [];
+          await dispatch('act_getAllComments' ,newComment.id);
         })
         .catch((error) => {
           console.error(error);
         });
     },
 
-    async act_increaseCommentRating({ dispatch }, comment) {
+    async act_increaseCommentRating({ state, dispatch }, comment) {
       console.log('act_increaseCommentRating', comment);
-      return await RestCalls.increaseCommentRating(comment)
-        .then(() => {
-          dispatch('act_getAllComments', comment.id);
+      await RestCalls.increaseCommentRating(comment)
+        .then(async () => {
+          //reset all comments
+          state.allComments = [];
+          await dispatch('act_getAllComments', comment.id);
         })
         .catch((error) => {
           console.error(error);
@@ -412,10 +424,14 @@ export default new Vuex.Store({
     },
 
     getUserId: (state) => {
-      
       return state.currentUser.id;
     },
+    
 
+    /**
+     * The first letters are taken from the first/last name and 
+     * used as avatar in the navigation bar
+     */
     getFirstLetterFromUser: (state) => {
       if(state.currentUser.name) {
         let raw = state.currentUser.name.split(' ');

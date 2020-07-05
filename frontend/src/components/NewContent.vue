@@ -1,8 +1,15 @@
 <template>
   <div class="pt-4 pb-4" v-if="id">
     <b-button-group class="d-flex">
+      <!-- Depending on the property, the addition of a new answer or comment is shown  -->
+
+      <!-- Card for adding new Answer  -->
       <b-form-textarea v-if="nIsAnswer" v-model="contentForAnswer" placeholder="Add new answer ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
+      
+      <!-- Card for adding new Comment  -->
       <b-form-textarea v-if="nIsComment" v-model="contentForComment" placeholder="Add new comment ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
+      
+      
       <b-button v-if="nIsAnswer" @click="addNewAnswer()" variant="success"><fai icon="plus-circle" /></b-button>
       <b-button v-if="nIsComment" @click="addNewComment()" variant="success"><fai icon="plus-circle" /></b-button>
     </b-button-group>
@@ -64,6 +71,9 @@ export default {
     };
   },
   methods: {
+    /**
+     * 
+     */
     async addNewAnswer() {
       if (this.contentForAnswer) {
         this.newAnswer.listOfAnswers.push({
@@ -72,14 +82,26 @@ export default {
           timeStamp: Date.parse(new Date()),
         });
         console.log('HIER:!!', this.newAnswer);
+        
+        // websocket
         this.connect();
         this.send(this.id);
-        let resp = await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
-        // this.$store.dispatch('act_switchLoadingStateForAnswer', true);
-        // this.$router.go(`/question/${resp.id}`);
+
+        //add the answer
+        await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
+
+        //scroll to this answer
+        window.scrollTo(0,document.body.scrollHeight);
+
+        // clear ansers old content 
+        this.contentForAnswer = ""
+        this.newAnswer.listOfAnswers = [];
       }
     },
 
+    /**
+     * 
+     */
     async addNewComment() {
       if (this.contentForComment) {
         this.newComment.comments.push({
@@ -88,14 +110,18 @@ export default {
           timestamp: Date.parse(new Date()), //TODO
         });
         console.log('HIER:!!', this.newComment);
-        let resp = await this.$store.dispatch('act_addNewComment', this.newComment);
-        this.send(testID);
-        this.$router.go(`/question/${resp.id}`);
+
+        //add the comments
+        await this.$store.dispatch('act_addNewComment', this.newComment);
+
+        //clear comments old value
+        this.contentForComment = "";
+        this.newComment.comments = [];
       }
     },
   },
   computed: {
-    ...mapActions(['act_addNewAnswer', 'act_addNewComment']),
+    ...mapActions(['act_addNewAnswer', 'act_addNewComment', 'act_getAllAnswers', 'act_getAllComments']),
   },
 };
 </script>
