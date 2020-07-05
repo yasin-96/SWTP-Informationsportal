@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.thm.swtp.information_portal.models.Comment;
 import de.thm.swtp.information_portal.models.Comments;
 import de.thm.swtp.information_portal.service.CommentService;
+import de.thm.swtp.information_portal.service.UserService;
 
 @RestController
 @RequestMapping("/info-portal/api")
@@ -34,6 +35,10 @@ public class CommentController {
 
 	@Autowired
 	private CommentService commentService;
+
+	
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * 
@@ -59,6 +64,23 @@ public class CommentController {
 		Optional<Comments> comments = commentService.findByAnswerId(id);
 		if (comments.isPresent()) {
 			List<Comment> allComments = comments.get().getComments();
+
+			allComments.forEach(comment -> {
+
+				if(comment.getUserId() != null) {
+
+					var userName = userService.getUser(comment.getUserId()).get().getPreferred_username();
+
+					comment.setUserName(
+						!userName.isEmpty() && userName != null ? userName : "Unknown");
+				} else {
+					comment.setUserName("Unknown");
+				}
+			});
+
+
+
+
 			allComments.sort(compareByRating);
 		}
 		ResponseEntity<Comments> resComments = comments.map(response -> ResponseEntity.ok().body(response))

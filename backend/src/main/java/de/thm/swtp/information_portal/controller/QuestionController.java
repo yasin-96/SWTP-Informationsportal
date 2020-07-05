@@ -10,6 +10,8 @@ import de.thm.swtp.information_portal.models.Answers;
 import de.thm.swtp.information_portal.models.Tag;
 import de.thm.swtp.information_portal.service.AnswerService;
 import de.thm.swtp.information_portal.service.TagService;
+import de.thm.swtp.information_portal.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,8 @@ public class QuestionController {
 	@Autowired
 	private AnswerService answerService;
 
+	@Autowired
+	private UserService userService;
 	/**
 	 * 
 	 * @return
@@ -49,6 +53,9 @@ public class QuestionController {
 	@GetMapping("/allQuestions")
 	public CompletableFuture<List<Question>> getAllQuestions() throws InterruptedException {
 		var response = questionService.getAllQuestions();
+
+		setParsedUserNameById(response);
+
 		return CompletableFuture.completedFuture(response);
 	}
 
@@ -63,6 +70,15 @@ public class QuestionController {
 	public CompletableFuture<ResponseEntity<Question>> getQuestion(@PathVariable String id)
 			throws InterruptedException {
 		Optional<Question> question = questionService.getQuestion(id);
+
+		if(question.get().getUserId() != null) {
+			var userName = userService.getUser(question.get().getUserId()).get().getPreferred_username();
+			question.get().setUserName( !userName.isEmpty() || userName != null ? userName : "Unknown");
+		} else {
+			question.get().setUserName("Unknown");
+		}
+
+
 		ResponseEntity<Question> quest = question.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 		return CompletableFuture.completedFuture(quest);
@@ -79,6 +95,9 @@ public class QuestionController {
 	public CompletableFuture<ResponseEntity<List<Question>>> findByTag(@PathVariable String tag)
 			throws InterruptedException {
 		List<Question> questions = questionService.findByTag(tag);
+		
+		setParsedUserNameById(questions);
+
 		return CompletableFuture.completedFuture(new ResponseEntity<List<Question>>(questions, HttpStatus.OK));
 	}
 
@@ -116,7 +135,7 @@ public class QuestionController {
 
 	@Async
 	@GetMapping("/question/query")
-	public CompletableFuture<ResponseEntity<HashSet<Question>>> getDataByQuery(@Validated @RequestParam String searchQuery)
+	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Validated @RequestParam String searchQuery)
 			throws URISyntaxException, InterruptedException {
 
 		List<String> listQuery = Arrays.stream(searchQuery.split(" ")).filter(item -> !item.isEmpty())
@@ -135,8 +154,12 @@ public class QuestionController {
 				System.out.println(e);
 			}
 		}
+
+		var filteredQuestionsAsList = new ArrayList<Question>(filteredQuestions);
+
+		setParsedUserNameById(filteredQuestionsAsList);
 		
-		return CompletableFuture.completedFuture(new ResponseEntity<>(filteredQuestions, HttpStatus.OK));
+		return CompletableFuture.completedFuture(new ResponseEntity<>(filteredQuestionsAsList, HttpStatus.OK));
 	}
 
 	@Async
@@ -150,6 +173,7 @@ public class QuestionController {
 			answers.ifPresent(value -> myMap.put(item, value.getListOfAnswers().size()));
 		}
 		mostActiveQuestions = getListOfMostActiveQuestions(myMap);
+		setParsedUserNameById(mostActiveQuestions);
 		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions, HttpStatus.OK));
 	}
 
@@ -162,6 +186,29 @@ public class QuestionController {
 		for (var entry : sorted.entrySet()) {
 			questions.add(entry.getKey());
 		}
+		setParsedUserNameById(questions);
+
 		return questions.stream().limit(12).collect(Collectors.toList());
+	}
+
+	public void setParsedUserNameById(Optional<Question> question){
+		if(question.get().getUserId() != null) {
+			var userName = userService.getUser(question.get().getUserId()).get().getPreferred_username();
+			question.get().setUserName( !userName.isEmpty() || userName != null ? userName : "Unknown");
+		} else {
+			question.get().setUserName("Unknown");
+		}
+	}
+
+	public void setParsedUserNameById(List<Question> listOfQuestions){
+		
+		listOfQuestions.forEach(question -> {
+			if(question.getUserId() != null) {
+				var userName = userService.getUser(question.getUserId()).get().getPreferred_username();
+				question.setUserName( !userName.isEmpty() || userName != null ? userName : "Unknown");
+			} else {
+				question.setUserName("Unknown");
+			}
+		});
 	}
 }

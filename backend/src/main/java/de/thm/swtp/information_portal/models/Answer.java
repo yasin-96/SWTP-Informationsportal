@@ -27,6 +27,8 @@ public class Answer {
 	// User that has written this answer
 	private String userId;
 
+	private String userName = "";
+
 	// save currentdate in unix timestamp
 	private Long timeStamp;
 
@@ -46,3 +48,5 @@ public class Answer {
 	}
 
 }
+
+

@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Answers;
+import de.thm.swtp.information_portal.models.User;
 import de.thm.swtp.information_portal.service.AnswerService;
+import de.thm.swtp.information_portal.service.UserService;
 
 @RestController
 @RequestMapping("/info-portal/api")
@@ -25,6 +27,9 @@ public class AnswerController {
 
 	@Autowired
 	private AnswerService answerService;
+
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * 
@@ -106,6 +111,20 @@ public class AnswerController {
 		Optional<Answers> answers = answerService.findByQuestionId(id);
 		if (answers.isPresent()) {
 			List<Answer> allAnswers = answers.get().getListOfAnswers();
+
+			//write userName to structure
+			allAnswers.forEach(aData -> {
+
+				if (aData.getUserId() != null) {
+					var userIdFromAnswer = aData.getUserId();
+					var userName = userService.getUser(userIdFromAnswer).get().getPreferred_username();
+					aData.setUserName( !userName.isEmpty() && userName != null ? userName : "Unknown");
+				} else {
+					aData.setUserName("Unknown");
+				}
+
+			});
+
 			allAnswers.sort(compareByRating);
 		}
 		ResponseEntity<Answers> answRes = answers.map(response -> ResponseEntity.ok().body(response))

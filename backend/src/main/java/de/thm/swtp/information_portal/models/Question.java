@@ -32,6 +32,9 @@ public class Question {
 	// Creator of this Queston ->
 	private String userId;
 
+
+	private String userName = "";
+
 	// keywords for this question
 	private List<Tag> tags;
 

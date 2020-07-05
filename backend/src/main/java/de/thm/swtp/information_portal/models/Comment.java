@@ -24,6 +24,8 @@ public class Comment {
     // User that has written this comment
     private String userId;
 
+    private String userName = "";
+
     // Likes as counter
     private int rating;
 
