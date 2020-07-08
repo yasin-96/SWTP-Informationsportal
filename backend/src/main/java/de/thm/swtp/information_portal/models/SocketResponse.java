@@ -5,14 +5,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class SocketResponse {
+
+    private String questionId;
+
     private HashSet<User> listOfUsers;
     private String headerOfQuestion;
 
+    private Boolean isAnswer; 
+    private Boolean isComment; 
+
+    private long timestamp;
 
     public SocketResponse(HashSet<User> listOfUsers, String headerOfQuestion){
        this.listOfUsers = listOfUsers;

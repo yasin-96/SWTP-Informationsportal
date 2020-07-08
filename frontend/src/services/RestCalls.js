@@ -17,6 +17,11 @@ console.warn('isDebugEnabled: ' + isDebugEnabled);
  * @param {string} apiUrl - The complete url with the previous parameters
  * @param {string} apiAddress - The address to the server to answer the requests
  * @param {string} softwareDevelopState - Gives me the information under which status the server is running. (production or development)
+ * @param {string} baseurl - Gives me the information under which status the server is running. (production or development)
+ * @param {string} websocketPort - The port indicates that this is the backend and not the gateway.
+ * @param {string} websocketName - The name which is used to create exactly such a connection to the backend using the name
+ * @param {string} websocketSubcription - The end point for the registration of the subscription
+ * @param {string} stompEndPoint - The end point that is subsequently addressed in the backend to process the data.
  */
 const serverConfig = {
   apiProtocol: process.env.VUE_APP_API_PROTOCOL,
@@ -28,6 +33,11 @@ const serverConfig = {
   uiAddress: process.env.VUE_APP_API_UI_URL,
   softwareDevelopState: process.env.VUE_APP_API_STATE,
   baseurl: process.env.BASE_URL,
+  websocketPort: process.env.VUE_APP_WEBSOCKET_PORT,
+  websocketName: process.env.VUE_APP_WEBSOCKET_NAME,
+  websocketURL: process.env.VUE_APP_WS_URL,
+  websocketSubcription: process.env.VUE_APP_WEBSOCKET_SUBCRIPTION,
+  stompEndPoint: process.env.VUE_APP_STOMPENDPOINT,
 };
 
 /* Set: Axios Instance
@@ -42,6 +52,28 @@ const client = new axios.create({
   },
   // timeout: 20000,
 });
+
+
+// /**
+//  * Define Socket options
+//  */
+// const apiAddress = process.env.VUE_APP_API_URL;
+// const websocketName = 'http://localhost:8082/info-portal-websocket';
+
+// const websocketSubcription = '/notify';
+// const stompEndPoint = '/socket/hello';
+
+// const websocketAddress = `${serverConfig.apiAddress}/${serverConfig.websocketURL}`;
+
+// console.log('apiAddress:', apiAddress);
+// console.log('websocketName:', websocketName);
+// console.log('websocketAddress:', websocketAddress);
+// console.log('websocketSubcription:', websocketSubcription);
+// console.log('stompEndPoint:', stompEndPoint);
+
+
+
+
 
 /*
  * Returns the information under which address the backend is to be delivered.

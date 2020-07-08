@@ -18,10 +18,10 @@
 
 <script>
 import { mapActions } from 'vuex';
-import send from '@/mixins/socketStomp.js';
-import connect from '@/mixins/socketStomp.js';
-import disconnect from '@/mixins/socketStomp.js';
-import tickleConnection from '@/mixins/socketStomp.js';
+// import send from '@/mixins/socketStomp.js';
+// import connect from '@/mixins/socketStomp.js';
+// import disconnect from '@/mixins/socketStomp.js';
+// import tickleConnection from '@/mixins/socketStomp.js';
 
 export default {
   name: 'NewContent',
@@ -55,7 +55,7 @@ export default {
       required: true,
     },
   },
-  mixins: [send, connect, disconnect, tickleConnection],
+  // mixins: [send, connect, disconnect, tickleConnection],
   data() {
     return {
       newAnswer: {
@@ -83,12 +83,16 @@ export default {
         });
         console.log('HIER:!!', this.newAnswer);
         
-        // websocket
-        this.connect();
-        this.send(this.id);
+
+
+        // this.connect();
+        // this.send(this.id);
 
         //add the answer
         await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
+        
+        // websocket message
+        await this.$store.dispatch('act_sendStompMessage', this.id);
 
         //scroll to this answer
         window.scrollTo(0,document.body.scrollHeight);

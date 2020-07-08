@@ -24,6 +24,18 @@ body {
   margin: 0;
 }
 
+#notifySidebar .bi-x.b-icon.bi{
+  color: #D7F1FE;
+}
+
+#notifySidebar .b-sidebar-body ,
+#notifySidebar .b-sidebar-header {
+  background-color: #4a5c66;
+}
+
+
+
+
 .nav-item:hover {
   /* padding: 2px 2px; */
   /* background: rgb(223, 229, 230); */

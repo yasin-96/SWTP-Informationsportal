@@ -25,7 +25,7 @@
         <NewContent bTextSize="lg" :nRows="2" :id="oneQuestion.id" :nIsAnswer="true" />
 
         <!-- Display all available Answers  -->
-        <b-container v-if="isDataLoaded.answers && !!allAnswers.listOfAnswers">
+        <b-container v-if="isDataLoaded.answers &&!!allAnswers.listOfAnswers">
           <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index">
             <AnswerCard :nId="oneQuestion.id" :aContent="answer.content" :aRating="answer.rating" :aDate="answer.timeStamp" :cId="answer.id" :aUserId="answer.userId" :aUserName="answer.userName" :userEdit="oneQuestion.userId === getUserId" class="pb-3" />
           </b-container>

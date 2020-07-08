@@ -9,17 +9,18 @@
 
 <script>
 import Navigation from '@/components/Navigation';
+
 import RestCalls from '@/services/RestCalls';
-import send from '@/mixins/socketStomp.js';
-import connect from '@/mixins/socketStomp.js';
-import disconnect from '@/mixins/socketStomp.js';
-import tickleConnection from '@/mixins/socketStomp.js';
+// import send from '@/mixins/socketStomp.js';
+// import connect from '@/mixins/socketStomp.js';
+// import disconnect from '@/mixins/socketStomp.js';
+// import tickleConnection from '@/mixins/socketStomp.js';
 import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'App',
   components: { Navigation },
-  mixins: [send, connect, disconnect, tickleConnection],
+  // mixins: [send, connect, disconnect, tickleConnection],
   data() {
     return {
       initAllData: null,
@@ -28,7 +29,9 @@ export default {
   },
   created() {
     //connect to Socket
-    this.connect();
+    // this.connect();
+
+    this.$store.dispatch('act_createConnectSocketAndStompClient');
 
     //run once
     this.reloadAllData();

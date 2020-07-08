@@ -21,6 +21,9 @@
             <b-nav-item to="/questions">General</b-nav-item>
             <b-nav-item to="/topics">Topics</b-nav-item>
             <b-nav-item to="/about">About</b-nav-item>
+            <b-nav-item> 
+              <Sidebar />
+            </b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
             <Searching />
@@ -41,6 +44,7 @@
 
 <script>
 import Searching from '@/components/Searching';
+import Sidebar from '@/components/Sidebar';
 import { BNavbar } from 'bootstrap-vue';
 import { mapGetters } from 'vuex';
 
@@ -49,6 +53,7 @@ export default {
   components: {
     Searching,
     'b-navbar': BNavbar,
+    Sidebar
   },
   data() {
     return {

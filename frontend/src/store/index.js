@@ -3,11 +3,19 @@ import Vuex from 'vuex';
 import RestCalls from '@/services/RestCalls';
 import { convertUnixTimeStampToString } from '@/services/Utils';
 
+import SockJS from 'sockjs-client';
+import Stomp from 'webstomp-client';
+
+const websocketPort = process.env.VUE_APP_WEBSOCKET_PORT;
+const websocketName = process.env.VUE_APP_WEBSOCKET_NAME;
+const websocketURL = process.env.VUE_APP_WS_URL;
+const websocketSubcription = process.env.VUE_APP_WEBSOCKET_SUBCRIPTION;
+const stompEndPoint = process.env.VUE_APP_STOMPENDPOINT;
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    
     //questions
     allQuestions: {},
     oneQuestion: {},
@@ -30,6 +38,13 @@ export default new Vuex.Store({
 
     //user
     currentUser: {},
+
+    //stomp && websocket connection to backenc
+    clientConnection: null,
+    socket: null,
+    stompClient: null,
+
+    wsMessages:[]
   },
   mutations: {
     //#region questions
@@ -99,7 +114,6 @@ export default new Vuex.Store({
       }
     },
 
-
     //#endregion answers
 
     //#region comments
@@ -147,6 +161,10 @@ export default new Vuex.Store({
     SET_USER_INFO(state, data) {
       state.currentUser = data;
     },
+
+    ADD_WS_MESSAGE(state, wsReponse){
+      state.wsMessages.push(wsReponse.body);
+    }
   },
   actions: {
     //#region question
@@ -246,13 +264,12 @@ export default new Vuex.Store({
       console.log('act_getAllAnswers', questionId);
       await RestCalls.getAllAnswersToQuestions(questionId)
         .then((response) => {
-
-          if(response){
+          if (response) {
             response.listOfAnswers.forEach((d) => {
               console.debug('ANSWERS', d);
               d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
             });
-            
+
             commit('SET_ALL_ANSWERS', response);
           }
         })
@@ -285,7 +302,7 @@ export default new Vuex.Store({
         });
     },
 
-    async act_addNewAnswer({dispatch}, newAnswer) {
+    async act_addNewAnswer({ dispatch }, newAnswer) {
       console.log('act_addNewAnswer', newAnswer);
       await RestCalls.addNewAnswer(newAnswer)
         .then(async (response) => {
@@ -315,18 +332,17 @@ export default new Vuex.Store({
 
     //#region comment
     //comments
-    async act_getAllComments({ commit, dispatch }, answerId) {
+    async act_getAllComments({ commit }, answerId) {
       console.log('act_getAllComments');
       await RestCalls.getAllCommentsToAnswers(answerId)
         .then((response) => {
-          
-          if(response && response.comments){
+          if (response && response.comments) {
             response.comments.forEach((dd) => {
               console.debug(dd);
               dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
             });
           }
-          
+
           commit('SET_ALL_COMMENTS', response);
         })
         .catch((error) => {
@@ -334,13 +350,13 @@ export default new Vuex.Store({
         });
     },
 
-    async act_addNewComment({ state, dispatch}, newComment) {
+    async act_addNewComment({ state, dispatch }, newComment) {
       console.log('act_addNewComment', newComment);
       await RestCalls.addNewComment(newComment)
         .then(async (response) => {
-          console.log('response',response);
+          console.log('response', response);
           state.allComments = [];
-          await dispatch('act_getAllComments' ,newComment.id);
+          await dispatch('act_getAllComments', newComment.id);
         })
         .catch((error) => {
           console.error(error);
@@ -406,7 +422,72 @@ export default new Vuex.Store({
           console.error(error);
           return id;
         });
+    },
 
+    act_createConnectSocketAndStompClient({ state, commit  }) {
+      // commit('CREATE_NEW_SOCKET', websocketURL);
+      // commit('CREATE_NEW_STOMP_CLIENT');
+
+      if (websocketURL) {
+        console.warn("WS:", websocketURL);
+        state.socket = new SockJS(websocketURL);
+
+        if (state.socket) {
+          state.stompClient = Stomp.over(state.socket);
+
+          state.stompClient.connect(
+            {},
+            async (frame) => {
+              state.clientConnection = true;
+              console.log('CON:', state.clientConnection);
+              console.log('BIN FRAME', frame);
+
+              await state.stompClient.subscribe(websocketSubcription, (response) => {
+                //TODO das hier muss in den Store
+                let parsedData = JSON.parse(`${response.body}`);
+
+
+                //todo nur hinzufügen, wenn der user drinne ist
+                parsedData.body.forEach(pd => {
+                  if( pd.listOfUsers.filter( lu => lu.includes(state.currentUser.preferred_username) ? true : false )){
+                    commit("ADD_WS_MESSAGE", parsedData);
+                  }
+                })
+
+                
+                console.log('WS:', JSON.parse(`${response.body}`));
+              });
+            },
+            (error) => {
+              console.log(error);
+              state.clientConnection = false;
+            }
+          );
+        } else {
+          state.socket = null;
+          state.stompClient = null;
+        }
+      }
+    },
+
+    act_disconnectStompClient({ state }) {
+      if (state.stompClient) {
+        this.stompClient.disconnect();
+      }
+    },
+
+    act_toggleConnectionState({ state, dispatch }) {
+      state.clientConnection ? dispatch('act_disconnectStompClient') : dispatch('act_createConnectSocketAndStompClient');
+    },
+
+    async act_sendStompMessage({ state }, idOfQuestion) {
+      if (idOfQuestion) {
+        console.log('Send message:' + idOfQuestion);
+        if (state.stompClient && state.stompClient.connected) {
+          console.warn('send to msg');
+          await state.stompClient.send(stompEndPoint, idOfQuestion, {});
+        }
+      }
     },
   },
 
@@ -426,19 +507,18 @@ export default new Vuex.Store({
     getUserId: (state) => {
       return state.currentUser.id;
     },
-    
 
     /**
-     * The first letters are taken from the first/last name and 
+     * The first letters are taken from the first/last name and
      * used as avatar in the navigation bar
      */
     getFirstLetterFromUser: (state) => {
-      if(state.currentUser.name) {
+      if (state.currentUser.name) {
         let raw = state.currentUser.name.split(' ');
-        return `${raw[0].charAt(0)}${raw[1].charAt(0)}`
+        return `${raw[0].charAt(0)}${raw[1].charAt(0)}`;
       }
-      return ""
-    }
+      return '';
+    },
   },
   modules: {},
 });
