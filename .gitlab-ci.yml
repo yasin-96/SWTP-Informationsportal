@@ -29,7 +29,7 @@ stages:
   - build
   
 build:
-  image: npm:12
+  image: node:12
   stage: build
   before_script:
     - cd frontend
