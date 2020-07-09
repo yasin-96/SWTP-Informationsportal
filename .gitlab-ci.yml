@@ -46,7 +46,7 @@ build:
     
     
 deliver-docker:
-  image: docker
+  image: gitlab/dind
   stage: deliver
   before_script:
     - cd frontend
