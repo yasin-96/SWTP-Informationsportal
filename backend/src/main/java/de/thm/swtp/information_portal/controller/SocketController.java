@@ -56,7 +56,7 @@ public class SocketController {
             wsData = parseJsObject.readValue(wsMessage, SocketReceived.class);
 
             if (wsData.getIsAnswer()) {
-                Optional<Answers> answers = answerRepository.findById(wsData.getId());
+                Optional<Answers> answers = answerRepository.findById(wsData.getQuestionId());
                 var users = new HashSet<User>();
 
                 List<Answer> answersOfQuestion = answers.get().getListOfAnswers();
@@ -64,9 +64,9 @@ public class SocketController {
                     Optional<User> userToBeAdded = userRepository.findById(answer.getUserId());
                     users.add(userToBeAdded.get());
                 }
-                String headerOfQuestion = questionRepository.findById(wsData.getId()).get().getHeader();
+                String headerOfQuestion = questionRepository.findById(wsData.getQuestionId()).get().getHeader();
 
-                socketResponse = new SocketResponse(wsData.getId(), users, headerOfQuestion,
+                socketResponse = new SocketResponse(wsData.getQuestionId(), users, headerOfQuestion,
                         wsData.getIsAnswer(), wsData.getIsComment(), wsData.getMinimalUser());
             }
 

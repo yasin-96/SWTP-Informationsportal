@@ -30,7 +30,6 @@ export default {
   watch: {
     wsMessages() {
       if (this.wsMessages && this.wsMessages.length) {
-        console.warn(this.wsMessages)
         this.isMessagesLoaded = true;
       } else {
         this.isMessagesLoaded = false;

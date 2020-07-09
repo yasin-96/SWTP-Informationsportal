@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Add new comment -->
-    <NewContent v-if="cId" :nRows="2" :nIsComment="true" :id="cId" />
+    <NewContent v-if="cId" :nRows="2" :nIsComment="true" :id="cId" :qId="qId" />
 
     <b-card no-body class="mb-1" v-if="hasComments">
       <!-- Toggle all comments -->
@@ -58,6 +58,10 @@ export default {
     'b-icon-toggle-on': BIconToggleOn,
   },
   props: {
+    qId: {
+      type: String,
+      required: true,
+    },
     cId: {
       type: String,
       required: true,

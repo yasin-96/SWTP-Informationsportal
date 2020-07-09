@@ -37,7 +37,7 @@
       <!-- Area for all Comments -->
       <b-card-body>
         <b-container>
-          <Comment :cComments="allComments" :cId="cId" />
+          <Comment :cComments="allComments" :cId="cId" :qId="nId" />
         </b-container>
         <b-container> </b-container>
       </b-card-body>
