@@ -16,6 +16,7 @@ import java.util.HashSet;
 public class SocketResponse {
 
     private String questionId;
+    private String answerId;
 
     private HashSet<User> listOfUsers;
     private String headerOfQuestion;
@@ -27,15 +28,23 @@ public class SocketResponse {
 
     private long timestamp;
 
-    public SocketResponse(String questionId, HashSet<User> listOfUsers, String headerOfQuestion){
-       this.questionId = questionId;
-       this.listOfUsers = listOfUsers;
-       this.headerOfQuestion = headerOfQuestion;
-       this.timestamp = Instant.now().getEpochSecond() * 1000;
+    public SocketResponse(String questionId, HashSet<User> listOfUsers, String headerOfQuestion) {
+        this.questionId = questionId;
+        this.listOfUsers = listOfUsers;
+        this.headerOfQuestion = headerOfQuestion;
+        this.timestamp = Instant.now().getEpochSecond() * 1000;
     }
 
-    public SocketResponse(String questionId, HashSet<User> listOfUsers, String headerOfQuestion, Boolean isAnswer, boolean isComment, MinimalUser minimalUser){
+    public SocketResponse(String questionId, HashSet<User> listOfUsers, String headerOfQuestion, Boolean isAnswer, boolean isComment, MinimalUser minimalUser) {
         this(questionId, listOfUsers, headerOfQuestion);
+        this.isAnswer = isAnswer;
+        this.isComment = isComment;
+        this.minimalUser = minimalUser;
+    }
+
+    public SocketResponse(String questionId, String answerId,HashSet<User> listOfUsers, String headerOfQuestion, Boolean isAnswer, boolean isComment, MinimalUser minimalUser) {
+        this(questionId,listOfUsers, headerOfQuestion);
+        this.answerId = answerId;
         this.isAnswer = isAnswer;
         this.isComment = isComment;
         this.minimalUser = minimalUser;

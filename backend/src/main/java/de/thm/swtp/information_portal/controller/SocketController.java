@@ -1,7 +1,9 @@
 package de.thm.swtp.information_portal.controller;
 
+import com.mongodb.util.Hash;
 import de.thm.swtp.information_portal.models.*;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
+import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 import de.thm.swtp.information_portal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class SocketController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CommentRepository commentRepository;
+
     @MessageMapping("/hello")
     @SendTo("/notify")
     public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage) {
@@ -48,6 +53,8 @@ public class SocketController {
         // init data
         SocketReceived wsData = null;
         SocketResponse socketResponse = null;
+        var users = new HashSet<User>();
+        String headerOfQuestion = questionRepository.findById(wsData.getQuestionId()).get().getHeader();
 
         try {
 
@@ -57,22 +64,31 @@ public class SocketController {
 
             if (wsData.getIsAnswer()) {
                 Optional<Answers> answers = answerRepository.findById(wsData.getQuestionId());
-                var users = new HashSet<User>();
+
 
                 List<Answer> answersOfQuestion = answers.get().getListOfAnswers();
                 for (Answer answer : answersOfQuestion) {
                     Optional<User> userToBeAdded = userRepository.findById(answer.getUserId());
                     users.add(userToBeAdded.get());
                 }
-                String headerOfQuestion = questionRepository.findById(wsData.getQuestionId()).get().getHeader();
+
 
                 socketResponse = new SocketResponse(wsData.getQuestionId(), users, headerOfQuestion,
                         wsData.getIsAnswer(), wsData.getIsComment(), wsData.getMinimalUser());
             }
 
             if (wsData.getIsComment()) {
-                // TODO
-                Optional<Answer> answer = answerRepository.findById(
+
+                Optional<Comments> comments = commentRepository.findById(wsData.getAnswerId());
+                List<Comment> allComments = comments.get().getComments();
+                for(Comment comment: allComments){
+                    Optional<User> userToBeAdded = userRepository.findById(comment.getId());
+                    users.add(userToBeAdded.get());
+                }
+
+                socketResponse = new SocketResponse(wsData.getQuestionId(),wsData.getAnswerId(),users,headerOfQuestion,
+                        wsData.getIsAnswer(),wsData.getIsComment(),wsData.getMinimalUser());
+
             }
 
         } catch (Exception e) {
