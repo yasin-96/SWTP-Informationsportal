@@ -129,9 +129,17 @@ export default {
         //add the comments
         await this.$store.dispatch('act_addNewComment', this.newComment);
 
+        // websocket message
+        this.newWsMessage.isComment = true;
+        this.newWsMessage.minimalUser.userId = this.getUserId;
+        this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;
+
+        await this.$store.dispatch('act_sendStompMessage', this.newWsMessage);
+
         //clear comments old value
         this.contentForComment = '';
         this.newComment.comments = [];
+        this.newWsMessage.isComment = false;
       }
     },
   },

@@ -43,29 +43,42 @@ public class SocketController {
 
     @MessageMapping("/hello")
     @SendTo("/notify")
-    public CompletableFuture<ResponseEntity<String>> socketResponse(@RequestBody String wsMessage) {
+    public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage) {
 
-        System.out.println(wsMessage);
+        // init data
+        SocketReceived wsData = null;
+        SocketResponse socketResponse = null;
 
         try {
 
+            // parse jsObject to java object
             var parseJsObject = new ObjectMapper();
+            wsData = parseJsObject.readValue(wsMessage, SocketReceived.class);
 
-            SocketReceived wsData = parseJsObject.readValue(wsMessage, SocketReceived.class);
-            Optional<Answers> answers = answerRepository.findById(wsData.getQuestionId());
-            var users = new HashSet<User>();
-            List<Answer> answersOfQuestion = answers.get().getListOfAnswers();
-            for (Answer answer : answersOfQuestion) {
-                Optional<User> userToBeAdded = userRepository.findById(answer.getUserId());
-                users.add(userToBeAdded.get());
+            if (wsData.getIsAnswer()) {
+                Optional<Answers> answers = answerRepository.findById(wsData.getQuestionId());
+                var users = new HashSet<User>();
+
+                List<Answer> answersOfQuestion = answers.get().getListOfAnswers();
+
+                for (Answer answer : answersOfQuestion) {
+                    Optional<User> userToBeAdded = userRepository.findById(answer.getUserId());
+                    users.add(userToBeAdded.get());
+                }
+                String headerOfQuestion = questionRepository.findById(wsData.getQuestionId()).get().getHeader();
+
+                socketResponse = new SocketResponse(wsData.getQuestionId(), users, headerOfQuestion,
+                        wsData.getIsAnswer(), wsData.getIsComment(), wsData.getMinimalUser());
             }
-            String headerOfQuestion = questionRepository.findById(wsData.getQuestionId()).get().getHeader();
-            SocketResponse socketResponse = new SocketResponse(wsData.getQuestionId(), users, headerOfQuestion,
-                    wsData.getIsAnswer(), wsData.getIsComment(), wsData.getMinimalUser());
+
+            if (wsData.getIsComment()) {
+                // TODO
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        return CompletableFuture.completedFuture(new ResponseEntity<String>(wsMessage, HttpStatus.OK));
+
+        return CompletableFuture.completedFuture(new ResponseEntity<SocketResponse>(socketResponse, HttpStatus.OK));
     }
 }

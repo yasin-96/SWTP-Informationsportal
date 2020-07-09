@@ -2,13 +2,17 @@ package de.thm.swtp.information_portal.models;
 
 import com.mongodb.util.Hash;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.HashSet;
 
-@Data
 @NoArgsConstructor
+@Data
+@Getter
+@Setter
 public class SocketResponse {
 
     private String questionId;
@@ -22,8 +26,6 @@ public class SocketResponse {
     private MinimalUser minimalUser;
 
     private long timestamp;
-
-
 
     public SocketResponse(String questionId, HashSet<User> listOfUsers, String headerOfQuestion){
        this.questionId = questionId;
