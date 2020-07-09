@@ -12,14 +12,16 @@ import lombok.Setter;
 @Setter
 public class SocketReceived {
     private String questionId;
+    private String answerId;
     private Boolean isAnswer;
     private Boolean isComment;
 
     //user that has post new answer/comment 
     private MinimalUser minimalUser;
 
-    public SocketReceived(String questionId, Boolean isAnswer, Boolean isComment, MinimalUser minimalUser) {
+    public SocketReceived(String questionId,String answerId, Boolean isAnswer, Boolean isComment, MinimalUser minimalUser) {
         this.questionId = questionId;
+        this.answerId = answerId;
         this.isAnswer = isAnswer;
         this.isComment = isComment;
         this.minimalUser = minimalUser;
