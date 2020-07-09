@@ -40,4 +40,12 @@ build-backend:
     when: always
     expire_in: 2 hours
     
-    
+deliver-docker-backend:
+  image: gitlab/dind
+  stage: deliver
+  before_script:
+    - cd backend
+  script:
+    - docker build -t swtp.pcvolkmer.de/infosys .
+    - docker login -u $REPO_USERNAME -p $REPO_PASSWORD swtp.pcvolkmer.de
+    - docker push swtp.pcvolkmer.de/infosys    
