@@ -2,9 +2,10 @@
   <b-container>
     <span v-b-toggle.notifySidebar> <fai icon="bell"></fai> <b-badge variant="light">4</b-badge> </span>
     <b-sidebar id="notifySidebar" title="Notification" text-variant="light" shadow>
-      <div v-if="isMessagesLoaded && wsMessages.listOfUsers">
-        <div v-for="(index, msg) in wsMessages" :key="index">
-          <NotificationCard :question="msg.headerOfQuestion" :user="msg.user" :isAnswer="msg.isAnswer" :isComment="msg.isComment" :timestamp="msg.timestamp" />
+      <div v-if="isMessagesLoaded">
+        <div v-for="(msg, i) in wsMessages" :key="i">
+          <!-- <span>{{i}} {{msg}}</span> -->
+          <NotificationCard :questionId="msg.questionId" :question="msg.headerOfQuestion" :user="msg.minimalUser" :isAnswer="msg.isAnswer" :isComment="msg.isComment" :timestamp="msg.timestamp" />
         </div>
       </div>
     </b-sidebar>
@@ -28,7 +29,8 @@ export default {
   },
   watch: {
     wsMessages() {
-      if (this.wsMessages && this.listOfUsers) {
+      if (this.wsMessages && this.wsMessages.length) {
+        console.warn(this.wsMessages)
         this.isMessagesLoaded = true;
       } else {
         this.isMessagesLoaded = false;

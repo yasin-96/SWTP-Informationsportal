@@ -44,7 +44,7 @@ export default new Vuex.Store({
     socket: null,
     stompClient: null,
 
-    wsMessages:[]
+    wsMessages: [],
   },
   mutations: {
     //#region questions
@@ -162,9 +162,14 @@ export default new Vuex.Store({
       state.currentUser = data;
     },
 
-    ADD_WS_MESSAGE(state, wsReponse){
-      state.wsMessages.push(wsReponse.body);
-    }
+    ADD_WS_MESSAGE(state, wsReponse) {
+
+      if(wsReponse){
+        wsReponse.timestamp = convertUnixTimeStampToString(wsReponse.timestamp);
+        state.wsMessages.push(wsReponse);
+      }
+
+    },
   },
   actions: {
     //#region question
@@ -424,12 +429,12 @@ export default new Vuex.Store({
         });
     },
 
-    act_createConnectSocketAndStompClient({ state, commit  }) {
+    act_createConnectSocketAndStompClient({ state, commit }) {
       // commit('CREATE_NEW_SOCKET', websocketURL);
       // commit('CREATE_NEW_STOMP_CLIENT');
 
       if (websocketURL) {
-        console.warn("WS:", websocketURL);
+        console.warn('WS:', websocketURL);
         state.socket = new SockJS(websocketURL);
 
         if (state.socket) {
@@ -446,16 +451,17 @@ export default new Vuex.Store({
                 //TODO das hier muss in den Store
                 let parsedData = JSON.parse(`${response.body}`);
 
+                if (parsedData.body) {
+                  //todo nur hinzufügen, wenn der user drinne ist
+                  parsedData.body.listOfUsers.forEach((pd) => {
+                    console.log('PD', pd);
+                    if (pd.id === state.currentUser.id) {
+                      commit('ADD_WS_MESSAGE', parsedData.body );
+                    }
+                  });
 
-                //todo nur hinzufügen, wenn der user drinne ist
-                parsedData.body.forEach(pd => {
-                  if( pd.listOfUsers.filter( lu => lu.includes(state.currentUser.preferred_username) ? true : false )){
-                    commit("ADD_WS_MESSAGE", parsedData);
-                  }
-                })
-
-                
-                console.log('WS:', JSON.parse(`${response.body}`));
+                  console.log('WS:', JSON.parse(`${response.body}`));
+                }
               });
             },
             (error) => {
@@ -522,7 +528,7 @@ export default new Vuex.Store({
 
     getUsersPreferedName: (state) => {
       return state.currentUser.preferred_username;
-    }
+    },
   },
   modules: {},
 });
