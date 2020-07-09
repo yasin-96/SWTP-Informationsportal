@@ -28,7 +28,7 @@ deliver-docker:
     - docker push swtp.pcvolkmer.de/infosys
 
 build-backend: 
-  image: openjdk:11-jre
+  image: openjdk:11-jdk
   stage: build
   before_script:
     - cd backend
