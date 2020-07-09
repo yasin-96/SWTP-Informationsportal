@@ -52,12 +52,9 @@ deliver-docker:
     - cd frontend
   script:
     - docker build -t swtp.pcvolkmer.de/infosys .
-    - docker login -u $REPO_USERNAME -p $REPO_PASSWORD
+    - docker login -u $REPO_USERNAME -p $REPO_PASSWORD swtp.pcvolkmer.de
     - docker push swtp.pcvolkmer.de/infosys
-  
-  
-  
-  
+
   
   
   
