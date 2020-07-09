@@ -38,7 +38,7 @@ build:
   script:
     - npm run build
   artifacts:
-    path: 
+    paths: 
       - frontend/dist/**
     when: always
     expire_in: 2 hours
