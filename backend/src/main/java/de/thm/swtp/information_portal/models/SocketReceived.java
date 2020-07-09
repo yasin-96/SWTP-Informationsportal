@@ -19,7 +19,7 @@ public class SocketReceived {
     //user that has post new answer/comment 
     private MinimalUser minimalUser;
 
-    public SocketReceived(String questionId,String answerId, Boolean isAnswer, Boolean isComment, MinimalUser minimalUser) {
+    public SocketReceived(String questionId, String answerId, Boolean isAnswer, Boolean isComment, MinimalUser minimalUser) {
         this.questionId = questionId;
         this.answerId = answerId;
         this.isAnswer = isAnswer;

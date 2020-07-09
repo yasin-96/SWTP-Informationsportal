@@ -53,8 +53,10 @@ export default {
       type: String,
       required: true,
     },
+    qId: {
+      type: String,
+    },
   },
-  // mixins: [send, connect, disconnect, tickleConnection],
   data() {
     return {
       newAnswer: {
@@ -67,15 +69,16 @@ export default {
       },
       contentForAnswer: '',
       contentForComment: '',
-      newWsMessage: {
-        questionId: this.id,
-        isAnswer: false,
-        isComment: false,
-        minimalUser: {
-          userId: '',
-          userName: '',
-        }
-      },
+      // newWsMessage: {
+      //   questionId: this.id,
+      //   answerId: this.id,
+      //   isAnswer: false,
+      //   isComment: false,
+      //   minimalUser: {
+      //     userId: '',
+      //     userName: '',
+      //   }
+      // },
     };
   },
   methods: {
@@ -91,16 +94,25 @@ export default {
         });
         console.log('HIER:!!', this.newAnswer);
 
-        // this.connect();
-        // this.send(this.id);
-
         //add the answer
         await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
 
         // websocket message
-        this.newWsMessage.isAnswer = true;
-        this.newWsMessage.minimalUser.userId = this.getUserId;
-        this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;
+        let newWsMessage = {
+          questionId: this.id,
+          answerId: "",
+          isAnswer: true,
+          isComment: false,
+          minimalUser: {
+            userId: this.getUserId,
+            userName: this.getUsersPreferedName,
+          }
+        }
+
+
+        // this.newWsMessage.isAnswer = true;
+        // this.newWsMessage.minimalUser.userId = this.getUserId;
+        // this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;
 
         await this.$store.dispatch('act_sendStompMessage', this.newWsMessage);
 
@@ -110,7 +122,7 @@ export default {
         // clear ansers old content
         this.contentForAnswer = '';
         this.newAnswer.listOfAnswers = [];
-        this.newWsMessage.isAnswer = false;
+        // this.newWsMessage.isAnswer = false;
       }
     },
 
@@ -130,6 +142,17 @@ export default {
         await this.$store.dispatch('act_addNewComment', this.newComment);
 
         // websocket message
+
+        let newWsMessage = {
+          questionId: this.qId,
+          answerId: this.id,
+          isAnswer: false,
+          isComment: true,
+          minimalUser: {
+            userId: this.getUserId,
+            userName: this.getUsersPreferedName,
+          }
+        }
         this.newWsMessage.isComment = true;
         this.newWsMessage.minimalUser.userId = this.getUserId;
         this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;
@@ -139,7 +162,7 @@ export default {
         //clear comments old value
         this.contentForComment = '';
         this.newComment.comments = [];
-        this.newWsMessage.isComment = false;
+        // this.newWsMessage.isComment = false;
       }
     },
   },

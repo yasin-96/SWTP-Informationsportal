@@ -495,6 +495,14 @@ export default new Vuex.Store({
         }
       }
     },
+
+    async loadNotificationFromLocalStorage({commit}){
+
+    },
+
+    async saveNotificationToLocalStorage({state}){
+      // this.$localStore.ge
+    }
   },
 
   getters: {
