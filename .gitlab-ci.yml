@@ -38,20 +38,22 @@ build:
   script:
     - npm run build
   artifacts:
-    path: 
+    paths: 
       - frontend/dist/**
     when: always
     expire_in: 2 hours
       
     
     
-#deliver-docker:
-#  image: docker
-#  stage: deliver
-#  script:
-#    - docker build -t swtp.pcvolkmer.de/infosys
-#    - docker login -u $REPO_USERNAME -p $REPO_PASSWORD
-#    - docker push swtp.pcvolkmer.de/infosys
+deliver-docker:
+  image: docker
+  stage: deliver
+  before_script:
+    - cd frontend
+  script:
+    - docker build -t swtp.pcvolkmer.de/infosys .
+    - docker login -u $REPO_USERNAME -p $REPO_PASSWORD
+    - docker push swtp.pcvolkmer.de/infosys
   
   
   
