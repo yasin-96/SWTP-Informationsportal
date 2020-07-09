@@ -34,3 +34,10 @@ build-backend:
     - cd backend
   script:
     - mvn clean install -DskipTests
+  artifacts:
+    paths: 
+      - backend/build/**
+    when: always
+    expire_in: 2 hours
+    
+    
