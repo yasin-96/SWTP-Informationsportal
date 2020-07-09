@@ -5,11 +5,10 @@
 
       <!-- Card for adding new Answer  -->
       <b-form-textarea v-if="nIsAnswer" v-model="contentForAnswer" placeholder="Add new answer ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
-      
+
       <!-- Card for adding new Comment  -->
       <b-form-textarea v-if="nIsComment" v-model="contentForComment" placeholder="Add new comment ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
-      
-      
+
       <b-button v-if="nIsAnswer" @click="addNewAnswer()" variant="success"><fai icon="plus-circle" /></b-button>
       <b-button v-if="nIsComment" @click="addNewComment()" variant="success"><fai icon="plus-circle" /></b-button>
     </b-button-group>
@@ -17,7 +16,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 // import send from '@/mixins/socketStomp.js';
 // import connect from '@/mixins/socketStomp.js';
 // import disconnect from '@/mixins/socketStomp.js';
@@ -68,11 +67,20 @@ export default {
       },
       contentForAnswer: '',
       contentForComment: '',
+      newWsMessage: {
+        questionId: this.id,
+        isAnswer: false,
+        isComment: false,
+        minimalUser: {
+          userId: '',
+          userName: '',
+        }
+      },
     };
   },
   methods: {
     /**
-     * 
+     *
      */
     async addNewAnswer() {
       if (this.contentForAnswer) {
@@ -82,29 +90,32 @@ export default {
           timeStamp: Date.parse(new Date()),
         });
         console.log('HIER:!!', this.newAnswer);
-        
-
 
         // this.connect();
         // this.send(this.id);
 
         //add the answer
         await this.$store.dispatch('act_addNewAnswer', this.newAnswer);
-        
+
         // websocket message
-        await this.$store.dispatch('act_sendStompMessage', this.id);
+        this.newWsMessage.isAnswer = true;
+        this.newWsMessage.minimalUser.userId = this.getUserId;
+        this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;
+
+        await this.$store.dispatch('act_sendStompMessage', this.newWsMessage);
 
         //scroll to this answer
-        window.scrollTo(0,document.body.scrollHeight);
+        window.scrollTo(0, document.body.scrollHeight);
 
-        // clear ansers old content 
-        this.contentForAnswer = ""
+        // clear ansers old content
+        this.contentForAnswer = '';
         this.newAnswer.listOfAnswers = [];
+        this.newWsMessage.isAnswer = false;
       }
     },
 
     /**
-     * 
+     *
      */
     async addNewComment() {
       if (this.contentForComment) {
@@ -119,13 +130,14 @@ export default {
         await this.$store.dispatch('act_addNewComment', this.newComment);
 
         //clear comments old value
-        this.contentForComment = "";
+        this.contentForComment = '';
         this.newComment.comments = [];
       }
     },
   },
   computed: {
     ...mapActions(['act_addNewAnswer', 'act_addNewComment', 'act_getAllAnswers', 'act_getAllComments']),
+    ...mapGetters(['getUsersPreferedName', 'getUserId']),
   },
 };
 </script>

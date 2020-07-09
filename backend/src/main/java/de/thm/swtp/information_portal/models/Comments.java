@@ -28,6 +28,6 @@ public class Comments {
     public Comments(List<Comment> comments, String answerId) {
         this.id = answerId;
         this.comments = comments;
-        this.timestamp = Instant.now().getEpochSecond();
+        this.timestamp = Instant.now().getEpochSecond() * 1000;
     }
 }

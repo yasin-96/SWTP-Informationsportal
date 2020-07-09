@@ -480,12 +480,12 @@ export default new Vuex.Store({
       state.clientConnection ? dispatch('act_disconnectStompClient') : dispatch('act_createConnectSocketAndStompClient');
     },
 
-    async act_sendStompMessage({ state }, idOfQuestion) {
-      if (idOfQuestion) {
-        console.log('Send message:' + idOfQuestion);
+    async act_sendStompMessage({ state }, wsMessages) {
+      if (wsMessages) {
+        console.log('Send message:', wsMessages);
         if (state.stompClient && state.stompClient.connected) {
           console.warn('send to msg');
-          await state.stompClient.send(stompEndPoint, idOfQuestion, {});
+          await state.stompClient.send(stompEndPoint, JSON.stringify(wsMessages), {});
         }
       }
     },
@@ -519,6 +519,10 @@ export default new Vuex.Store({
       }
       return '';
     },
+
+    getUsersPreferedName: (state) => {
+      return state.currentUser.preferred_username;
+    }
   },
   modules: {},
 });

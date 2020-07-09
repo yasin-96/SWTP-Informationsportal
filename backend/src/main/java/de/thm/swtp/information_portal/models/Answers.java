@@ -30,6 +30,6 @@ public class Answers {
     public Answers(List<Answer> listWithAnswers, String questionId) {
         this.id = questionId;
         this.listOfAnswers = listWithAnswers;
-        this.timeStamp = Instant.now().getEpochSecond();
+        this.timeStamp = Instant.now().getEpochSecond() *1000;
     }
 }

@@ -84,7 +84,7 @@ export default {
     },
   },
   computed: {
-    ...mapActions(['act_getUserInfo', 'act_getAllQuestions', 'act_getMostActiveQuestions', '', 'act_getAllTags', 'act_getCurrentTopics']),
+    ...mapActions(['act_getUserInfo', 'act_getAllQuestions', 'act_getMostActiveQuestions', '', 'act_getAllTags', 'act_getCurrentTopics', 'act_createConnectSocketAndStompClient']),
   },
 };
 </script>
