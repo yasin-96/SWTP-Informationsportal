@@ -43,12 +43,12 @@ public class SocketController {
 
     @MessageMapping("/hello")
     @SendTo("/notify")
+
     public CompletableFuture<ResponseEntity<String>> socketResponse(@RequestBody String wsMessage) {
 
         System.out.println(wsMessage);
 
         try {
-
             var parseJsObject = new ObjectMapper();
 
             SocketReceived wsData = parseJsObject.readValue(wsMessage, SocketReceived.class);
