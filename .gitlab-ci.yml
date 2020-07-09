@@ -1,31 +1,7 @@
 stages:
-  # - test
-  - build
-  
-# test:
-#   image: openjdk:11-jre
-#   tags:
-#     - maven
-#   stage: test
-#   before_script:
-#     - cd backend
-    
-#   script:
-#     - mvn test 
-  
-build:
-  image: openjdk:11-jre
-    - maven
-  stage: build
-  before_script:
-    - cd backend
-  script:
-    - mvn clean install -DskipTests
-
-
-stages:
   - build
   - deliver
+  - build-backend
   
 build:
   image: node:12
@@ -50,3 +26,11 @@ deliver-docker:
     - docker build -t swtp.pcvolkmer.de/infosys .
     - docker login -u $REPO_USERNAME -p $REPO_PASSWORD swtp.pcvolkmer.de
     - docker push swtp.pcvolkmer.de/infosys
+
+build-backend: 
+  image: openjdk:11-jre
+  stage: build
+  before_script:
+    - cd backend
+  script:
+    - mvn clean install -DskipTests
