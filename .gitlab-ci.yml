@@ -46,6 +46,6 @@ deliver-docker-backend:
   before_script:
     - cd backend
   script:
-    - docker build -t swtp.pcvolkmer.de/infosys .
+    - docker build -t swtp.pcvolkmer.de/infosys-backend .
     - docker login -u $REPO_USERNAME -p $REPO_PASSWORD swtp.pcvolkmer.de
-    - docker push swtp.pcvolkmer.de/infosys    
+    - docker push swtp.pcvolkmer.de/infosys-backend   
