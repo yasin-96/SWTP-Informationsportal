@@ -1,9 +1,9 @@
-FROM openjdk:11-jre AS build-env
+FROM maven:latest AS build-env
 WORKDIR /usr/local
 COPY build/libs/*.jar /usr/local/app.jar
 RUN jar -xf *.jar
 
-FROM openjdk:11-jre
+FROM maven:latest
 #COPY build/libs/*.jar /usr/local/app.jar
 COPY --from=build-env /usr/local/BOOT-INF/lib /usr/local/app/lib
 COPY --from=build-env /usr/local/META-INF /usr/local/app/META-INF
