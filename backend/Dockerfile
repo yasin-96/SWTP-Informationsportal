@@ -1,10 +1,9 @@
 FROM maven:latest AS build-env
-WORKDIR /usr/local
-RUN ls -lsa build-backend/
-COPY build-backend/target/*.jar /usr/local/app.jar
+COPY ./target/*.jar /usr/local/app.jar
 RUN jar -xf *.jar
 
 FROM maven:latest
+WORKDIR /usr/local
 #COPY build/libs/*.jar /usr/local/app.jar
 COPY --from=build-env /usr/local/BOOT-INF/lib /usr/local/app/lib
 COPY --from=build-env /usr/local/META-INF /usr/local/app/META-INF
