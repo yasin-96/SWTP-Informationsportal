@@ -1,6 +1,6 @@
 FROM maven:latest AS build-env
 WORKDIR /usr/local
-COPY build/libs/*.jar /usr/local/app.jar
+COPY build-backend/libs/*.jar /usr/local/app.jar
 RUN jar -xf *.jar
 
 FROM maven:latest
