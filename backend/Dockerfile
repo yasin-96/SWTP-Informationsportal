@@ -1,8 +1,7 @@
 FROM maven:latest AS build-env
 WORKDIR /usr/local
-RUN ls -lsa build
-RUN ls -lsa build-backend
-#COPY backend/target/*.jar /usr/local/app.jar
+RUN ls -lsa build-backend/
+COPY build-backend/target/*.jar /usr/local/app.jar
 RUN jar -xf *.jar
 
 FROM maven:latest
