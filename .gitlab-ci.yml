@@ -54,7 +54,7 @@ deploy-frontend:
   stage:
     deploy
   only:
-    - master
+    - develop
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_FRONTEND
 
@@ -62,7 +62,7 @@ deploy-backend:
   stage:
     deploy
   only:
-    - master
+    - develop
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_BACKEND
 
