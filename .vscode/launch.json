@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-InformationPortal<information_portal>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "de.thm.swtp.information_portal.InformationPortal",
+            "projectName": "information_portal",
+            "args": ""
+        }
+    ]
+}

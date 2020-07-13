@@ -1,38 +1,52 @@
 package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.UUID;
 
-// import org.springframework.data.annotation.Id;
-// import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Data
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
-
+@Getter
+@Setter
+@AllArgsConstructor
 public class Answer {
-	
-	//the answer to the question
+
+	private String id;
+
+	// the answer to the question
 	private String content;
 
-	//how good was the answer as counter
+	// how good was the answer as counter
 	private int rating;
 
-	// the given answer to the question based on this id
+	// User that has written this answer
+	private String userId;
 
-	//save currentdate in unix timestamp 
+	private String userName = "";
+
+	// save currentdate in unix timestamp
 	private Long timeStamp;
-	
-	
 
+	//TODO der muss weg
 	public Answer(String content, int rating) {
-
+		this.id = UUID.randomUUID().toString();
 		this.content = content;
 		this.rating = rating;
-		this.timeStamp = Instant.now().getEpochSecond();
+		this.timeStamp = Instant.now().getEpochSecond() * 1000;
 	}
+	public Answer(String content, String userId, int rating) {
+		this.id = UUID.randomUUID().toString();
+		this.content = content;
+		this.userId = userId;
+		this.rating = rating;
+		this.timeStamp = Instant.now().getEpochSecond() * 1000;
+	}
+
 }
+
+

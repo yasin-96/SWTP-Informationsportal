@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import axios from 'axios';
 import http from 'http';
 
@@ -5,7 +6,6 @@ import http from 'http';
 let isDebugEnabled = process.env.VUE_APP_API_STATE === 'dev' ? true : false;
 console.log('process.env.VUE_APP_API_STATE: ' + process.env.VUE_APP_API_STATE);
 console.warn('isDebugEnabled: ' + isDebugEnabled);
-
 
 /**
  * Defines Information about server
@@ -17,28 +17,62 @@ console.warn('isDebugEnabled: ' + isDebugEnabled);
  * @param {string} apiUrl - The complete url with the previous parameters
  * @param {string} apiAddress - The address to the server to answer the requests
  * @param {string} softwareDevelopState - Gives me the information under which status the server is running. (production or development)
+ * @param {string} baseurl - Gives me the information under which status the server is running. (production or development)
+ * @param {string} websocketPort - The port indicates that this is the backend and not the gateway.
+ * @param {string} websocketName - The name which is used to create exactly such a connection to the backend using the name
+ * @param {string} websocketSubcription - The end point for the registration of the subscription
+ * @param {string} stompEndPoint - The end point that is subsequently addressed in the backend to process the data.
  */
 const serverConfig = {
-    apiProtocol: process.env.VUE_APP_API_PROTOCOL,
-    apiServer: process.env.VUE_APP_API_SERVER,
-    apiPort: process.env.VUE_APP_API_PORT,
-    apiInterface: process.env.VUE_APP_API_INTERFACE,
-    apiUrl: process.env.VUE_APP_API_URL,
-    apiAddress: process.env.VUE_APP_API_URL,
-    softwareDevelopState: process.env.VUE_APP_API_STATE
+  apiProtocol: process.env.VUE_APP_API_PROTOCOL,
+  apiServer: process.env.VUE_APP_API_SERVER,
+  apiPort: process.env.VUE_APP_API_PORT,
+  apiInterface: process.env.VUE_APP_API_INTERFACE,
+  apiUrl: process.env.VUE_APP_API_URL,
+  apiAddress: process.env.VUE_APP_API_URL,
+  uiAddress: process.env.VUE_APP_API_UI_URL,
+  softwareDevelopState: process.env.VUE_APP_API_STATE,
+  baseurl: process.env.BASE_URL,
+  websocketPort: process.env.VUE_APP_WEBSOCKET_PORT,
+  websocketName: process.env.VUE_APP_WEBSOCKET_NAME,
+  websocketURL: process.env.VUE_APP_WS_URL,
+  websocketSubcription: process.env.VUE_APP_WEBSOCKET_SUBCRIPTION,
+  stompEndPoint: process.env.VUE_APP_STOMPENDPOINT,
 };
 
 /* Set: Axios Instance
  * These are the properties for axios given with to send requests.
  */
 const client = new axios.create({
-    baseURL: serverConfig.apiAddress,
-    httpAgent: new http.Agent({ keepAlive: true }),
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    }
+  baseURL: serverConfig.apiAddress,
+  httpAgent: new http.Agent({ keepAlive: true }),
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+  // timeout: 20000,
 });
+
+
+// /**
+//  * Define Socket options
+//  */
+// const apiAddress = process.env.VUE_APP_API_URL;
+// const websocketName = 'http://localhost:8082/info-portal-websocket';
+
+// const websocketSubcription = '/notify';
+// const stompEndPoint = '/socket/hello';
+
+// const websocketAddress = `${serverConfig.apiAddress}/${serverConfig.websocketURL}`;
+
+// console.log('apiAddress:', apiAddress);
+// console.log('websocketName:', websocketName);
+// console.log('websocketAddress:', websocketAddress);
+// console.log('websocketSubcription:', websocketSubcription);
+// console.log('stompEndPoint:', stompEndPoint);
+
+
+
 
 
 /*
@@ -46,33 +80,379 @@ const client = new axios.create({
  * Depending on the start process. These are different under dev and prod.
  */
 switch (serverConfig.softwareDevelopState) {
-    case 'dev':
-      isDebugEnabled = true;
-      console.log(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.apiAddress} .`);
-      break;
-  
-    case 'release':
-      isDebugEnabled = false;
-      console.log(`REST-API is addressed PRODUCTIVELY at the address: ${serverConfig.apiAddress} angesprochen.`);
-      break;
-  
-    default:
-      isDebugEnabled = false;
-      console.error('No <state> selected! Please do not use Frontend productively and contact the responsible developer immediately!');
-      serverConfig.apiAddress = '';
-      break;
+  case 'dev':
+    isDebugEnabled = true;
+    console.debug(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.apiAddress} .`);
+    console.debug(`REST-API is addressed for DEVELOPMENT at the address: ${serverConfig.baseUrl} .`);
+    break;
+
+  case 'release':
+    isDebugEnabled = false;
+    console.debug(`REST-API is addressed PRODUCTIVELY at the address: ${serverConfig.apiAddress} angesprochen.`);
+    break;
+
+  default:
+    isDebugEnabled = false;
+    console.error('No <state> selected! Please do not use Frontend productively and contact the responsible developer immediately!');
+    serverConfig.apiAddress = '';
+    break;
 }
-
-
 
 export default {
+  /**
+   *
+   * @param {String} qId
+   */
+  async getOneQuestion(qId) {
+    console.debug(`RestCall: getOneQuestion(${qId})`);
+    return await client
+      .get(`/questionById/${qId}`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
 
-    async getAllQuestions(){
-        try {
-            let serverResponse = await clien.get(); 
-        } catch (error) {
-            
+  /**
+   * 
+   */
+  async getAllQuestions() {
+    console.debug('RestCall: getAllQuestions()');
+    return await client
+      .get('/allQuestions')
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   * 
+   * @param {Strings} searchQuery 
+   */
+  async getAllDataByQuery(searchQuery) {
+    console.debug(`RestCall: getAllDataByQuery(${searchQuery})`);
+    return await client
+      .get(`/question/query/`, { params: { searchQuery } })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return new Array();
+      });
+  },
+
+  /**
+   * 
+   * @param {String} questionId 
+   */
+  async getAllAnswersToQuestions(questionId) {
+    console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
+    return await client
+      .get(`/answersByQuestionId/${questionId}`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return null;
+      });
+  },
+
+  /**
+   * 
+   * @param {String} id 
+   */
+  async getOneAnswerToQuestion(id) {
+    console.debug(`RestCall: getOneAnswerToQuestion(${id})`, id);
+    return await client
+      .post('/answer/answerTobeEdited', id.ids)
+      .then((response) => {
+        console.log(response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   * 
+   * @param {Answer} updatedAnswer 
+   */
+  async setOneAnswerToQuestion(updatedAnswer) {
+    console.debug('setOneAnswerToQuestion():', updatedAnswer);
+    return await client
+      .put('/answer/', updatedAnswer)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   * 
+   * @param {String} answerId 
+   */
+  async getAllCommentsToAnswers(answerId) {
+    console.info(`RestCall: getAllCommentsToAnswers(${answerId})`);
+    return await client
+      .get(`/commentsByAnswerId/${answerId}`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   * 
+   */
+  async getAllTags() {
+    console.info('RestCall: getAllTags()');
+    return await client
+      .get(`/getAllTags`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        if (axios.isCancel(error)) {
+          console.log(error.message);
+        } else {
+          console.error('No Data: ', error);
         }
-    }
+        return null;
+      });
+  },
 
-}
+  /**
+   *
+   * @param {*} newQuestion
+   */
+  async addNewQuestion(newQuestion) {
+    console.debug(`RestCall: addNewQuestion()`, newQuestion);
+    return await client
+      .post('/newQuestion', newQuestion)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   * @param {*} updatedQuestion
+   */
+  async updateCurrentQuestion(updatedQuestion) {
+    console.debug(`RestCall: updateCurrentQuestion()`, updatedQuestion);
+    return await client
+      .put('/question', updatedQuestion)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   * @param {*} newQuestion
+   */
+  async addNewAnswer(newQuestion) {
+    console.debug(`RestCall: addNewAnswer(${newQuestion})`);
+    return await client
+      .post('/answer', newQuestion)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('addNewAnswer():', error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   * @param {Answer} answer
+   */
+  async increaseAnswerRating(answer) {
+    console.debug(`RestCall: increaseAnswerRating(${answer})`);
+    return await client
+      .post('/answer/increaseRating', answer)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   * @param {Comment} newComment
+   */
+  async addNewComment(newComment) {
+    console.debug(`RestCall: addNewComment(${newComment})`);
+    return await client
+      .post('/newComments', newComment)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   * @param {Comment} comment
+   */
+  async increaseCommentRating(comment) {
+    console.debug(`RestCall: increaseCommentRating(${comment})`);
+    return await client
+      .post('/comment/increaseRating', comment)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('increaseCommentRating():', error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   * @param {Question} question
+   */
+  async postNewQuestion(question) {
+    console.debug(`RestCall: postNewQuestion(${question})`);
+    return await client
+      .post(`/newQuestion`, question)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   */
+  async getMostActiveQuestions() {
+    console.debug('RestCall: getMostActiveQuestions()');
+    return await client
+      .get('/question/getMostActiveQuestions')
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   */
+  async getCurrentTopics() {
+    console.debug('RestCall: getCurrentTopics()');
+    return await client
+      .get('/tagsWithMostQuestions')
+      .then((response) => {
+        console.warn('Topics', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   *
+   * @param {String} tag
+   */
+  async getQuestionBasedOnTopic(tag) {
+    console.debug(`RestCall: getQuestionBasedOnTopic(${tag})`);
+    return await client
+      .get(`/questionByTag/${tag}`)
+      .then((response) => {
+        console.warn('Topics', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  // async getRendertHtmlFromMarkdown(mdText) {
+  //   console.debug('Parse MD');
+  //   return await axios({
+  //     methode: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     url: ' https://gitlab.com/api/v4/markdown',
+  //     data: { text: mdText, gfm: true },
+  //   }).then((response) => {
+  //     console.warn('Data raw', response);
+  //     console.warn('Data->data', response.data);
+  //     return response.data;
+  //   });
+  // },
+
+  /**
+   * 
+   */
+  async getUserInfo() {
+    return await client
+      .get('/user')
+      .then((response) => {
+        console.log('userinfo:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+
+  /**
+   * 
+   * @param {String} id 
+   */
+  async getUserNameFromId(id) {
+    return await client
+      .post('/userNameFromId', id)
+      .then((response) => {
+        console.log('Name from id all:', response);
+        console.log('Name from id:', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+        return id;
+      });
+  },
+};

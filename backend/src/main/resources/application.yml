@@ -1,6 +1,20 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://swtp.pcvolkmer.de/auth/realms/master
   data:
     mongodb:
       uri: mongodb+srv://swtp:swtpinfo@cluster0-vtmhv.mongodb.net/swtp_info?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
 server:
-  port: 8000
+  # port: 8082
+  port: 8080
+  forward-headers-strategy: native

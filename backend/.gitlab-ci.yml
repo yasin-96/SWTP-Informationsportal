@@ -1,0 +1,23 @@
+stages:
+    - build
+    - test
+    - package
+    # - deliver
+    # - deploy
+
+  build:
+    image: openjdk:11-jdk
+    stage: build
+    script:
+        - ./mvnw package -B
+    artifacts:
+      paths:
+        - build/*
+      when: always
+      expire_in: 2 days
+  
+  test:
+    image: openjdk:11-jdk
+    stage: test
+    script:
+        - ./mvnw test
