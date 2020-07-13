@@ -53,28 +53,6 @@ const client = new axios.create({
   // timeout: 20000,
 });
 
-
-// /**
-//  * Define Socket options
-//  */
-// const apiAddress = process.env.VUE_APP_API_URL;
-// const websocketName = 'http://localhost:8082/info-portal-websocket';
-
-// const websocketSubcription = '/notify';
-// const stompEndPoint = '/socket/hello';
-
-// const websocketAddress = `${serverConfig.apiAddress}/${serverConfig.websocketURL}`;
-
-// console.log('apiAddress:', apiAddress);
-// console.log('websocketName:', websocketName);
-// console.log('websocketAddress:', websocketAddress);
-// console.log('websocketSubcription:', websocketSubcription);
-// console.log('stompEndPoint:', stompEndPoint);
-
-
-
-
-
 /*
  * Returns the information under which address the backend is to be delivered.
  * Depending on the start process. These are different under dev and prod.
@@ -408,20 +386,6 @@ export default {
         return null;
       });
   },
-
-  // async getRendertHtmlFromMarkdown(mdText) {
-  //   console.debug('Parse MD');
-  //   return await axios({
-  //     methode: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     url: ' https://gitlab.com/api/v4/markdown',
-  //     data: { text: mdText, gfm: true },
-  //   }).then((response) => {
-  //     console.warn('Data raw', response);
-  //     console.warn('Data->data', response.data);
-  //     return response.data;
-  //   });
-  // },
 
   /**
    * 
