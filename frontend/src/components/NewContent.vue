@@ -4,31 +4,22 @@
       <!-- Depending on the property, the addition of a new answer or comment is shown  -->
 
       <!-- Card for adding new Answer  -->
-      <b-form-textarea v-if="nIsAnswer" v-model="contentForAnswer" placeholder="Add new answer ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
+      <b-form-textarea v-if="nIsAnswer" v-model="contentForAnswer" :placeholder="nAnswerText" :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
 
       <!-- Card for adding new Comment  -->
-      <b-form-textarea v-if="nIsComment" v-model="contentForComment" placeholder="Add new comment ..." :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
+      <b-form-textarea v-if="nIsComment" v-model="contentForComment" :placeholder="nCommentText" :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
 
-      <b-button v-if="nIsAnswer" @click="addNewAnswer()" variant="success"><fai icon="plus-circle" /></b-button>
-      <b-button v-if="nIsComment" @click="addNewComment()" variant="success"><fai icon="plus-circle" /></b-button>
+      <b-button v-if="nIsAnswer" @click="addNewAnswer()" :variant="nSendColor"><fai :icon="nSendIcon" /></b-button>
+      <b-button v-if="nIsComment" @click="addNewComment()" :variant="nSendColor"><fai :icon="nSendIcon" /></b-button>
     </b-button-group>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-// import send from '@/mixins/socketStomp.js';
-// import connect from '@/mixins/socketStomp.js';
-// import disconnect from '@/mixins/socketStomp.js';
-// import tickleConnection from '@/mixins/socketStomp.js';
-
 export default {
   name: 'NewContent',
   props: {
-    nPlaceholder: {
-      type: String,
-      default: 'asd',
-    },
     nRows: {
       type: Number,
       default: 3,
@@ -45,9 +36,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    nAnswerText: {
+      type: String,
+      default: 'Add new answer ...',
+    },
     nIsComment: {
       type: Boolean,
       default: false,
+    },
+    nCommentText: {
+      type: String,
+      default: 'Add new comment ..',
     },
     id: {
       type: String,
@@ -55,6 +54,14 @@ export default {
     },
     qId: {
       type: String,
+    },
+    nSendColor: {
+      type: String,
+      default: 'success',
+    },
+    nSendIcon: {
+      type: String,
+      default: 'plus-circle',
     },
   },
   data() {
@@ -69,16 +76,6 @@ export default {
       },
       contentForAnswer: '',
       contentForComment: '',
-      // newWsMessage: {
-      //   questionId: this.id,
-      //   answerId: this.id,
-      //   isAnswer: false,
-      //   isComment: false,
-      //   minimalUser: {
-      //     userId: '',
-      //     userName: '',
-      //   }
-      // },
     };
   },
   methods: {
@@ -100,19 +97,15 @@ export default {
         // websocket message
         let newWsMessage = {
           questionId: this.id,
-          answerId: "",
+          answerId: '',
           isAnswer: true,
           isComment: false,
           minimalUser: {
             userId: this.getUserId,
             userName: this.getUsersPreferedName,
-          }
-        }
+          },
+        };
 
-
-        // this.newWsMessage.isAnswer = true;
-        // this.newWsMessage.minimalUser.userId = this.getUserId;
-        // this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;
         console.warn('newWsMessage', newWsMessage);
         await this.$store.dispatch('act_sendStompMessage', this.newWsMessage);
 
@@ -151,8 +144,8 @@ export default {
           minimalUser: {
             userId: this.getUserId,
             userName: this.getUsersPreferedName,
-          }
-        }
+          },
+        };
         this.newWsMessage.isComment = true;
         this.newWsMessage.minimalUser.userId = this.getUserId;
         this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;

@@ -7,7 +7,7 @@
           <b-button-group>
             <h2><fai icon="user-circle" /></h2>
             <b-button size="sm" disabled variant="white"> </b-button>
-            <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{qUserName}} <small class="ml-3"> </small> </b-button>
+            <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{ qUserName }} <small class="ml-3"> </small> </b-button>
             <b-button size="sm" disabled variant="white">
               <small>
                 <fai icon="clock" />
@@ -77,10 +77,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    qShowMaxText: {
-      type: Number,
-      default: 50,
-    },
     displayContent: {
       type: Boolean,
       default: false,
@@ -91,7 +87,7 @@ export default {
     },
     qUserName: {
       type: String,
-      required: true
+      required: true,
     },
     qEdit: {
       type: Boolean,
