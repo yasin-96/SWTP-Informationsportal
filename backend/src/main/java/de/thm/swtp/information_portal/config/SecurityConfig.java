@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     return jwtAuthToken;
            
         });
-        // http.csrf().disable();
+        http.csrf().disable();
         // http.headers().frameOptions().sameOrigin();
     }
 
