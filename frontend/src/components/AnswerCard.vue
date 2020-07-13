@@ -37,7 +37,7 @@
       <!-- Area for all Comments -->
       <b-card-body>
         <b-container>
-          <Comment :cComments="allComments" :cId="cId" :qId="nId" />
+          <CommentCard :cComments="allComments" :cId="cId" :qId="nId" />
         </b-container>
         <b-container> </b-container>
       </b-card-body>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import Comment from '@/components/Comment';
+import CommentCard from '@/components/CommentCard';
 import { mapState, mapActions } from 'vuex';
 import VueSimplemde from 'vue-simplemde';
 
@@ -55,7 +55,7 @@ import { BIconClock, BIconChatSquareDots } from 'bootstrap-vue';
 export default {
   name: 'AnswerCard',
   components: {
-    Comment,
+    CommentCard,
     Editor: VueSimplemde,
   },
   props: {
