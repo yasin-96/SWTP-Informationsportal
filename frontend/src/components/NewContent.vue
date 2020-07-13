@@ -113,7 +113,7 @@ export default {
         // this.newWsMessage.isAnswer = true;
         // this.newWsMessage.minimalUser.userId = this.getUserId;
         // this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;
-
+        console.warn('newWsMessage', newWsMessage);
         await this.$store.dispatch('act_sendStompMessage', this.newWsMessage);
 
         //scroll to this answer

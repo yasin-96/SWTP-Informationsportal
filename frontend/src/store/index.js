@@ -429,7 +429,7 @@ export default new Vuex.Store({
         });
     },
 
-    act_createConnectSocketAndStompClient({ state, commit }) {
+    act_createConnectSocketAndStompClient({ state, commit, dispatch }) {
       // commit('CREATE_NEW_SOCKET', websocketURL);
       // commit('CREATE_NEW_STOMP_CLIENT');
 
@@ -449,14 +449,22 @@ export default new Vuex.Store({
 
               await state.stompClient.subscribe(websocketSubcription, (response) => {
                 //TODO das hier muss in den Store
+                //TODO speichern auch im local storage
                 let parsedData = JSON.parse(`${response.body}`);
 
                 if (parsedData.body) {
-                  //todo nur hinzufügen, wenn der user drinne ist
-                  parsedData.body.listOfUsers.forEach((pd) => {
+                  
+                  // nur hinzufügen, wenn der user drinne ist
+                  parsedData.body.listOfUsers.forEach(async (pd) => {
                     console.log('PD', pd);
                     if (pd.id === state.currentUser.id) {
+
+                      //save to store
                       commit('ADD_WS_MESSAGE', parsedData.body );
+                      
+                      //save to local storage
+                      this.$localStore.set('notify', JSON.stringify(state.wsMessages));
+                      // dispatch('saveNotificationToLocalStorage');
                     }
                   });
 
@@ -496,12 +504,17 @@ export default new Vuex.Store({
       }
     },
 
+
+
     async loadNotificationFromLocalStorage({commit}){
+      let loadNotification = await this.$localStore.get('notify');
+
+      let parsedJsonObject = JSON.parse(loadNotification);
 
     },
 
-    async saveNotificationToLocalStorage({state}){
-      // this.$localStore.ge
+    saveNotificationToLocalStorage({state}){
+      this.$localStore.set('notify', JSON.stringify(state.wsMessages));
     }
   },
 
