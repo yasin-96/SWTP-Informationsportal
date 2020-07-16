@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import createPersistedState from "vuex-persistedstate";
+
 import RestCalls from '@/services/RestCalls';
 import { convertUnixTimeStampToString } from '@/services/Utils';
 
@@ -11,6 +13,13 @@ const websocketName = process.env.VUE_APP_WEBSOCKET_NAME;
 const websocketURL = process.env.VUE_APP_WS_URL;
 const websocketSubcription = process.env.VUE_APP_WEBSOCKET_SUBCRIPTION;
 const stompEndPoint = process.env.VUE_APP_STOMPENDPOINT;
+
+
+const localStore = createPersistedState({
+  key: 'info-portal-notification',
+  paths: ['wsMessages']
+})
+
 
 Vue.use(Vuex);
 
@@ -461,10 +470,7 @@ export default new Vuex.Store({
 
                       //save to store
                       commit('ADD_WS_MESSAGE', parsedData.body );
-                      
-                      //save to local storage
-                      this.$localStore.set('notify', JSON.stringify(state.wsMessages));
-                      // dispatch('saveNotificationToLocalStorage');
+                     
                     }
                   });
 
@@ -552,4 +558,5 @@ export default new Vuex.Store({
     },
   },
   modules: {},
+  plugins: [localStore]
 });
