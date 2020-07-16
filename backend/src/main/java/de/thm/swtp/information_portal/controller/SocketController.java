@@ -6,6 +6,7 @@ import de.thm.swtp.information_portal.repositories.AnswerRepository;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 import de.thm.swtp.information_portal.repositories.UserRepository;
+import lombok.var;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,9 +53,9 @@ public class SocketController {
     public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage) {
 
         // init data
-        SocketReceived wsData = new SocketReceived();
-        SocketResponse socketResponse = new SocketResponse();
-        HashSet<User> users = new HashSet<User>();
+        var wsData = new SocketReceived();
+        var socketResponse = new SocketResponse();
+        var users = new HashSet<User>();
         
         try {
             
