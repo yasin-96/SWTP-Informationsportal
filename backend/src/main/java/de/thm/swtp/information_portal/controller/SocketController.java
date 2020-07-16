@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
-@RequestMapping("/info-portal/api")
+@RequestMapping("/info-portal/ws")
 @CrossOrigin(origins = "*")
 public class SocketController {
 
