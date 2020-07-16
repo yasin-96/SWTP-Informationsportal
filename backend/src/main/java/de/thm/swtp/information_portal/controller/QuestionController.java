@@ -138,7 +138,9 @@ public class QuestionController {
 	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Validated @RequestParam String searchQuery)
 			throws URISyntaxException, InterruptedException {
 
-		List<String> listQuery = Arrays.stream(searchQuery.split(" ")).filter(item -> !item.isEmpty())
+
+
+		List<String> listQuery = Arrays.stream(searchQuery.toUpperCase().split(" ")).filter(item -> !item.isEmpty())
 				.collect(Collectors.toList());
 
 		var filteredQuestions = new HashSet<Question>();
