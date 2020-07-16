@@ -54,7 +54,6 @@ public class QuestionService {
 	}
 
 	public Optional<Question> getQuestion(String id) {
-		Optional<Question> question = questionRepository.findById(id);
-		return question;
+		return questionRepository.findById(id);
 	}
 }

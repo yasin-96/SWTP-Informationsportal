@@ -31,10 +31,12 @@ public class UserInformationController {
     @Autowired
     private AnswerRepository answerRepository;
 
-    @GetMapping("/{user}/info")
+    @GetMapping("/info/{user}")
     public CompletableFuture<ResponseEntity<UserInformation>> getUserInfo(@PathVariable String user) throws URISyntaxException {
         Optional<UserInformation> userInfo = userInformationService.getUserInfo(user);
+
         if(userInfo.isPresent()){
+            System.out.println("ist da");
             ResponseEntity<UserInformation> reqUserInfo = userInfo.map(response -> ResponseEntity.ok().body(response))
                     .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
             return CompletableFuture.completedFuture(reqUserInfo);
@@ -51,7 +53,7 @@ public class UserInformationController {
             UserInformation newUserInfo = new UserInformation(user,questionsOfUser.size(),numberOfAnswers);
             userInformationService.addUserInfo(newUserInfo);
             return CompletableFuture
-                    .completedFuture(ResponseEntity.created(new URI("/info-portal/api" + newUserInfo.getId())).body(newUserInfo));
+                    .completedFuture(ResponseEntity.created(new URI("/info-portal/api" + newUserInfo.get_id())).body(newUserInfo));
         }
     }
 

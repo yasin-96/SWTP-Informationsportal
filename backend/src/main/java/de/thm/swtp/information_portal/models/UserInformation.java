@@ -11,12 +11,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class UserInformation {
 
     //String userId;
-    String id;
+
+    String _id;
     int numberOfQuestions;
     int numberOfAnswers;
 
     public UserInformation(String id, int numberOfQuestions,int numberOfAnswers){
-        this.id=id;
+        this._id=id;
         this.numberOfQuestions=numberOfQuestions;
         this.numberOfAnswers = numberOfAnswers;
     }
