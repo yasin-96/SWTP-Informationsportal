@@ -53,9 +53,9 @@ public class SocketController {
     public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage) {
 
         // init data
-        var wsData = new SocketReceived();
-        var socketResponse = new SocketResponse();
-        var users = new HashSet<User>();
+        SocketReceived wsData = new SocketReceived();
+        SocketResponse socketResponse = new SocketResponse();
+        HashSet<User> users = new HashSet<User>();
         
         try {
             
