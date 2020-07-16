@@ -25,7 +25,7 @@ public class Tag {
 
 	public Tag(String name) {
 		this.id = UUID.randomUUID().toString();
-		this.name = name;
+		this.name = name.toUpperCase();
 		this.timeStamp = Instant.now().getEpochSecond() * 1000;
 	}
 
