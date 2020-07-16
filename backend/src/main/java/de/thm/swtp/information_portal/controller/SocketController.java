@@ -6,6 +6,8 @@ import de.thm.swtp.information_portal.repositories.AnswerRepository;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 import de.thm.swtp.information_portal.repositories.UserRepository;
+import lombok.var;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,17 +53,18 @@ public class SocketController {
     public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage) {
 
         // init data
-        SocketReceived wsData = null;
-        SocketResponse socketResponse = null;
+        var wsData = new SocketReceived();
+        var socketResponse = new SocketResponse();
         var users = new HashSet<User>();
-        String headerOfQuestion = questionRepository.findById(wsData.getQuestionId()).get().getHeader();
-
+        
         try {
-
+            
             // parse jsObject to java object
             var parseJsObject = new ObjectMapper();
             wsData = parseJsObject.readValue(wsMessage, SocketReceived.class);
 
+            String headerOfQuestion = questionRepository.findById(wsData.getQuestionId()).get().getHeader();
+            
             if (wsData.getIsAnswer()) {
                 Optional<Answers> answers = answerRepository.findById(wsData.getQuestionId());
 
@@ -69,7 +72,9 @@ public class SocketController {
                 List<Answer> answersOfQuestion = answers.get().getListOfAnswers();
                 for (Answer answer : answersOfQuestion) {
                     Optional<User> userToBeAdded = userRepository.findById(answer.getUserId());
-                    users.add(userToBeAdded.get());
+                    if(userToBeAdded != null){
+                        users.add(userToBeAdded.get());
+                    }
                 }
 
 
@@ -82,8 +87,10 @@ public class SocketController {
                 Optional<Comments> comments = commentRepository.findById(wsData.getAnswerId());
                 List<Comment> allComments = comments.get().getComments();
                 for(Comment comment: allComments){
-                    Optional<User> userToBeAdded = userRepository.findById(comment.getId());
-                    users.add(userToBeAdded.get());
+                    Optional<User> userToBeAdded = userRepository.findById(comment.getUserId());
+                    if(userToBeAdded != null){
+                        users.add(userToBeAdded.get());
+                    }
                 }
 
                 socketResponse = new SocketResponse(wsData.getQuestionId(),wsData.getAnswerId(),users,headerOfQuestion,
