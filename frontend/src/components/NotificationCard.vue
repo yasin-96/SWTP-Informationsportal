@@ -1,26 +1,73 @@
 <template>
   <b-container class="mb-2">
-    <b-card bg-variant="white" text-variant="dark" v-if="isAnswer" title="New Answer" :sub-title="`${user.userName} added something to question`">
-      <b-card-text>
-        <span class="pr-1"><fai icon="comment"></fai></span>
-        <span
-          ><strong>{{ question }}</strong></span
-        >
-      </b-card-text>
-    </b-card>
+    <b-row>
+      <b-col cols="12">
+        <b-card bg-variant="white" text-variant="dark" v-if="isAnswer" style="max-width: 300px; max-height: 150px;">
+          <b-card-title>
+            <b-row class="justify-content-left">
+              <b-col>
+                <span class="pr-1"><fai :icon="answerIcon"></fai></span> {{ answerTitle }}
+              </b-col>
 
-    <b-card bg-variant="warning" text-variant="dark" v-if="isComment" title="New Comment" :sub-title="`${user.userName} added something to answer`">
-      <b-card-text>
-        <fai icon="comment-dots"></fai>
-        <span
-          ><strong>{{ question }}</strong></span
-        >
-      </b-card-text>
-    </b-card>
+               <b-col cols="mx-auto">
+                <small @click="removeNotification()">
+                  <span><fai icon="window-close" :style="{ color: '#b94a48'}"></fai></span>
+                </small>
+              </b-col>
+            </b-row>
+          </b-card-title>
+          <!-- <b-card-sub-title class="pb-2">{{ answerSubTitle }}</b-card-sub-title> -->
+          <b-card-text>
+            <p>
+              The user <b>{{ user.userName }}</b> has answered a question
+              <i>
+                <b-link :to="{ path: `/question/${questionId}` }"
+                  ><span
+                    ><strong>{{ question }}</strong></span
+                  >
+                </b-link>
+              </i>
+            </p>
+          </b-card-text>
+        </b-card>
+
+        <b-card bg-variant="warning" text-variant="dark" v-if="isComment" style="max-width: 300px; max-height: 150px;">
+          <b-card-title>
+            <b-row class="justify-content-left">
+              <b-col>
+                <span class="pr-1"><fai :icon="commentIcon"></fai></span> {{ commentTitle }}
+              </b-col>
+
+              <b-col cols="mx-auto">
+                <small @click="removeNotification()">
+                  <span><fai icon="window-close" :style="{ color: '#b94a48' }"></fai></span>
+                </small>
+              </b-col>
+            </b-row>
+          </b-card-title>
+          <!-- <b-card-sub-title class="">{{ commentSubTitle }}</b-card-sub-title> -->
+          <b-card-text>
+            <p>
+              The user <b>{{ user.userName }}</b> has commented on an answer to question
+              <i>
+                <b-link :to="{ path: `/question/${questionId}` }"
+                  ><span
+                    ><strong>{{ question }}</strong></span
+                  >
+                </b-link>
+              </i>
+            </p>
+          </b-card-text>
+        </b-card>
+      </b-col>
+    </b-row>
   </b-container>
 </template>
 
 <script>
+
+import {mapActions, Store } from 'vuex';
+
 export default {
   name: 'NotificationCard',
   props: {
@@ -48,7 +95,50 @@ export default {
       type: String,
       required: true,
     },
+    index: {
+      type: Number,
+      required: true
+    },
+
+    answerIcon: {
+      type: String,
+      default: 'comment',
+    },
+
+    answerTitle: {
+      type: String,
+      default: 'New Answer',
+    },
+
+    answerSubTitle: {
+      type: String,
+      default: 'Receive the answer',
+    },
+
+    commentIcon: {
+      type: String,
+      default: 'comment-dots',
+    },
+
+    commentTitle: {
+      type: String,
+      default: 'New Comment',
+    },
+
+    commentSubTitle: {
+      type: String,
+      default: 'Receive the comment',
+    },
   },
+  methods: {
+    removeNotification(){
+      console.warn("INDEX to Remove", this.index)
+      this.$store.dispatch('act_removeOneWSMessage', this.index)
+    }
+  },
+  computed: {
+    ...mapActions(['act_removeOneWSMessage'])
+  }
 };
 </script>
 
