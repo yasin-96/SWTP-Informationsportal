@@ -107,7 +107,7 @@ export default {
         };
 
         console.warn('newWsMessage', newWsMessage);
-        await this.$store.dispatch('act_sendStompMessage', this.newWsMessage);
+        await this.$store.dispatch('act_sendStompMessage', newWsMessage);
 
         //scroll to this answer
         window.scrollTo(0, document.body.scrollHeight);
@@ -146,11 +146,12 @@ export default {
             userName: this.getUsersPreferedName,
           },
         };
-        this.newWsMessage.isComment = true;
-        this.newWsMessage.minimalUser.userId = this.getUserId;
-        this.newWsMessage.minimalUser.userName = this.getUsersPreferedName;
+        
+        newWsMessage.isComment = true;
+        newWsMessage.minimalUser.userId = this.getUserId;
+        newWsMessage.minimalUser.userName = this.getUsersPreferedName;
 
-        await this.$store.dispatch('act_sendStompMessage', this.newWsMessage);
+        await this.$store.dispatch('act_sendStompMessage', newWsMessage);
 
         //clear comments old value
         this.contentForComment = '';
