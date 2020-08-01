@@ -20,11 +20,12 @@
           <b-nav-item class="mt-1" to="/questions">General</b-nav-item>
           <b-nav-item class="mt-1" to="/topics">Topics</b-nav-item>
           <b-nav-item class="mt-1" to="/about">About</b-nav-item>
-          <b-nav-item class="mt-1" href="/chat">Chat</b-nav-item>
-          <b-nav-item class="mt-1" href="/microblog/microblog">Microblog</b-nav-item>
           <b-nav-item class="mt-1">
             <Sidebar />
           </b-nav-item>
+          <b-nav-item class="mt-1" >|</b-nav-item>
+          <b-nav-item class="mt-1" href="/chat">Chat</b-nav-item>
+          <b-nav-item class="mt-1" href="/microblog/microblog">Microblog</b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
