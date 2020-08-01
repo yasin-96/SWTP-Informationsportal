@@ -20,6 +20,8 @@
           <b-nav-item class="mt-1" to="/questions">General</b-nav-item>
           <b-nav-item class="mt-1" to="/topics">Topics</b-nav-item>
           <b-nav-item class="mt-1" to="/about">About</b-nav-item>
+          <b-nav-item class="mt-1" href="/chat">Chat</b-nav-item>
+          <b-nav-item class="mt-1" href="/microblog/microblog">Microblog</b-nav-item>
           <b-nav-item class="mt-1">
             <Sidebar />
           </b-nav-item>
@@ -27,13 +29,15 @@
 
         <b-navbar-nav class="ml-auto">
           <Searching />
-          <b-nav-item-dropdown right>
-            <template v-slot:button-content>
-              <b-avatar size="2rem" variant="success" :text="getFirstLetterFromUser"></b-avatar>
-            </template>
-            <b-dropdown-item to="#">Profile</b-dropdown-item>
-            <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
-          </b-nav-item-dropdown>
+            <b-nav-item-dropdown  right>
+              <template v-slot:button-content>
+                <template>
+                  <b-avatar size="2rem" variant="info" :text="getFirstLetterFromUser"></b-avatar>
+                </template>
+              </template>
+              <b-dropdown-item :href="'/microblog/profile/'+ userUUID ">Profile</b-dropdown-item>
+              <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
+            </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
@@ -73,7 +77,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getFirstLetterFromUser']),
+    ...mapGetters(['getFirstLetterFromUser','getUserId']),
     avatarLetter() {
       if (this.getFirstLetterFromUser) {
         return this.getFirstLetterFromUser;
@@ -81,6 +85,13 @@ export default {
         return '';
       }
     },
+    userUUID(){
+      if (this.getUserId) {
+        return this.getUserId;
+      } else {
+        return ""
+      }
+    }
   },
 };
 </script>

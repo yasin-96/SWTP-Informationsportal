@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <div>
     <span v-b-toggle.notifySidebar> <fai icon="bell"></fai> <b-badge variant="light">{{ wsMessages.length != 0 ? wsMessages.length : ''  }}</b-badge> </span>
     <b-sidebar id="notifySidebar" title="Notification" text-variant="light" shadow>
       <div v-if="wsMessages.length">
@@ -17,7 +17,7 @@
         </div>
       </div>
     </b-sidebar>
-  </b-container>
+  </div>
 </template>
 <script>
 import NotificationCard from '@/components/NotificationCard';
