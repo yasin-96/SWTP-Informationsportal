@@ -1,9 +1,9 @@
 <template>
-  <b-container>
+  <div class="mt-1">
     <b-row>
       <b-col>
-        <b-input-group>
-          <b-input-group-append>
+        <b-input-group class="roundedCornerLeft">
+          <b-input-group-append > 
             <b-button variant="success" v-on:enter="searchData()" @click="searchData()">
               <fai icon="search" />
             </b-button>
@@ -12,7 +12,7 @@
         </b-input-group>
       </b-col>
     </b-row>
-  </b-container>
+  </div>
 </template>
 
 <script>
