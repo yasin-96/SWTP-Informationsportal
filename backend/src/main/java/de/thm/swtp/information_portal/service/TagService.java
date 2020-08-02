@@ -19,6 +19,11 @@ public class TagService {
 	@Autowired
 	private TagRepository tagRepository;
 
+	/**
+	 *
+	 * @param tags
+	 * @return
+	 */
 	public List<Tag> checkIfTagsExist(List<Tag> tags) {
 		List<Tag> newTagList = new ArrayList<Tag>();
 
@@ -40,11 +45,20 @@ public class TagService {
 		}
 		return newTagList;
 	}
-	
+
+	/**
+	 *
+	 * @return
+	 */
 	public List<Tag> getAllTags() {
 		return tagRepository.findAll();
 	}
 
+	/**
+	 *
+	 * @param tag
+	 * @return
+	 */
 	public Tag tagToUpperCase(Tag tag){
 		//List<Tag> tagsInUpperCase = new ArrayList<>();
 		tag.setName(tag.getName().toUpperCase());

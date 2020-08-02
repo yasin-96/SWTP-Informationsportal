@@ -95,6 +95,11 @@ public class CommentController {
 		}
 	};
 
+	/**
+	 *
+	 * @param commentList
+	 * @return
+	 */
 	@Async
 	@PostMapping("/comment/increaseRating")
 	public CompletableFuture<ResponseEntity<Comments>> increaseCommentRating(

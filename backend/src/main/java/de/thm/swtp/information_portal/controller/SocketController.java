@@ -47,6 +47,11 @@ public class SocketController {
     @Autowired
     private CommentRepository commentRepository;
 
+    /**
+     *
+     * @param wsMessage
+     * @return
+     */
     @MessageMapping("/hello")
     @SendTo("/notify")
     public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage) {

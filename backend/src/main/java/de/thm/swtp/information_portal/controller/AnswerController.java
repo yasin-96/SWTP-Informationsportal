@@ -63,6 +63,11 @@ public class AnswerController {
 		}
 	}
 
+	/**
+	 *
+	 * @param ids
+	 * @return
+	 */
 	@Async
 	@PostMapping("/answer/answerTobeEdited")
 	public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(@Validated @RequestBody String[] ids) {
@@ -78,6 +83,12 @@ public class AnswerController {
 		return CompletableFuture.completedFuture(new ResponseEntity<Answer>(foundAnswer, HttpStatus.OK));
 	}
 
+	/**
+	 *
+	 * @param answersBody
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	@Async
 	@PutMapping("/answer")
 	public CompletableFuture<ResponseEntity<Answers>> editAnswer(@Validated @RequestBody Answers answersBody)
@@ -139,6 +150,11 @@ public class AnswerController {
 		}
 	};
 
+	/**
+	 *
+	 * @param answerList
+	 * @return
+	 */
 	@Async
 	@PostMapping("/answer/increaseRating")
 	public CompletableFuture<ResponseEntity<Answers>> increaseAnswerRating(@RequestBody Answers answerList) {

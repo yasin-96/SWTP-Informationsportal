@@ -14,10 +14,20 @@ public class UserInformationService {
     @Autowired
     private UserInformationRepository userInformationRepository;
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Optional<UserInformation> getUserInfo(String id){
         return userInformationRepository.findById(id);
     }
 
+    /**
+     *
+     * @param userInfo
+     * @return
+     */
     public UserInformation addUserInfo(UserInformation userInfo){
        return userInformationRepository.save(userInfo);
     }

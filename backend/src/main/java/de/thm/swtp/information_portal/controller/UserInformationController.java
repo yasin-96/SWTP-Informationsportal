@@ -31,6 +31,13 @@ public class UserInformationController {
     @Autowired
     private AnswerRepository answerRepository;
 
+    /**
+     *
+     * @param user
+     * @return
+     * @throws URISyntaxException
+     */
+    @Async
     @GetMapping("/info/{user}")
     public CompletableFuture<ResponseEntity<UserInformation>> getUserInfo(@PathVariable String user) throws URISyntaxException {
         Optional<UserInformation> userInfo = userInformationService.getUserInfo(user);
@@ -57,6 +64,11 @@ public class UserInformationController {
         }
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     int getNumberOfAnswers(String id) {
         List<Answers> allAnswers = answerRepository.findAll();
         List<Answer> allSingleAnswers = new ArrayList<>();

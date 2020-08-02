@@ -24,6 +24,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     *
+     * @param jwt
+     * @return
+     * @throws URISyntaxException
+     */
     @Async
     @GetMapping("/user")
     CompletableFuture<ResponseEntity<User>> getUser(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
@@ -37,7 +43,11 @@ public class UserController {
         }
     }
 
-
+    /**
+     *
+     * @param id
+     * @return
+     */
     @Async
     @PostMapping("/userNameFromId")
     CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody String id) {
@@ -50,6 +60,12 @@ public class UserController {
     }
 
 
+    /**
+     *
+     * @param jwt
+     * @return
+     * @throws URISyntaxException
+     */
     @Async
     CompletableFuture<ResponseEntity<User>> saveUserIfNotExists(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
         if(jwt != null){
@@ -58,7 +74,7 @@ public class UserController {
             User newUser = new User(userId, jwt.getClaimAsString("name"), jwt.getClaimAsString("email"), jwt.getClaimAsString("preferred_username"));
             userService.addUser(newUser);
             return CompletableFuture
-                    .completedFuture(ResponseEntity.created(new URI("/api/user" + newUser.get_Id())).body(newUser));
+                    .completedFuture(ResponseEntity.created(new URI("/api/user" + newUser.get_id())).body(newUser));
         }
         return CompletableFuture
                 .completedFuture(ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(null));

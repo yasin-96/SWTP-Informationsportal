@@ -7,11 +7,10 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@NoArgsConstructor
 @Data
 @Getter
 @Setter
-@AllArgsConstructor
+//@AllArgsConstructor
 
 @Document(collection = "userInfo")
 public class UserInformation {
@@ -20,6 +19,11 @@ public class UserInformation {
     private int numberOfQuestions;
     private int numberOfAnswers;
 
+    /**
+     * @param id
+     * @param numberOfQuestions
+     * @param numberOfAnswers
+     */
     public UserInformation(String id, int numberOfQuestions, int numberOfAnswers) {
         this._id = id;
         this.numberOfQuestions = numberOfQuestions;

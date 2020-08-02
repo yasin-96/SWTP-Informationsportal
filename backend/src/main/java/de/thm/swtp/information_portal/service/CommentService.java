@@ -14,15 +14,29 @@ public class CommentService {
 
 	@Autowired
 	private CommentRepository commentRepository;
-	
+
+	/**
+	 *
+	 * @return
+	 */
 	public List<Comments>findAllComments(){
 		return commentRepository.findAll();
 	}
-	
+
+	/**
+	 *
+	 * @param id
+	 * @return
+	 */
 	public Optional<Comments> findByAnswerId(String id) {
 		return commentRepository.findById(id);
 	}
-	
+
+	/**
+	 *
+	 * @param comments
+	 * @return
+	 */
 	public Comments postComments(Comments comments) {
 		return commentRepository.save(comments);
 	}

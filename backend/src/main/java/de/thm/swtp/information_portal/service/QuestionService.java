@@ -24,6 +24,11 @@ public class QuestionService {
 	@Autowired
 	private TagRepository tagRepository;
 
+	/**
+	 *
+	 * @param tags
+	 * @return
+	 */
 	public List<Question> findByTag(String tags) {
 
 		Tag existingTag = tagRepository.findByName(tags);
@@ -39,20 +44,39 @@ public class QuestionService {
 		return questionByTags;
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	public List<Question> getAllQuestions() {
 		return questionRepository.findAll();
 	}
 
+	/**
+	 *
+	 * @param question
+	 * @return
+	 */
 	public Question editQuestion(Question question){
 		return questionRepository.save(question);
 	}
 
+	/**
+	 *
+	 * @param question
+	 * @return
+	 */
 	public Question postQuestion(Question question) {
 		List<Tag> newQuestionTags = tagService.checkIfTagsExist(question.getTags());
 		Question newQuestion = new Question(question.getHeader(), question.getContent(), newQuestionTags, question.getUserId());
 		return questionRepository.save(newQuestion);
 	}
 
+	/**
+	 *
+	 * @param id
+	 * @return
+	 */
 	public Optional<Question> getQuestion(String id) {
 		return questionRepository.findById(id);
 	}
