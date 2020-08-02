@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "..\\swtp-sose2020-helloservice"
+		},
+		{
+			"path": "../frontend"
 		}
 	],
 	"settings": {

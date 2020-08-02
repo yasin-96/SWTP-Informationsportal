@@ -10,11 +10,11 @@
 	<groupId>de.thm.swtp</groupId>
 	<artifactId>information_portal</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>info-portal</name>
+	<description>Informations-Portal for THM</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>14</java.version>
 	</properties>
 
 	<dependencies>

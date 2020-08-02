@@ -11,9 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MinimalUser {
-    
-    // uuid from user 
+
+    // UUID from user
     private String userId;
+
     // Fullname of Person
     private String userName;
 

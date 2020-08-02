@@ -46,7 +46,6 @@ public class Answer {
 		this.rating = rating;
 		this.timeStamp = Instant.now().getEpochSecond() * 1000;
 	}
-
 }
 
 

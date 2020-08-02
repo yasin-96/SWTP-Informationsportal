@@ -10,12 +10,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+//lombok feature
 @NoArgsConstructor
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
+
+//Name of collection in MongoDB
 @Document(collection = "answer")
+
 public class Answers {
 
     // UUID for every answer
