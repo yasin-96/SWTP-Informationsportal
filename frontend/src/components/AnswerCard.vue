@@ -1,14 +1,20 @@
 <template>
   <b-container v-if="nId">
-    <b-card id="nId" class="mt-3" :key="nId">
+    <b-card header-bg-variant="white" id="nId" class="mt-3" :key="nId">
       <!-- Information about user & creation date -->
       <template v-slot:header>
         <b-row class="justify-content-left">
           <b-col>
             <b-button-group>
-              <h2><fai icon="user-circle" /></h2>
-              <b-button size="sm" disabled variant="white"> </b-button>
-              <b-button size="sm" disabled variant="white"> <strong>Antwort </strong> erstellt von {{ aUserName }} <small class="ml-3"> </small> </b-button>
+              <h2>
+                <fai icon="user-circle" />
+              </h2>
+              <b-button size="sm" disabled variant="white"></b-button>
+              <b-button size="sm" disabled variant="white">
+                <strong>Antwort</strong>
+                erstellt von {{ aUserName }}
+                <small class="ml-3"></small>
+              </b-button>
               <b-button size="sm" disabled variant="white">
                 <small>
                   <fai icon="clock" />
@@ -28,10 +34,10 @@
         <b-button size="sm" variant="info" @click="increaseRating()">
           <fai icon="thumbs-up" />
         </b-button>
-        <b-button size="sm" disabled variant="info">
-          {{ aRating }}
+        <b-button size="sm" disabled variant="info">{{ aRating }}</b-button>
+        <b-button v-if="userEdit" size="sm" @click="editAnswer()">
+          <fai icon="edit"></fai>
         </b-button>
-        <b-button v-if="userEdit" size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
       </b-button-group>
 
       <!-- Area for all Comments -->
@@ -39,7 +45,7 @@
         <b-container>
           <CommentCard :cComments="allComments" :cId="cId" :qId="nId" />
         </b-container>
-        <b-container> </b-container>
+        <b-container></b-container>
       </b-card-body>
     </b-card>
   </b-container>
@@ -125,7 +131,7 @@ export default {
     },
 
     /**
-     * 
+     *
      */
     async increaseRating() {
       // this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
@@ -152,7 +158,7 @@ export default {
     },
 
     /**
-     * 
+     *
      */
     editAnswer() {
       this.$router
