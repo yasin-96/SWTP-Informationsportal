@@ -20,9 +20,9 @@ public class UserInformation {
     private int numberOfQuestions;
     private int numberOfAnswers;
 
-    /*public UserInformation(String id, int numberOfQuestions, int numberOfAnswers) {
+    public UserInformation(String id, int numberOfQuestions, int numberOfAnswers) {
         this._id = id;
         this.numberOfQuestions = numberOfQuestions;
         this.numberOfAnswers = numberOfAnswers;
-    }*/
+    }
 }
