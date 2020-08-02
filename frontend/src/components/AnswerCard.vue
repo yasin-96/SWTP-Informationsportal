@@ -1,6 +1,7 @@
 <template>
   <b-container v-if="nId">
-    <b-card header-bg-variant="white" id="nId" class="mt-3" :key="nId">
+    <b-card header-bg-variant="white"
+    footer-bg-variant="white" id="nId" class="mt-3" :key="nId">
       <!-- Information about user & creation date -->
       <template v-slot:header>
         <b-row class="justify-content-left">
@@ -15,15 +16,24 @@
                 erstellt von {{ aUserName }}
                 <small class="ml-3"></small>
               </b-button>
-              <b-button size="sm" disabled variant="white">
+              <!-- <b-button size="sm" disabled variant="white">
                 <small>
                   <fai icon="clock" />
                   {{ aDate }}
                 </small>
-              </b-button>
+              </b-button> -->
             </b-button-group>
           </b-col>
         </b-row>
+      </template>
+
+      <template v-slot:footer>
+        <b-button size="md" disabled variant="white">
+          <small>
+            <fai icon="clock" />
+            {{ qDate }}
+          </small>
+        </b-button>
       </template>
 
       <!-- One answer to the question -->

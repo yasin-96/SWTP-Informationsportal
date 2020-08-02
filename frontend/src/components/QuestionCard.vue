@@ -56,9 +56,8 @@
       <b-form-tags v-model="allTags" tag-pills disabled class="mb-2" placeholder></b-form-tags>
     </template>
 
-    <!-- Show all Tags from Question and its rating -->
-    <template v-if="qFooter" v-slot:footer>
-      //TODO TIMESTAMP hier anzeigen
+    <!-- Show only the time from Question -->
+    <template v-if="qFooter && !qTags" v-slot:footer>
       <b-button size="sm" disabled variant="white">
         <small>
           <fai icon="clock" />
