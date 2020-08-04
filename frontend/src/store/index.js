@@ -607,7 +607,7 @@ export default new Vuex.Store({
      * returns the uuid from logged in user
      */
     getUserId: (state) => {
-      return state.currentUser.id;
+      return state.currentUser._id;
     },
 
     /**

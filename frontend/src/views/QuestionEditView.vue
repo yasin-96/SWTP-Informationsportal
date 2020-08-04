@@ -1,22 +1,27 @@
 <template>
-  <b-container class="mt-3">
+  <b-container class="mt-3 mb-5">
     <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
     <b-row>
       <b-col>
-        <b-card header-tag="header" header-bg-variant="#DFE8DF" header-border-variant="white" style="min-width: 200px; min-height: 300px;" class="bCard">
+        <b-card
+          header-bg-variant="white"
+          footer-bg-variant="white"
+          style="min-width: 200px; min-height: 300px;"
+          class="bCard rounded shadow"
+        >
           <!-- Information about user & creation date -->
           <template v-slot:header>
             <b-row class="justify-content-left">
               <b-col>
                 <b-button-group>
-                  <h2><fai icon="user-circle" /></h2>
-                  <b-button size="sm" disabled variant="white"> </b-button>
-                  <b-button size="sm" disabled variant="white"> <strong>Frage</strong> vom {{ oneQuestion.userId }} <small class="ml-3"> </small> </b-button>
+                  <b-button disabled variant="white">
+                    <fai icon="user-circle" size="lg" />
+                  </b-button>
+                  <b-button size="sm" disabled variant="white"></b-button>
                   <b-button size="sm" disabled variant="white">
-                    <small>
-                      <fai icon="clock" />
-                      {{ oneQuestion.timeStamp }}
-                    </small>
+                    <strong>Frage</strong>
+                    vom {{ oneQuestion.userId }}
+                    <small class="ml-3"></small>
                   </b-button>
                 </b-button-group>
               </b-col>
@@ -25,21 +30,40 @@
 
           <!-- Question header with content -->
           <b-card-title>
-            <b-form-input v-model="question.header" :search-input.sync="question.header" type="text" class="form-control" id="questionHeader" size="lg" center placeholder="Fragetitel"></b-form-input>
+            <b-form-input
+              v-model="question.header"
+              :search-input.sync="question.header"
+              type="text"
+              class="form-control"
+              id="questionHeader"
+              size="lg"
+              center
+              placeholder="Fragetitel"
+            ></b-form-input>
           </b-card-title>
 
           <!-- Question content -->
           <b-card-text>
             <editor :configs="mdeConfig" v-model="question.content" />
-            <!-- <b-form-textarea v-model="question.content" :search-input.sync="question.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true" placeholder="Eine genauere Beschreibung ihrer Frage ..."></b-form-textarea>-->
+            <b-button size="sm" disabled variant="white">
+              <small>
+                <fai icon="clock" />
+                {{ oneQuestion.timeStamp }}
+              </small>
+            </b-button>
           </b-card-text>
-
           <!-- Show all Tags from Question and its rating -->
           <template v-if="isTagsAreLoaded" v-slot:footer>
             <!-- Tags for this question -->
-            <b-form-tags @input="formatter($event)" v-model="question.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }"> </b-form-tags>
+            <b-form-tags
+              @input="formatter($event)"
+              v-model="question.tags"
+              :remove-on-delete="true"
+              :input-attrs="{ list: 'alltags' }"
+              :input-handlers="{ input: 'alltags' }"
+            ></b-form-tags>
 
-            <b-datalist id="alltags" :options="filterTags"> </b-datalist>
+            <b-datalist id="alltags" :options="filterTags"></b-datalist>
           </template>
         </b-card>
       </b-col>

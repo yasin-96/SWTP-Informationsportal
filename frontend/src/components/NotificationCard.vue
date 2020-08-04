@@ -6,7 +6,7 @@
           <b-card-title>
             <b-row class="justify-content-left">
               <b-col>
-                <span class="pr-1"><fai :icon="answerIcon"></fai></span> {{ answerTitle }}
+                <span class="pr-1w"><fai :icon="answerIcon" size="xs"></fai></span> <small>{{ answerTitle }}</small>
               </b-col>
 
                <b-col cols="mx-auto">
@@ -35,12 +35,12 @@
           <b-card-title>
             <b-row class="justify-content-left">
               <b-col>
-                <span class="pr-1"><fai :icon="commentIcon"></fai></span> {{ commentTitle }}
+                <span class="pr-1"><fai :icon="commentIcon" size="xs"></fai></span> <small>{{ commentTitle }}</small>
               </b-col>
 
               <b-col cols="mx-auto">
-                <small @click="removeNotification()">
-                  <span><fai icon="window-close" :style="{ color: '#b94a48' }"></fai></span>
+                <small @click="removeNotification()" >
+                  <span> <fai icon="window-close" :style="{ color: '#b94a48' }"></fai></span>
                 </small>
               </b-col>
             </b-row>

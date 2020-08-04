@@ -8,8 +8,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import '@/assets/css/infop.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchMinus, faSearchPlus, faExclamationTriangle, faEdit, faPen, faBell, faWindowClose} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText} from '@fortawesome/vue-fontawesome';
+import { faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchMinus, faSearchPlus, faExclamationTriangle, faEdit, faPen, faBell, faWindowClose, faTags, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome';
 
 //VUE Markdown editor
 // import 'codemirror/lib/codemirror.css';
@@ -17,7 +17,7 @@ import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText} from '@forta
 // import { Editor } from '@toast-ui/vue-editor';
 import 'simplemde/dist/simplemde.min.css';
 
-library.add(faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchPlus, faSearchMinus, faExclamationTriangle, faEdit, faPen, faBell, faWindowClose);
+library.add(faUserCircle, faClock, faThumbsUp, faThumbsDown, faComment, faCommentAlt, faCommentDots, faPlusCircle, faSearch, faSearchPlus, faSearchMinus, faExclamationTriangle, faEdit, faPen, faBell, faWindowClose, faTags, faEnvelope);
 
 Vue.component('fai', FontAwesomeIcon);
 Vue.component('falayers', FontAwesomeLayers);

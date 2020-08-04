@@ -1,20 +1,19 @@
 <template>
+    <!-- header-tag="header" -->
   <b-card
-    header-tag="header"
     header-bg-variant="white"
     footer-bg-variant="white"
     style="min-width: 200px; min-height: 300px;"
-    class="bCard"
+    class="bCard shadow rounded"
   >
     <!-- Information about user & creation date -->
     <template v-slot:header>
       <b-row class="justify-content-left">
         <b-col>
           <b-button-group>
-            <h2>
-              <fai icon="user-circle" />
-            </h2>
-            <b-button size="sm" disabled variant="white"></b-button>
+            <b-button disabled variant="white">
+              <fai icon="user-circle" size="lg"/>
+            </b-button>
             <b-button size="sm" disabled variant="white">
               <strong>Frage</strong>
               erstellt von {{ qUserName }}
@@ -57,7 +56,7 @@
     </template>
 
     <!-- Show only the time from Question -->
-    <template v-if="qFooter && !qTags" v-slot:footer>
+    <template v-if="qFooter" v-slot:footer>
       <b-button size="sm" disabled variant="white">
         <small>
           <fai icon="clock" />

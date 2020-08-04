@@ -23,7 +23,7 @@
           <b-nav-item class="mt-1">
             <Sidebar />
           </b-nav-item>
-          <span class="mt-1">|</span>
+          <b-nav-item class="mt-1" disabled="">| </b-nav-item>
           <b-nav-item class="mt-1" href="/chat">Chat</b-nav-item>
           <b-nav-item class="mt-1" href="/microblog/microblog">Microblog</b-nav-item>
         </b-navbar-nav>

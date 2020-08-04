@@ -10,6 +10,7 @@
           :qDate="quest.timeStamp"
           :qUserId="quest.userId"
           :qUserName="quest.userName"
+          :qFooter="true"
         />
       </b-col>
     </b-row>

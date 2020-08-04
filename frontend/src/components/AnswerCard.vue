@@ -1,37 +1,37 @@
 <template>
   <b-container v-if="nId">
-    <b-card header-bg-variant="white"
-    footer-bg-variant="white" id="nId" class="mt-3" :key="nId">
+    <b-card
+      header-bg-variant="white"
+      footer-bg-variant="white"
+      id="nId"
+      class="mt-1 shadow rounded"
+      :key="nId"
+    >
       <!-- Information about user & creation date -->
       <template v-slot:header>
-        <b-row class="justify-content-left">
-          <b-col>
-            <b-button-group>
-              <h2>
-                <fai icon="user-circle" />
-              </h2>
-              <b-button size="sm" disabled variant="white"></b-button>
-              <b-button size="sm" disabled variant="white">
-                <strong>Antwort</strong>
-                erstellt von {{ aUserName }}
-                <small class="ml-3"></small>
-              </b-button>
-              <!-- <b-button size="sm" disabled variant="white">
-                <small>
-                  <fai icon="clock" />
-                  {{ aDate }}
-                </small>
-              </b-button> -->
-            </b-button-group>
-          </b-col>
-        </b-row>
+        <b-container>
+          <b-row class="justify-content-left">
+            <b-col>
+              <b-button-group>
+                <b-button disabled variant="white">
+                  <fai icon="user-circle" size="lg" />
+                </b-button>
+                <b-button size="sm" disabled variant="white">
+                  <strong>Antwort</strong>
+                  erstellt von {{ aUserName }}
+                  <small></small>
+                </b-button>
+              </b-button-group>
+            </b-col>
+          </b-row>
+        </b-container>
       </template>
 
       <template v-slot:footer>
         <b-button size="md" disabled variant="white">
           <small>
             <fai icon="clock" />
-            {{ qDate }}
+            {{ aDate }}
           </small>
         </b-button>
       </template>

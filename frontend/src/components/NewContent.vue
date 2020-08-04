@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-4 pb-4" v-if="id">
+  <div class="mt-4 mb-4" v-if="id">
     <b-button-group class="d-flex">
       <!-- Depending on the property, the addition of a new answer or comment is shown  -->
 

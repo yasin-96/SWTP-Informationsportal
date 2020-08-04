@@ -1,6 +1,6 @@
 <template>
-  <b-container background="primary">
-    <b-card border-variant="white">
+  <b-container background="primary" class="mb-5">
+    <b-card border-variant="white" class="rounded shadow"> 
       <b-row class="justify-content-xs-top justify-content-sm-center justify-content-center">
         <!-- Imgage for card -->
         <b-col xs="12" sm="12" md="12" lg="5">

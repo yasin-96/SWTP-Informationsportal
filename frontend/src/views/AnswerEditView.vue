@@ -4,18 +4,28 @@
     <b-row>
       <!-- <b-col>
         <QuestionCard v-if="!!answer" :qId="answer.id" :qHeader="answer.header" :qContent="answer.content" :qTags="answer.tags" :qDate="answer.timeStamp" :qFooter="true" :qEdit="false" />
-      </b-col> -->
+      </b-col>-->
 
       <b-col>
-        <b-card header-tag="header" header-bg-variant="#DFE8DF" header-border-variant="white" style="min-width: 200px; min-height: 300px;" class="bCard">
+        <b-card
+          header-bg-variant="white"
+          style="min-width: 200px; min-height: 300px;"
+          class="bCard rounded shadow"
+        >
           <!-- Information about user & creation date -->
           <template v-slot:header>
             <b-row class="justify-content-left">
               <b-col>
                 <b-button-group>
-                  <h2><fai icon="user-circle" /></h2>
-                  <b-button size="sm" disabled variant="white"> </b-button>
-                  <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{ currentAnswer.userId }} <small class="ml-3"> </small> </b-button>
+                  <h2>
+                    <fai icon="user-circle" />
+                  </h2>
+                  <b-button size="sm" disabled variant="white"></b-button>
+                  <b-button size="sm" disabled variant="white">
+                    <strong>Frage</strong>
+                    erstellt von {{ currentAnswer.userId }}
+                    <small class="ml-3"></small>
+                  </b-button>
                   <b-button size="sm" disabled variant="white">
                     <small>
                       <fai icon="clock" />
