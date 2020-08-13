@@ -42,35 +42,36 @@ export default {
     'b-form-tags': BFormTags,
   },
   props: {
+    /**
+     * The id of tag
+     */
     tId: {
       type: String,
       default: '',
     },
+    /**
+     * Name of tag
+     */
     tName: {
       type: String,
       default: '',
     },
+    /**
+     * Creation date of tag
+     */
     tDate: {
       type: String,
       default: '',
     },
   },
-  data() {
-    return {};
-  },
   methods: {
     /**
-     * By clicking on the title of a question, a page is called up and all information is provided.
+     * By clicking on the title of a tag, a page is called up and all information is provided.
      */
     goToQuestion(topic) {
       console.log('topic', topic);
 
       this.$router.push(`/questions/topics/${topic}`).catch((err) => {});
-    },
-  },
-  computed: {
-    allTags() {
-      return this.qTags.map((tag) => tag.name);
     },
   },
 };
