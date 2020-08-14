@@ -25,7 +25,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import QuestionCard from '@/components/QuestionCard';
 import { mapState, mapActions } from 'vuex';
 
@@ -35,6 +34,9 @@ export default {
     QuestionCard,
   },
   props: {
+    /**
+     * The tag that will be used for getting all question
+     */
     tag: {
       type: String,
       required: true,
@@ -42,6 +44,7 @@ export default {
   },
   data() {
     return {
+      //Check if data are loaded and then display the content
       isDataLoaded: false,
     };
   },
@@ -50,6 +53,9 @@ export default {
   },
 
   methods: {
+    /**
+     * Trigger all questions based on most important topics/tags
+     */
     async loadData() {
       await this.$store.dispatch('act_getQuestionsBasedOnTopic', this.tag);
     },

@@ -13,7 +13,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import TagCard from "@/components/TagCard"
 import { mapState, mapActions } from 'vuex';
 
@@ -30,6 +29,9 @@ export default {
     ...mapActions(['act_getCurrentTopics',]),
     ...mapState(['topicsBasedOnTags']),
     
+    /**
+     * Only display then all tags are loaded from store
+     */
     topics(){
       if(!!this.topicsBasedOnTags){
         return this.topicsBasedOnTags;
