@@ -74,7 +74,7 @@ public class UserController {
             User newUser = new User(userId, jwt.getClaimAsString("name"), jwt.getClaimAsString("email"), jwt.getClaimAsString("preferred_username"));
             userService.addUser(newUser);
             return CompletableFuture
-                    .completedFuture(ResponseEntity.created(new URI("/api/user" + newUser.get_id())).body(newUser));
+                    .completedFuture(ResponseEntity.created(new URI("/api/user" + newUser.getId())).body(newUser));
         }
         return CompletableFuture
                 .completedFuture(ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(null));

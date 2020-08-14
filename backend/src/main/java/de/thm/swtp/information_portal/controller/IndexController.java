@@ -1,4 +1,4 @@
-// package de.thm.swtp.information_portal.controller;
+package de.thm.swtp.information_portal.controller;// package de.thm.swtp.information_portal.de.thm.swtp.information_portal.controller;
 
 // import com.google.common.net.HttpHeaders;
 

@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "userInfo")
 public class UserInformation {
 
-    private String _id;
+    private String id;
     private int numberOfQuestions;
     private int numberOfAnswers;
 
@@ -25,7 +25,7 @@ public class UserInformation {
      * @param numberOfAnswers
      */
     public UserInformation(String id, int numberOfQuestions, int numberOfAnswers) {
-        this._id = id;
+        this.id = id;
         this.numberOfQuestions = numberOfQuestions;
         this.numberOfAnswers = numberOfAnswers;
     }

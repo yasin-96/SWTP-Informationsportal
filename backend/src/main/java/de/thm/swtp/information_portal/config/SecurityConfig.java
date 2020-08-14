@@ -18,8 +18,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwt -> {
-                    // System.out.println("TOKEN: "+ jwt.getTokenValue());
-                    // System.out.println(jwt.getClaims().toString());
+//                     System.out.println("TOKEN: "+ jwt.getTokenValue());
+//                     System.out.println(jwt.getClaims().toString());
             
                     var jwtAuthToken = new JwtAuthenticationToken(jwt);
                     jwtAuthToken.setAuthenticated(true);
