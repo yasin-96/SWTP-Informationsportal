@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import de.thm.swtp.information_portal.models.Answer;
 import de.thm.swtp.information_portal.models.Answers;
-import de.thm.swtp.information_portal.models.User;
 import de.thm.swtp.information_portal.service.AnswerService;
 import de.thm.swtp.information_portal.service.UserService;
 
