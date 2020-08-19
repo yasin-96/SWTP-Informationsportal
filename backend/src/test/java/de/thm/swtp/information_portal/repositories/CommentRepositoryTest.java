@@ -1,4 +1,4 @@
-package de.thm.swtp.information_portal.Repository;
+package de.thm.swtp.information_portal.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 
 import de.thm.swtp.information_portal.models.Comment;
 import de.thm.swtp.information_portal.models.Comments;
-import de.thm.swtp.information_portal.repositories.CommentRepository;
 
 @DataMongoTest
 class CommentRepositoryTest {
