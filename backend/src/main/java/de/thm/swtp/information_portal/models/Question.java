@@ -30,6 +30,7 @@ public class Question {
 	private String content;
 
 	// Creator of this Queston ->
+
 	private String userId;
 
 
@@ -41,14 +42,6 @@ public class Question {
 	// save currentdate in unix timestamp
 	private Long timeStamp;
 
-	//TODO alter ctor -> dieser muss weg und nur noch den anderen benutzen
-	public Question(String header, String content, List<Tag> tags) {
-		this.id = UUID.randomUUID().toString();
-		this.header = header;
-		this.content = content;
-		this.tags = tags;
-		this.timeStamp = Instant.now().getEpochSecond() * 1000;
-	}
 	public Question(String header, String content, List<Tag> tags, String userId) {
 		this.id = UUID.randomUUID().toString();
 		this.header = header;

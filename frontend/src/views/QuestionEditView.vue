@@ -87,6 +87,9 @@ export default {
   name: 'QuestionEditView',
   components: { Editor: VueSimplemde },
   props: {
+    /**
+     * The id of the question
+     */
     id: {
       type: String,
       required: true,
@@ -94,17 +97,21 @@ export default {
   },
   data() {
     return {
+      //Check if question are loaded and then display the content
       isQuestionAreLoaded: false,
+
+      //Check if answer are loaded and then display the content
       isTagsAreLoaded: false,
-      paramId: '',
-      componentKey: '',
-      componentCounter: 0,
+      
+      //All changes for the question will stored here
       question: {
         id: '',
         header: '',
         content: '',
         tags: [],
       },
+
+      //Config for the markdown editor
       mdeConfig: {
         spellChecker: false,
       },
@@ -117,15 +124,26 @@ export default {
     // this.$refs.mde.simplemde.toggleSideBySide();
   },
   methods: {
+    /**
+     * Load all questions and the answers via the id
+     */
     async loadData() {
       if (this.id) {
         await this.$store.dispatch('act_getAllTags');
         await this.$store.dispatch('act_getOneQuestion', this.id);
       }
     },
+
+    /**
+     * Leave current page and go to the view of a question
+     */
     goToDetailView() {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
+
+    /**
+     * Send new changes from a question
+     */
     async sendUpdatedQuestion() {
       console.warn('QID in EDIT', this.question);
       let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
@@ -136,6 +154,10 @@ export default {
         })
         .catch((err) => {});
     },
+
+    /**
+     * To prevent errors all tags are capitalized
+     */
     formatter(newTag) {
       console.warn(newTag);
       this.question.tags = newTag.map((tag) => tag.toUpperCase());
@@ -146,9 +168,11 @@ export default {
     ...mapActions(['act_getOneQuestion', 'act_getAllTags', 'act_updateCurrentQuestion']),
     ...mapState(['oneQuestion', 'allTags']),
     ...mapGetters(['getAllTagName']),
-    availableOptions() {
-      return this.getAllTagName.filter((opt) => this.question.tags.indexOf(opt) === -1);
-    },
+    
+    /**
+     * The tag selection is filtered by the already selected and the still available ones. 
+     * All those that have already been selected are automatically no longer offered for selection.
+     */
     filterTags() {
       if (this.question.tags) {
         return this.getAllTagName.filter((item) => !this.question.tags.includes(item)).map((item) => item.toUpperCase());

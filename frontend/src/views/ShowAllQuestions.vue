@@ -18,7 +18,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import QuestionCard from '@/components/QuestionCard';
 import { mapState, mapActions } from 'vuex';
 
@@ -29,6 +28,7 @@ export default {
   },
   data() {
     return {
+      //Check if data are loaded and then display the content
       isDataLoaded: false,
     };
   },
@@ -36,6 +36,9 @@ export default {
     this.loadData();
   },
   methods: {
+    /**
+     * Load all question from store
+     */
     async loadData() {
       await this.$store.dispatch('act_getAllQuestions');
     },

@@ -33,9 +33,6 @@ export default {
   components: {
     NotificationCard,
   },
-  data() {
-    return { isMessagesLoaded: false };
-  },
   computed: {
     ...mapState(['wsMessages']),
   },

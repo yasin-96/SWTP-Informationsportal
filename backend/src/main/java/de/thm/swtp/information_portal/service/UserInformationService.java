@@ -1,6 +1,5 @@
 package de.thm.swtp.information_portal.service;
 
-import de.thm.swtp.information_portal.models.User;
 import de.thm.swtp.information_portal.models.UserInformation;
 import de.thm.swtp.information_portal.repositories.UserInformationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

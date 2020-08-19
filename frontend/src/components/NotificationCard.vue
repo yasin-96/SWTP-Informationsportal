@@ -71,66 +71,114 @@ import {mapActions, Store } from 'vuex';
 export default {
   name: 'NotificationCard',
   props: {
+    /**
+     * Id of question
+     */
     questionId: {
       type: String,
       required: true,
     },
+
+    /**
+     * The question where something has just happened
+     */
     question: {
       type: String,
       required: true,
     },
+
+    /**
+     * The user who answered this 
+     */
     user: {
       type: Object,
       required: true,
     },
+
+    /**
+     * The message will show as answer
+     */
     isAnswer: {
       type: Boolean,
       default: false,
     },
+
+    /**
+     * The message will show as comment
+     */
     isComment: {
       type: Boolean,
       default: false,
     },
+
+    /**
+     * Creation date/time of the message
+     */
     timestamp: {
       type: String,
       required: true,
     },
+
+    /**
+     * Position of each message in the list
+     */
     index: {
       type: Number,
       required: true
     },
 
+    /**
+     * The symbol that is displayed for answers
+     */
     answerIcon: {
       type: String,
       default: 'comment',
     },
 
+    /**
+     * The title for notification if it was a answer
+     */
     answerTitle: {
       type: String,
       default: 'New Answer',
     },
 
+    /**
+     * The subtitle for notification if it was a answer
+     */
     answerSubTitle: {
       type: String,
       default: 'Receive the answer',
     },
 
+    /**
+     * The symbol that is displayed for comments
+     */
     commentIcon: {
       type: String,
       default: 'comment-dots',
     },
 
+    /**
+     * The title for notification if it was a comment
+     */
     commentTitle: {
       type: String,
       default: 'New Comment',
     },
 
+    /**
+     * The subtitle for notification if it was a comment
+     */
     commentSubTitle: {
       type: String,
       default: 'Receive the comment',
     },
   },
   methods: {
+    /**
+     * Remove the message from sidebare based on the index
+     */
     removeNotification(){
       console.warn("INDEX to Remove", this.index)
       this.$store.dispatch('act_removeOneWSMessage', this.index)
@@ -141,5 +189,3 @@ export default {
   }
 };
 </script>
-
-<style></style>

@@ -15,8 +15,8 @@
               <fai icon="user-circle" size="lg"/>
             </b-button>
             <b-button size="sm" disabled variant="white">
-              <strong>Frage</strong>
-              erstellt von {{ qUserName }}
+              <strong>Question</strong>
+              created by {{ qUserName }}
               <small class="ml-3"></small>
             </b-button>
             <b-button v-if="!qFooter" size="sm" disabled variant="white">
@@ -79,47 +79,82 @@ export default {
     Editor: VueSimplemde,
   },
   props: {
+    /**
+     * Id of the question
+     */
     qId: {
       type: String,
       default: '',
       length: 24,
     },
+
+    /**
+     * Header of the question
+     */
     qHeader: {
       type: String,
       default: '',
     },
+
+    /**
+     * Main content of the question
+     */
     qContent: {
       type: String,
       default: '',
     },
+
+    /**
+     * All tags/topics for this question
+     */
     qTags: {
       type: Array,
       default: [],
     },
+
+    /**
+     * Creation date of question
+     */
     qDate: {
       type: String,
       default: '',
     },
+
+    /**
+     * Show/hide footer
+     */
     qFooter: {
       type: Boolean,
       default: false,
     },
+
+    /**
+     * Show/hide main content of the question
+     */
     displayContent: {
       type: Boolean,
       default: false,
     },
+
+    /**
+     * The id of the user who has create this question
+     */
     qUserId: {
       type: String,
       required: true,
     },
+
+    /**
+     * Name of the user who has create this question
+     */
     qUserName: {
       type: String,
       required: true,
     },
-    qEdit: {
-      type: Boolean,
-      default: false,
-    },
+
+    /**
+     * Enable edit option if the author of the question and the user id are equal
+     */
     userEdit: {
       type: Boolean,
       default: false,
@@ -127,12 +162,13 @@ export default {
   },
   data() {
     return {
+
+      //Config for markdown editor
       mdeConfig: {
         toolbar: null,
         // styleSelectedText: false,
         shortcuts: {},
       },
-      test: '',
     };
   },
   async mounted() {
@@ -145,14 +181,20 @@ export default {
     goToQuestion() {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
+
+    /**
+     * If the user id matches the author of the question it can be edited. 
+     */
     editQuestion() {
       this.$router.push(`/question/edit/${this.$props.qId}`).catch((err) => {});
     },
   },
   computed: {
+    /**
+     * Filter all tags based on the name
+     */
     allTags() {
       return this.qTags.map((tag) => tag.name);
-      this.test = getRendertHtmlFromMarkdown(this.qContent);
     },
   },
 };

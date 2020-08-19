@@ -78,8 +78,8 @@ switch (serverConfig.softwareDevelopState) {
 
 export default {
   /**
-   *
-   * @param {String} qId
+   * Queries from the backend one question, based on the id
+   * @param {String} qId [id of question]
    */
   async getOneQuestion(qId) {
     console.debug(`RestCall: getOneQuestion(${qId})`);
@@ -95,7 +95,7 @@ export default {
   },
 
   /**
-   * 
+   * Queries all questions from the backend 
    */
   async getAllQuestions() {
     console.debug('RestCall: getAllQuestions()');
@@ -111,8 +111,8 @@ export default {
   },
 
   /**
-   * 
-   * @param {Strings} searchQuery 
+   * Queries the backend for all questions that match the search query
+   * @param {Strings} searchQuery [all queries delimitered by space]
    */
   async getAllDataByQuery(searchQuery) {
     console.debug(`RestCall: getAllDataByQuery(${searchQuery})`);
@@ -128,8 +128,8 @@ export default {
   },
 
   /**
-   * 
-   * @param {String} questionId 
+   * Requests from the backend all answers of a question, based on the id 
+   * @param {String} questionId [id of one question]
    */
   async getAllAnswersToQuestions(questionId) {
     console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
@@ -145,8 +145,8 @@ export default {
   },
 
   /**
-   * 
-   * @param {String} id 
+   * Requests an answer to a question from the backend, based on the ids
+   * @param {Object} id [contains the id of the question and the answer to be fetched]
    */
   async getOneAnswerToQuestion(id) {
     console.debug(`RestCall: getOneAnswerToQuestion(${id})`, id);
@@ -180,8 +180,8 @@ export default {
   },
 
   /**
-   * 
-   * @param {String} answerId 
+   * Queries from the backend all comments on a question, based on the id
+   * @param {String} answerId [id of one answer]
    */
   async getAllCommentsToAnswers(answerId) {
     console.info(`RestCall: getAllCommentsToAnswers(${answerId})`);
@@ -197,7 +197,7 @@ export default {
   },
 
   /**
-   * 
+   * Queries from the backend all tags
    */
   async getAllTags() {
     console.info('RestCall: getAllTags()');
@@ -218,8 +218,8 @@ export default {
   },
 
   /**
-   *
-   * @param {*} newQuestion
+   * Send a new question object to the backend
+   * @param {Object} newQuestion [question to create]
    */
   async addNewQuestion(newQuestion) {
     console.debug(`RestCall: addNewQuestion()`, newQuestion);
@@ -235,8 +235,8 @@ export default {
   },
 
   /**
-   *
-   * @param {*} updatedQuestion
+   * Send new information for question to the backend
+   * @param {Object} updatedQuestion [new changes for this question]
    */
   async updateCurrentQuestion(updatedQuestion) {
     console.debug(`RestCall: updateCurrentQuestion()`, updatedQuestion);
@@ -252,13 +252,13 @@ export default {
   },
 
   /**
-   *
-   * @param {*} newQuestion
+   * Send new answer for one question to the backend
+   * @param {*} newAnswer [answer to add]
    */
-  async addNewAnswer(newQuestion) {
-    console.debug(`RestCall: addNewAnswer(${newQuestion})`);
+  async addNewAnswer(newAnswer) {
+    console.debug(`RestCall: addNewAnswer(${newAnswer})`);
     return await client
-      .post('/answer', newQuestion)
+      .post('/answer', newAnswer)
       .then((response) => {
         return response.data;
       })
@@ -269,8 +269,8 @@ export default {
   },
 
   /**
-   *
-   * @param {Answer} answer
+   * Send updated answer that has increased rating to the backend
+   * @param {Answer} answer [answer to increase rating]
    */
   async increaseAnswerRating(answer) {
     console.debug(`RestCall: increaseAnswerRating(${answer})`);
@@ -286,8 +286,8 @@ export default {
   },
 
   /**
-   *
-   * @param {Comment} newComment
+   * Send a new comment object to the backend 
+   * @param {Comment} newComment [new comment for one answer]
    */
   async addNewComment(newComment) {
     console.debug(`RestCall: addNewComment(${newComment})`);
@@ -303,8 +303,8 @@ export default {
   },
 
   /**
-   *
-   * @param {Comment} comment
+   * Send updated comment that has increased rating to the backend
+   * @param {Comment} comment [comment to increase rating]
    */
   async increaseCommentRating(comment) {
     console.debug(`RestCall: increaseCommentRating(${comment})`);
@@ -320,24 +320,7 @@ export default {
   },
 
   /**
-   *
-   * @param {Question} question
-   */
-  async postNewQuestion(question) {
-    console.debug(`RestCall: postNewQuestion(${question})`);
-    return await client
-      .post(`/newQuestion`, question)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error(error);
-        return null;
-      });
-  },
-
-  /**
-   *
+   * Queries from the backend all questions that are current relevant and regarded
    */
   async getMostActiveQuestions() {
     console.debug('RestCall: getMostActiveQuestions()');
@@ -353,7 +336,7 @@ export default {
   },
 
   /**
-   *
+   * Queries from the backend all questions with most famouse tags
    */
   async getCurrentTopics() {
     console.debug('RestCall: getCurrentTopics()');
@@ -370,8 +353,8 @@ export default {
   },
 
   /**
-   *
-   * @param {String} tag
+   * Queries from the backend all questions based on this tag
+   * @param {String} tag [tag for query]
    */
   async getQuestionBasedOnTopic(tag) {
     console.debug(`RestCall: getQuestionBasedOnTopic(${tag})`);
@@ -388,7 +371,7 @@ export default {
   },
 
   /**
-   * 
+   * Queries from the backend all information about the user
    */
   async getUserInfo() {
     return await client
@@ -403,8 +386,8 @@ export default {
   },
 
   /**
-   * 
-   * @param {String} id 
+   * Queries from the backend the user, based on the id
+   * @param {String} id [id of user]
    */
   async getUserNameFromId(id) {
     return await client

@@ -18,21 +18,20 @@
 <script>
 import { mapActions } from 'vuex';
 
+//TODO trigger für enter einfügen
+
 export default {
   name: 'Searching',
-  props: {
-    disable: {
-      type: Boolean,
-      default: true,
-    },
-  },
   data() {
     return {
-      enableSearchOptions: true,
+      //input of search textfield
       searchInput: '',
     };
   },
   methods: {
+    /**
+     * The search query is sent to the backend to get a result
+     */
     searchData() {
       this.$router
         .push({

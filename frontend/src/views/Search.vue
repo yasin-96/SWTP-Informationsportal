@@ -27,7 +27,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import QuestionCard from '@/components/QuestionCard';
 import { mapState, mapActions } from 'vuex';
 export default {
@@ -36,15 +35,24 @@ export default {
     QuestionCard,
   },
   props: {
+    /**
+     * Query for searching data 
+     */
     query: {
       type: String,
       required: true,
     },
   },
   data(){
-    return { isDataLoaded: false }
+    return { 
+      //Check if data are loaded and then display the content
+      isDataLoaded: false 
+    }
   },
   methods: {
+    /**
+     * 
+     */
     async sendQuery() {
       if(this.query.length){
         console.warn('Query:', this.query);

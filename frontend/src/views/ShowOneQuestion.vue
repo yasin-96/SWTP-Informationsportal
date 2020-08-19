@@ -59,6 +59,9 @@ export default {
     NewContent,
   },
   props: {
+    /**
+     * Id of the question 
+     */
     id: {
       type: String,
       required: true,
@@ -66,6 +69,7 @@ export default {
   },
   data() {
     return {
+      //Checked if the question and all answers to this are loaded
       isDataLoaded: {
         question: false,
         answers: false,

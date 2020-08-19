@@ -60,25 +60,31 @@ export default {
   },
   data() {
     return {
+      //logo from thm 
       thmSVGURl: 'https://www.thm.de/_thm/logos/thm.svg',
-      disableSearchBar: true,
-      searchInput: '',
-      isHovered: false,
+      
+      //width of logo
       imgX: 92,
+
+      //height of logo
       imgY: 38,
     };
   },
 
   methods: {
+    /**
+     * Go the site of the link
+     */
     goToLink(link) {
       this.$router.push(`${link}`);
-    },
-    handleHover(hovered) {
-      this.isHovered = hovered;
     },
   },
   computed: {
     ...mapGetters(['getFirstLetterFromUser','getUserId']),
+    
+    /**
+     * Show the Avatar from user, if user was loaded
+     */
     avatarLetter() {
       if (this.getFirstLetterFromUser) {
         return this.getFirstLetterFromUser;
@@ -86,6 +92,9 @@ export default {
         return '';
       }
     },
+    /**
+     * Read the userid for set the profile link
+     */
     userUUID(){
       if (this.getUserId) {
         return this.getUserId;
@@ -96,5 +105,3 @@ export default {
   },
 };
 </script>
-<style>
-</style>

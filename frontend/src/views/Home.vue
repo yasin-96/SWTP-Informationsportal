@@ -29,6 +29,7 @@ export default {
   },
   data() {
     return {
+      //Check if questions are loaded and then display the content
       isDataLoaded: false,
     };
   },
@@ -36,6 +37,9 @@ export default {
     this.loadData();
   },
   methods: {
+    /**
+     * Load all questions that are currently very popular 
+     */
     async loadData() {
       await this.$store.dispatch('act_getMostActiveQuestions');
     },

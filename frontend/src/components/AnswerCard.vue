@@ -17,8 +17,8 @@
                   <fai icon="user-circle" size="lg" />
                 </b-button>
                 <b-button size="sm" disabled variant="white">
-                  <strong>Antwort</strong>
-                  erstellt von {{ aUserName }}
+                  <strong>Answer</strong>
+                  created by {{ aUserName }}
                   <small></small>
                 </b-button>
               </b-button-group>
@@ -75,34 +75,59 @@ export default {
     Editor: VueSimplemde,
   },
   props: {
+    /**
+     * The ID of the answer
+     */
     nId: {
       type: String,
       required: true,
     },
+    /**
+     * The id for all comments to this answer
+     */
     cId: {
       type: String,
       required: true,
     },
+    /**
+     * Main content of the answer
+     */
     aContent: {
       type: String,
       default: '',
     },
+    /**
+     * The rating of this answer
+     */
     aRating: {
       type: Number,
       default: 0,
     },
+    /**
+     * The timestamp of this answer
+     */
     aDate: {
       type: String,
       default: '',
     },
+    /**
+     * The id of the user who created this answer
+     */
     aUserId: {
       type: String,
       required: true,
     },
+    /**
+     * The creator of this answer
+     */
     aUserName: {
       type: String,
       required: true,
     },
+    /**
+     * This enables the option to edit the answer, 
+     * if the user has created it
+     */
     userEdit: {
       type: Boolean,
       default: false,
@@ -110,14 +135,17 @@ export default {
   },
   data() {
     return {
-      minCommentRows: 3,
-      maxCommentRows: 10,
+      // All changes for the answer will are temporarily stored here
       changeAnswerObject: {
         id: '',
         listOfAnswers: [],
         timeStamp: Date.parse(new Date()),
       },
+
+      //Counter to in crease rating for answer
       newRating: Number(this.aRating) + 1,
+      
+      //settings for markdown editor
       mdeConfig: {
         toolbar: null,
         shortcuts: {},
@@ -141,7 +169,8 @@ export default {
     },
 
     /**
-     *
+     * Changes the current question by increasing the counter. 
+     * After that it is adjusted in the store
      */
     async increaseRating() {
       // this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
@@ -158,17 +187,17 @@ export default {
           timeStamp: currentDate,
         },
       ];
-      //TODO das geht noch nicht in place
+      
+      //TODO das geht noch nicht in place 
       console.warn('INCRESE Rating AWT', this.changeAnswerObject);
       await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
 
       this.changeAnswerObject.listOfAnswers = [];
-      //reload page
-      // this.$router.go(0);
     },
 
     /**
-     *
+     * If the user id matches the author of the question it can be edited. 
+     * Here with the user brought to the editing page
      */
     editAnswer() {
       this.$router

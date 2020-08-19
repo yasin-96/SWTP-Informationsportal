@@ -22,8 +22,8 @@
                   </h2>
                   <b-button size="sm" disabled variant="white"></b-button>
                   <b-button size="sm" disabled variant="white">
-                    <strong>Frage</strong>
-                    erstellt von {{ currentAnswer.userId }}
+                    <strong>Question</strong>
+                    created by {{ currentAnswer.userId }}
                     <small class="ml-3"></small>
                   </b-button>
                   <b-button size="sm" disabled variant="white">
@@ -64,10 +64,17 @@ export default {
   name: 'AnswerEditView',
   components: { QuestionCard, Editor: VueSimplemde },
   props: {
+    /**
+     * The id of the question
+     */
     qId: {
       type: String,
       required: true,
     },
+
+    /**
+     * The id for getting all answers to this question
+     */
     aId: {
       type: String,
       required: true,
@@ -75,16 +82,22 @@ export default {
   },
   data() {
     return {
+      //Check if answer are loaded and then display the content
       isAnswerLoaded: false,
+
+      //Check if answer are loaded and then display the content
       isQuestionAreLoaded: false,
-      paramId: '',
-      componentKey: '',
-      componentCounter: 0,
+
+      //Copy of all answer from store 
       currentAnswer: {},
+
+      //All changes will be stored here
       updatedAnswer: {
         id: this.qId,
         listOfAnswers: [],
       },
+
+      //Config for markdown editor
       mdeConfig: {
         spellChecker: false,
       },
@@ -96,15 +109,28 @@ export default {
   },
 
   methods: {
+    /**
+     * Trigger data for the question based on the question id
+     * Question and the answers to this will be loaded
+     */
     async loadData() {
       if (this.qId && this.aId) {
         await this.$store.dispatch('act_getOneQuestion', this.qId);
         await this.$store.dispatch('act_getOneAnswerToQuestion', { ids: [this.qId, this.aId] });
       }
     },
+
+    /**
+     * Page will navigate to the view site of a question.
+     * Editing page is left
+     */
     goToDetailView() {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
+
+    /**
+     * Send new change of a answer
+     */
     async sendUpdatedAnswer() {
       if (this.currentAnswer.content) {
         this.updatedAnswer.listOfAnswers.push({

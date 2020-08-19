@@ -58,14 +58,23 @@ export default {
     'b-icon-toggle-on': BIconToggleOn,
   },
   props: {
+    /**
+     * The id of answer
+     */
     qId: {
       type: String,
       required: true,
     },
+    /**
+     * The id get all comments
+     */
     cId: {
       type: String,
       required: true,
     },
+    /**
+     * Alle comments from one answer
+     */
     cComments: {
       type: Array,
       required: true,
@@ -73,21 +82,27 @@ export default {
   },
   data() {
     return {
+      //number of rows to display minimal for textare
       minCommentRows: 3,
-      toggelCommentBtn: false,
+
+      //counter for create for each comment uuid to toggle it later
       maxComments: 0,
+
+      //toggle all comments (show/hide)
       toggleId: uuidv4(),
+
+      /*
+        this will save all uuid that was created
+        and will used to render the ui for comments
+      */
       toggleCounter: new Array(),
-      newComment: {
-        content: '',
-        userName: '',
-        rating: 0,
-        timestamp: Date.parse(new Date()),
-      },
+
+      //text for button to show or hide comments
       toggleText: 'Show Comments',
-      iCounter: 0,
+
     };
   },
+  //create for each comment an uuid to toggel it later  
   async beforeMount() {
     if (this.cComments) {
       this.cComments.forEach((cc, index) => {
@@ -97,25 +112,16 @@ export default {
     }
   },
   methods: {
-    changeText() {
-      this.toggelCommentBtn = this.toggelCommentBtn ? false : true;
-      this.toggleText = this.toggleText === 'Show Comments' ? 'Hide Comments' : 'Show Comments';
-    },
-    getCommentsFromObject(objectWithComment) {
-      console.warn('OBj', objectWithComment);
-      console.warn('INDEX', this.iCounter);
-      console.warn('DAS OBJECT ist:', objectWithComment[this.iCounter].comments);
-      if (this.iCounter < this.maxComments) {
-        this.iCounter++;
-      }
-      return objectWithComment[this.iCounter].comments;
-    },
+    /**
+     * Changes the current comment by increasing the counter. 
+     * After that it is adjusted in the store
+     */
     async increaseRating(comment, cardId) {
-      let newRating = Number(comment.rating) + 1;
+      const newRating = Number(comment.rating) + 1;
 
       console.warn('OBJ', comment);
 
-      let newComment = {
+      const newComment = {
         id: this.cId,
         comments: [
           {
