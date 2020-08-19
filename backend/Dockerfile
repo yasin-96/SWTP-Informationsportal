@@ -9,6 +9,6 @@ COPY --from=build-env /usr/local/META-INF /usr/local/app/META-INF
 COPY --from=build-env /usr/local/BOOT-INF/classes /usr/local/app
 
 WORKDIR /usr/local
-EXPOSE 9000
+EXPOSE 8080
 
 ENTRYPOINT exec java -cp app:app/lib/* de.thm.swtp.information_portal.InformationPortalApplication $JAVA_OPTS
