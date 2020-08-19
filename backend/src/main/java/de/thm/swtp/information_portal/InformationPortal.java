@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
-public class InformationPortalApplication {
+public class InformationPortal {
 
     public static void main(String[] args) {
-        SpringApplication.run(InformationPortalApplication.class, args);
+        SpringApplication.run(InformationPortal.class, args);
     }
 
 }
