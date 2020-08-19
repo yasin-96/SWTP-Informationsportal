@@ -12,9 +12,6 @@ import router from "./router";
 // save all data to store
 import store from "./store";
 
-//user local storage
-import './storage';
-
 Vue.config.productionTip = false;
 
 //init new vue instance

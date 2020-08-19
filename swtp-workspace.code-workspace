@@ -1,5 +1,10 @@
 {
-    "settings": {
-        "java.configuration.updateBuildConfiguration": "automatic"
-    }
+	"folders": [
+		{
+			"path": "frontend"
+		},
+		{
+			"path": "backend"
+		}
+	]
 }

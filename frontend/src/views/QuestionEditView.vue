@@ -1,22 +1,27 @@
 <template>
-  <b-container class="mt-3">
+  <b-container class="mt-3 mb-5">
     <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
     <b-row>
       <b-col>
-        <b-card header-tag="header" header-bg-variant="#DFE8DF" header-border-variant="white" style="min-width: 200px; min-height: 300px;" class="bCard">
+        <b-card
+          header-bg-variant="white"
+          footer-bg-variant="white"
+          style="min-width: 200px; min-height: 300px;"
+          class="bCard rounded shadow"
+        >
           <!-- Information about user & creation date -->
           <template v-slot:header>
             <b-row class="justify-content-left">
               <b-col>
                 <b-button-group>
-                  <h2><fai icon="user-circle" /></h2>
-                  <b-button size="sm" disabled variant="white"> </b-button>
-                  <b-button size="sm" disabled variant="white"> <strong>Frage</strong> vom {{ oneQuestion.userId }} <small class="ml-3"> </small> </b-button>
+                  <b-button disabled variant="white">
+                    <fai icon="user-circle" size="lg" />
+                  </b-button>
+                  <b-button size="sm" disabled variant="white"></b-button>
                   <b-button size="sm" disabled variant="white">
-                    <small>
-                      <fai icon="clock" />
-                      {{ oneQuestion.timeStamp }}
-                    </small>
+                    <strong>Frage</strong>
+                    vom {{ oneQuestion.userId }}
+                    <small class="ml-3"></small>
                   </b-button>
                 </b-button-group>
               </b-col>
@@ -25,21 +30,40 @@
 
           <!-- Question header with content -->
           <b-card-title>
-            <b-form-input v-model="question.header" :search-input.sync="question.header" type="text" class="form-control" id="questionHeader" size="lg" center placeholder="Fragetitel"></b-form-input>
+            <b-form-input
+              v-model="question.header"
+              :search-input.sync="question.header"
+              type="text"
+              class="form-control"
+              id="questionHeader"
+              size="lg"
+              center
+              placeholder="Fragetitel"
+            ></b-form-input>
           </b-card-title>
 
           <!-- Question content -->
           <b-card-text>
             <editor :configs="mdeConfig" v-model="question.content" />
-            <!-- <b-form-textarea v-model="question.content" :search-input.sync="question.content" id="textarea-large" size="md" rows="4" max-rows="8" :no-resize="true" placeholder="Eine genauere Beschreibung ihrer Frage ..."></b-form-textarea>-->
+            <b-button size="sm" disabled variant="white">
+              <small>
+                <fai icon="clock" />
+                {{ oneQuestion.timeStamp }}
+              </small>
+            </b-button>
           </b-card-text>
-
           <!-- Show all Tags from Question and its rating -->
           <template v-if="isTagsAreLoaded" v-slot:footer>
             <!-- Tags for this question -->
-            <b-form-tags @input="formatter($event)" v-model="question.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }"> </b-form-tags>
+            <b-form-tags
+              @input="formatter($event)"
+              v-model="question.tags"
+              :remove-on-delete="true"
+              :input-attrs="{ list: 'alltags' }"
+              :input-handlers="{ input: 'alltags' }"
+            ></b-form-tags>
 
-            <b-datalist id="alltags" :options="filterTags"> </b-datalist>
+            <b-datalist id="alltags" :options="filterTags"></b-datalist>
           </template>
         </b-card>
       </b-col>
@@ -63,6 +87,9 @@ export default {
   name: 'QuestionEditView',
   components: { Editor: VueSimplemde },
   props: {
+    /**
+     * The id of the question
+     */
     id: {
       type: String,
       required: true,
@@ -70,17 +97,21 @@ export default {
   },
   data() {
     return {
+      //Check if question are loaded and then display the content
       isQuestionAreLoaded: false,
+
+      //Check if answer are loaded and then display the content
       isTagsAreLoaded: false,
-      paramId: '',
-      componentKey: '',
-      componentCounter: 0,
+      
+      //All changes for the question will stored here
       question: {
         id: '',
         header: '',
         content: '',
         tags: [],
       },
+
+      //Config for the markdown editor
       mdeConfig: {
         spellChecker: false,
       },
@@ -93,15 +124,26 @@ export default {
     // this.$refs.mde.simplemde.toggleSideBySide();
   },
   methods: {
+    /**
+     * Load all questions and the answers via the id
+     */
     async loadData() {
       if (this.id) {
         await this.$store.dispatch('act_getAllTags');
         await this.$store.dispatch('act_getOneQuestion', this.id);
       }
     },
+
+    /**
+     * Leave current page and go to the view of a question
+     */
     goToDetailView() {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
+
+    /**
+     * Send new changes from a question
+     */
     async sendUpdatedQuestion() {
       console.warn('QID in EDIT', this.question);
       let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
@@ -112,6 +154,10 @@ export default {
         })
         .catch((err) => {});
     },
+
+    /**
+     * To prevent errors all tags are capitalized
+     */
     formatter(newTag) {
       console.warn(newTag);
       this.question.tags = newTag.map((tag) => tag.toUpperCase());
@@ -122,9 +168,11 @@ export default {
     ...mapActions(['act_getOneQuestion', 'act_getAllTags', 'act_updateCurrentQuestion']),
     ...mapState(['oneQuestion', 'allTags']),
     ...mapGetters(['getAllTagName']),
-    availableOptions() {
-      return this.getAllTagName.filter((opt) => this.question.tags.indexOf(opt) === -1);
-    },
+    
+    /**
+     * The tag selection is filtered by the already selected and the still available ones. 
+     * All those that have already been selected are automatically no longer offered for selection.
+     */
     filterTags() {
       if (this.question.tags) {
         return this.getAllTagName.filter((item) => !this.question.tags.includes(item)).map((item) => item.toUpperCase());

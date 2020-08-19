@@ -20,18 +20,27 @@
           :userEdit="oneQuestion.userId === getUserId"
         />
 
-        
         <!-- Add new Answer to this Question -->
-        <NewContent bTextSize="lg" :nRows="2" :id="oneQuestion.id" :nIsAnswer="true" />
+        <NewContent bTextSize="lg" :nRows="2" :id="oneQuestion.id" :nIsAnswer="true" class="rounded shadow" />
+
 
         <!-- Display all available Answers  -->
         <b-container v-if="isDataLoaded.answers &&!!allAnswers.listOfAnswers">
-          <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index">
-            <AnswerCard :nId="oneQuestion.id" :aContent="answer.content" :aRating="answer.rating" :aDate="answer.timeStamp" :cId="answer.id" :aUserId="answer.userId" :aUserName="answer.userName" :userEdit="oneQuestion.userId === getUserId" class="pb-3" />
+          <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index" class="pb-3">
+            <AnswerCard
+              :nId="oneQuestion.id"
+              :aContent="answer.content"
+              :aRating="answer.rating"
+              :aDate="answer.timeStamp"
+              :cId="answer.id"
+              :aUserId="answer.userId"
+              :aUserName="answer.userName"
+              :userEdit="oneQuestion.userId === getUserId"
+            />
           </b-container>
         </b-container>
       </b-col>
-      <b-row> </b-row>
+      <b-row></b-row>
     </b-row>
   </b-container>
 </template>
@@ -50,6 +59,9 @@ export default {
     NewContent,
   },
   props: {
+    /**
+     * Id of the question 
+     */
     id: {
       type: String,
       required: true,
@@ -57,6 +69,7 @@ export default {
   },
   data() {
     return {
+      //Checked if the question and all answers to this are loaded
       isDataLoaded: {
         question: false,
         answers: false,

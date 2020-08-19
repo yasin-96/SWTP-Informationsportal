@@ -44,6 +44,7 @@ public class QuestionController {
 
 	@Autowired
 	private UserService userService;
+
 	/**
 	 * 
 	 * @return
@@ -122,6 +123,12 @@ public class QuestionController {
 				.completedFuture(ResponseEntity.created(new URI("/api/question" + question.getId())).body(question));
 	}
 
+	/**
+	 *
+	 * @param questionBody
+	 * @return
+	 * @throws URISyntaxException
+	 */
 	@Async
 	@PutMapping("/question")
 	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Validated @RequestBody Question questionBody)
@@ -133,12 +140,21 @@ public class QuestionController {
 				.completedFuture(ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question));
 	}
 
+	/**
+	 *
+	 * @param searchQuery
+	 * @return
+	 * @throws URISyntaxException
+	 * @throws InterruptedException
+	 */
 	@Async
 	@GetMapping("/question/query")
 	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Validated @RequestParam String searchQuery)
 			throws URISyntaxException, InterruptedException {
 
-		List<String> listQuery = Arrays.stream(searchQuery.split(" ")).filter(item -> !item.isEmpty())
+
+
+		List<String> listQuery = Arrays.stream(searchQuery.toUpperCase().split(" ")).filter(item -> !item.isEmpty())
 				.collect(Collectors.toList());
 
 		var filteredQuestions = new HashSet<Question>();
@@ -162,6 +178,10 @@ public class QuestionController {
 		return CompletableFuture.completedFuture(new ResponseEntity<>(filteredQuestionsAsList, HttpStatus.OK));
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Async
 	@GetMapping("/question/getMostActiveQuestions")
 	public CompletableFuture<ResponseEntity<List<Question>>> getMostActiveQuestions() {
@@ -177,6 +197,11 @@ public class QuestionController {
 		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions, HttpStatus.OK));
 	}
 
+	/**
+	 *
+	 * @param myMap
+	 * @return
+	 */
 	public List<Question> getListOfMostActiveQuestions(Map<Question, Integer> myMap) {
 		List<Question> questions = new ArrayList<>();
 		Map<Question, Integer> sorted = myMap.entrySet().stream()
@@ -191,6 +216,10 @@ public class QuestionController {
 		return questions.stream().limit(12).collect(Collectors.toList());
 	}
 
+	/**
+	 *
+	 * @param question
+	 */
 	public void setParsedUserNameById(Optional<Question> question){
 		if(question.get().getUserId() != null) {
 			var userName = userService.getUser(question.get().getUserId()).get().getPreferred_username();
@@ -200,6 +229,10 @@ public class QuestionController {
 		}
 	}
 
+	/**
+	 *
+	 * @param listOfQuestions
+	 */
 	public void setParsedUserNameById(List<Question> listOfQuestions){
 		
 		listOfQuestions.forEach(question -> {

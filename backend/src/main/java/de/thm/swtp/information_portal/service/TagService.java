@@ -19,28 +19,50 @@ public class TagService {
 	@Autowired
 	private TagRepository tagRepository;
 
+	/**
+	 *
+	 * @param tags
+	 * @return
+	 */
 	public List<Tag> checkIfTagsExist(List<Tag> tags) {
-		List<Tag> newTagList = new ArrayList<Tag>(); 
+		List<Tag> newTagList = new ArrayList<Tag>();
+
 		for(Tag tag:tags) {
 			Tag newTag = tagRepository.findByName(tag.getName());
+
 			if(newTag == null) {
 				int index = tags.indexOf(tag);
 				System.out.println("The tag " + tags.get(index).getName() +
 					" is getting created.");
 				Tag tagToBeAdded = new Tag(tags.get(index).getName());
-				tagRepository.save(tagToBeAdded);	
-				newTagList.add(tagToBeAdded);
+				tagRepository.save(tagToUpperCase(tagToBeAdded));
+				newTagList.add(tagToUpperCase(tagToBeAdded));
 			}
 			else {
-				newTagList.add(newTag);
+				newTagList.add(tagToUpperCase(newTag));
 			}
 	
 		}
 		return newTagList;
 	}
-	
+
+	/**
+	 *
+	 * @return
+	 */
 	public List<Tag> getAllTags() {
 		return tagRepository.findAll();
+	}
+
+	/**
+	 *
+	 * @param tag
+	 * @return
+	 */
+	public Tag tagToUpperCase(Tag tag){
+		//List<Tag> tagsInUpperCase = new ArrayList<>();
+		tag.setName(tag.getName().toUpperCase());
+		return tag;
 	}
 }
 		

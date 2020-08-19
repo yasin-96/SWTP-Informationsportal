@@ -9,18 +9,12 @@
 
 <script>
 import Navigation from '@/components/Navigation';
-
 import RestCalls from '@/services/RestCalls';
-// import send from '@/mixins/socketStomp.js';
-// import connect from '@/mixins/socketStomp.js';
-// import disconnect from '@/mixins/socketStomp.js';
-// import tickleConnection from '@/mixins/socketStomp.js';
 import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'App',
   components: { Navigation },
-  // mixins: [send, connect, disconnect, tickleConnection],
   data() {
     return {
       initAllData: null,
@@ -48,6 +42,9 @@ export default {
     clearInterval(this.initUserData);
   },
   methods: {
+
+    //TODO check if ws connection is not died
+
     //reload data each 5 min
     pullUserWithIntervall() {
       this.initUserData = setInterval(async () => {
@@ -61,8 +58,7 @@ export default {
       this.initAllData = setInterval(async () => {
         console.log('pullAllDataWithIntervall()');
         await this.reloadAllData();
-        // }, 600000);
-      }, 60000);
+      }, 600000);
     },
 
     async reloadAllData() {
@@ -84,14 +80,16 @@ export default {
     },
   },
   computed: {
+    ...mapState(['clientConnection']),
     ...mapActions(['act_getUserInfo', 'act_getAllQuestions', 'act_getMostActiveQuestions', '', 'act_getAllTags', 'act_getCurrentTopics', 'act_createConnectSocketAndStompClient']),
+  },
+  watch: {
+    clientConnection() {
+      console.warn("clientConnection -> ",this.clientConnection);
+      if (!this.clientConnection) {
+        this.$store.dispatch('act_createConnectSocketAndStompClient');
+      }
+    },
   },
 };
 </script>
-
-<style>
-/* 
-.editor-preview .editor-preview-active >>> h1 {
-  font-size: 40px;
-} */
-</style>

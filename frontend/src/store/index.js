@@ -1,16 +1,37 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import createPersistedState from "vuex-persistedstate";
+
 import RestCalls from '@/services/RestCalls';
 import { convertUnixTimeStampToString } from '@/services/Utils';
 
 import SockJS from 'sockjs-client';
 import Stomp from 'webstomp-client';
 
+/**
+ * websocketPort - The port indicates that this is the backend and not the gateway.
+ * websocketName - The name which is used to create exactly such a connection to the backend using the name
+ * websocketSubcription - The end point for the registration of the subscription
+ * stompEndPoint - The end point that is subsequently addressed in the backend to process the data.
+ */
 const websocketPort = process.env.VUE_APP_WEBSOCKET_PORT;
 const websocketName = process.env.VUE_APP_WEBSOCKET_NAME;
 const websocketURL = process.env.VUE_APP_WS_URL;
 const websocketSubcription = process.env.VUE_APP_WEBSOCKET_SUBCRIPTION;
 const stompEndPoint = process.env.VUE_APP_STOMPENDPOINT;
+
+/**
+ * To store the message over the websockets, we used a lib that
+ * stores everything in the local storage of the browser.
+ * 
+ * key: this is the key to find the data in the local storage 
+ * paths: this is vuex-store object that will be referenced to save each changes in the local storage
+ */
+const localStore = createPersistedState({
+  key: 'info-portal-notification',
+  paths: ['wsMessages']
+})
+
 
 Vue.use(Vuex);
 
@@ -44,98 +65,133 @@ export default new Vuex.Store({
     socket: null,
     stompClient: null,
 
+    //all messages from websockets will be saved here
     wsMessages: [],
   },
   mutations: {
     //#region questions
+      //all mutation for questions
 
-    //all mutation for questions
-    SET_ALL_QUESTIONS(state, data) {
-      console.debug('SET_ALL_QUESTIONS');
+      /**
+       * 
+       * @param {Object} state [vuex store]
+       * @param {Object} data [question as payload]
+       */
+      SET_ALL_QUESTIONS(state, data) {
+        console.debug('SET_ALL_QUESTIONS');
 
-      Object.keys(data).forEach((d) => {
-        data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-      });
-
-      state.allQuestions = data;
-    },
-
-    SET_ONE_QUESTION(state, data) {
-      console.debug('SET_ONE_QUESTION');
-
-      data.timeStamp = convertUnixTimeStampToString(data.timeStamp);
-
-      state.oneQuestion = data;
-    },
-
-    SET_QUESTIONS_BASED_ON_TOPICS(state, data) {
-      if (data) {
-        Object.keys(data).forEach((d) => {
-          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-        });
-        state.questionsBasedOnTopics = data;
-      }
-    },
-
-    SET_MOST_ACTIV_QUESTIONS(state, data) {
-      if (data) {
         Object.keys(data).forEach((d) => {
           data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
         });
 
-        state.activeQuestions = data;
-      }
-    },
+        state.allQuestions = data;
+      },
 
-    SET_ALL_QUERY_DATA(state, data) {
-      console.debug('SET_ALL_QUERY_DATA');
-      if (data) {
-        Object.keys(data).forEach((d) => {
-          data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
-        });
-      }
-      state.allQueryData = data;
-    },
+      /**
+       * 
+       * @param {Object} state 
+       * @param {Obejct} data 
+       */
+      SET_ONE_QUESTION(state, data) {
+        console.debug('SET_ONE_QUESTION');
+
+        data.timeStamp = convertUnixTimeStampToString(data.timeStamp);
+
+        state.oneQuestion = data;
+      },
+
+      /**
+       * 
+       * @param {Object} state 
+       * @param {*} data 
+       */
+      SET_QUESTIONS_BASED_ON_TOPICS(state, data) {
+        if (data) {
+          Object.keys(data).forEach((d) => {
+            data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+          });
+          state.questionsBasedOnTopics = data;
+        }
+      },
+
+      /**
+       * 
+       * @param {Object} state 
+       * @param {Object} data 
+       */
+      SET_MOST_ACTIV_QUESTIONS(state, data) {
+        if (data) {
+          Object.keys(data).forEach((d) => {
+            data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+          });
+
+          state.activeQuestions = data;
+        }
+      },
+
+      /**
+       * 
+       * @param {Object} state 
+       * @param {Object} data 
+       */
+      SET_ALL_QUERY_DATA(state, data) {
+        console.debug('SET_ALL_QUERY_DATA');
+        if (data) {
+          Object.keys(data).forEach((d) => {
+            data[d].timeStamp = convertUnixTimeStampToString(data[d].timeStamp);
+          });
+        }
+        state.allQueryData = data;
+      },
 
     //#endregion question
 
     //#region answer
+      //all mutation for answers
+      
+      /**
+       * 
+       * @param {Obejct} state 
+       * @param {Obejct} data 
+       */
+      SET_ALL_ANSWERS(state, data) {
+        console.debug('SET_ALL_ANSWERS');
+        state.allAnswers = data;
+      },
 
-    //all mutation for answers
-    SET_ALL_ANSWERS(state, data) {
-      console.debug('SET_ALL_ANSWERS');
-      state.allAnswers = data;
-    },
-
-    SET_ONE_ANSWER_TO_QUESTION(state, data) {
-      console.debug('SET_ONE_ANSWER_TO_QUESTION');
-      if (data) {
-        state.oneAnswer = data;
-      }
-    },
-
+      /**
+       * 
+       * @param {Object} state 
+       * @param {Object} data 
+       */
+      SET_ONE_ANSWER_TO_QUESTION(state, data) {
+        console.debug('SET_ONE_ANSWER_TO_QUESTION');
+        if (data) {
+          state.oneAnswer = data;
+        }
+      },
     //#endregion answers
 
     //#region comments
-    //all mutation for comments
-    SET_ALL_COMMENTS(state, data) {
-      if (data) {
-        console.debug('SET_ALL_COMMENTS');
-        console.debug('SET', data);
-        console.debug('COMMENTS', data.comments);
-        data.comments.forEach((dd) => {
-          console.debug(dd);
-          dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
-        });
+      //all mutation for comments
+      SET_ALL_COMMENTS(state, data) {
+        if (data) {
+          console.debug('SET_ALL_COMMENTS');
+          console.debug('SET', data);
+          console.debug('COMMENTS', data.comments);
+          data.comments.forEach((dd) => {
+            console.debug(dd);
+            dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
+          });
 
-        if (!state.allComments) {
-          state.allComments = new Array();
-          state.allComments = data;
-        } else {
-          state.allComments.push(data);
+          if (!state.allComments) {
+            state.allComments = new Array();
+            state.allComments = data;
+          } else {
+            state.allComments.push(data);
+          }
         }
-      }
-    },
+      },
 
     //#endregion comments
 
@@ -170,6 +226,16 @@ export default new Vuex.Store({
       }
 
     },
+
+    REMOVE_WS_MESSAGE(state, index) {
+      if(state.wsMessages) {
+        state.wsMessages.pop(index);
+        // state.wsMessages.forEach(ws => {
+        //   console.warn(ws)
+        //   // ws.pop(index);
+        // })
+      }
+    }
   },
   actions: {
     //#region question
@@ -320,6 +386,11 @@ export default new Vuex.Store({
         });
     },
 
+    /**
+     * 
+     * @param {*} param0 
+     * @param {*} answer 
+     */
     async increaseRatingForAnswer({ state, dispatch }, answer) {
       console.log('increaseAnswerRating', answer);
 
@@ -336,7 +407,10 @@ export default new Vuex.Store({
     //#endregion answer
 
     //#region comment
-    //comments
+    /**
+     * 
+     * @param {*} answerId 
+     */
     async act_getAllComments({ commit }, answerId) {
       console.log('act_getAllComments');
       await RestCalls.getAllCommentsToAnswers(answerId)
@@ -355,6 +429,10 @@ export default new Vuex.Store({
         });
     },
 
+    /**
+     * 
+     * @param {*} newComment 
+     */
     async act_addNewComment({ state, dispatch }, newComment) {
       console.log('act_addNewComment', newComment);
       await RestCalls.addNewComment(newComment)
@@ -368,6 +446,10 @@ export default new Vuex.Store({
         });
     },
 
+    /**
+     * TODO
+     * @param {*} comment 
+     */
     async act_increaseCommentRating({ state, dispatch }, comment) {
       console.log('act_increaseCommentRating', comment);
       await RestCalls.increaseCommentRating(comment)
@@ -384,8 +466,9 @@ export default new Vuex.Store({
     //#endregion comment
 
     //#region tags
-
-    //tags
+    /**
+     * TODO
+     */
     async act_getAllTags({ commit }) {
       await RestCalls.getAllTags()
         .then((response) => {
@@ -398,6 +481,9 @@ export default new Vuex.Store({
         });
     },
 
+    /**
+     * TODO
+     */
     async act_getCurrentTopics({ commit }) {
       console.log('act_getCurrentTopics()');
       await RestCalls.getCurrentTopics()
@@ -408,27 +494,20 @@ export default new Vuex.Store({
           console.error(error);
         });
     },
-
     //#endregion tags
 
+    /**
+     * TODO
+     */
     async act_getUserInfo({ commit }) {
       await RestCalls.getUserInfo().then((response) => {
         commit('SET_USER_INFO', response);
       });
     },
 
-    async act_getUserNameFromID({}, id) {
-      return await RestCalls.getUserNameFromId(id)
-        .then((response) => {
-          console.warn('STORE ID->NAME', response);
-          return response.userName;
-        })
-        .catch((error) => {
-          console.error(error);
-          return id;
-        });
-    },
-
+    /**
+     * TODO
+     */
     act_createConnectSocketAndStompClient({ state, commit, dispatch }) {
       // commit('CREATE_NEW_SOCKET', websocketURL);
       // commit('CREATE_NEW_STOMP_CLIENT');
@@ -461,10 +540,7 @@ export default new Vuex.Store({
 
                       //save to store
                       commit('ADD_WS_MESSAGE', parsedData.body );
-                      
-                      //save to local storage
-                      this.$localStore.set('notify', JSON.stringify(state.wsMessages));
-                      // dispatch('saveNotificationToLocalStorage');
+                     
                     }
                   });
 
@@ -484,16 +560,27 @@ export default new Vuex.Store({
       }
     },
 
+    /**
+     * Disconnect from websocket
+     */
     act_disconnectStompClient({ state }) {
       if (state.stompClient) {
         this.stompClient.disconnect();
       }
     },
 
+    /**
+     * TODO
+     * Reconnect websocket connection if connection losed
+     */
     act_toggleConnectionState({ state, dispatch }) {
       state.clientConnection ? dispatch('act_disconnectStompClient') : dispatch('act_createConnectSocketAndStompClient');
     },
 
+    /**
+     * TODO
+     * @param {*} wsMessages 
+     */
     async act_sendStompMessage({ state }, wsMessages) {
       if (wsMessages) {
         console.log('Send message:', wsMessages);
@@ -503,34 +590,42 @@ export default new Vuex.Store({
         }
       }
     },
-
-
-
-    async loadNotificationFromLocalStorage({commit}){
-      let loadNotification = await this.$localStore.get('notify');
-
-      let parsedJsonObject = JSON.parse(loadNotification);
-
-    },
-
-    saveNotificationToLocalStorage({state}){
-      this.$localStore.set('notify', JSON.stringify(state.wsMessages));
+    
+    /**
+     * Remove websocket message from local storage based on index 
+     * @param {*} param0 
+     * @param {Int} index [position of messages] 
+     */
+    act_removeOneWSMessage({commit}, index){
+      commit('REMOVE_WS_MESSAGE', index);
     }
   },
 
   getters: {
+    /**
+     * returns from store all answers for one question
+     */
     getListWithAnswers: (state) => {
       return state.allAnswers.listOfAnswers;
     },
 
+    /**
+     * returns from store all comments for all answers
+     */
     getListWithComments: (state) => {
       return state.allComments.comments;
     },
 
+    /**
+     * returns from store all tags that currently are available
+     */
     getAllTagName: (state) => {
       return state.allTags.map((n) => n.name);
     },
 
+    /**
+     * returns the uuid from logged in user
+     */
     getUserId: (state) => {
       return state.currentUser.id;
     },
@@ -547,9 +642,16 @@ export default new Vuex.Store({
       return '';
     },
 
+    /**
+     * returns nicksname from logged in user
+     */
     getUsersPreferedName: (state) => {
       return state.currentUser.preferred_username;
     },
   },
+
   modules: {},
+
+  //load the lib to store websocket messages in local storage in browser
+  plugins: [localStore]
 });

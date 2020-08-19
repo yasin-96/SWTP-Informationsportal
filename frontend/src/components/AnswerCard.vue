@@ -1,23 +1,39 @@
 <template>
   <b-container v-if="nId">
-    <b-card id="nId" class="mt-3" :key="nId">
+    <b-card
+      header-bg-variant="white"
+      footer-bg-variant="white"
+      id="nId"
+      class="mt-1 shadow rounded"
+      :key="nId"
+    >
       <!-- Information about user & creation date -->
       <template v-slot:header>
-        <b-row class="justify-content-left">
-          <b-col>
-            <b-button-group>
-              <h2><fai icon="user-circle" /></h2>
-              <b-button size="sm" disabled variant="white"> </b-button>
-              <b-button size="sm" disabled variant="white"> <strong>Antwort </strong> erstellt von {{ aUserName }} <small class="ml-3"> </small> </b-button>
-              <b-button size="sm" disabled variant="white">
-                <small>
-                  <fai icon="clock" />
-                  {{ aDate }}
-                </small>
-              </b-button>
-            </b-button-group>
-          </b-col>
-        </b-row>
+        <b-container>
+          <b-row class="justify-content-left">
+            <b-col>
+              <b-button-group>
+                <b-button disabled variant="white">
+                  <fai icon="user-circle" size="lg" />
+                </b-button>
+                <b-button size="sm" disabled variant="white">
+                  <strong>Answer</strong>
+                  created by {{ aUserName }}
+                  <small></small>
+                </b-button>
+              </b-button-group>
+            </b-col>
+          </b-row>
+        </b-container>
+      </template>
+
+      <template v-slot:footer>
+        <b-button size="md" disabled variant="white">
+          <small>
+            <fai icon="clock" />
+            {{ aDate }}
+          </small>
+        </b-button>
       </template>
 
       <!-- One answer to the question -->
@@ -28,25 +44,25 @@
         <b-button size="sm" variant="info" @click="increaseRating()">
           <fai icon="thumbs-up" />
         </b-button>
-        <b-button size="sm" disabled variant="info">
-          {{ aRating }}
+        <b-button size="sm" disabled variant="info">{{ aRating }}</b-button>
+        <b-button v-if="userEdit" size="sm" @click="editAnswer()">
+          <fai icon="edit"></fai>
         </b-button>
-        <b-button v-if="userEdit" size="sm" @click="editAnswer()"><fai icon="edit"></fai></b-button>
       </b-button-group>
 
       <!-- Area for all Comments -->
       <b-card-body>
         <b-container>
-          <Comment :cComments="allComments" :cId="cId" :qId="nId" />
+          <CommentCard :cComments="allComments" :cId="cId" :qId="nId" />
         </b-container>
-        <b-container> </b-container>
+        <b-container></b-container>
       </b-card-body>
     </b-card>
   </b-container>
 </template>
 
 <script>
-import Comment from '@/components/Comment';
+import CommentCard from '@/components/CommentCard';
 import { mapState, mapActions } from 'vuex';
 import VueSimplemde from 'vue-simplemde';
 
@@ -55,38 +71,63 @@ import { BIconClock, BIconChatSquareDots } from 'bootstrap-vue';
 export default {
   name: 'AnswerCard',
   components: {
-    Comment,
+    CommentCard,
     Editor: VueSimplemde,
   },
   props: {
+    /**
+     * The ID of the answer
+     */
     nId: {
       type: String,
       required: true,
     },
+    /**
+     * The id for all comments to this answer
+     */
     cId: {
       type: String,
       required: true,
     },
+    /**
+     * Main content of the answer
+     */
     aContent: {
       type: String,
       default: '',
     },
+    /**
+     * The rating of this answer
+     */
     aRating: {
       type: Number,
       default: 0,
     },
+    /**
+     * The timestamp of this answer
+     */
     aDate: {
       type: String,
       default: '',
     },
+    /**
+     * The id of the user who created this answer
+     */
     aUserId: {
       type: String,
       required: true,
     },
+    /**
+     * The creator of this answer
+     */
     aUserName: {
       type: String,
       required: true,
     },
+    /**
+     * This enables the option to edit the answer, 
+     * if the user has created it
+     */
     userEdit: {
       type: Boolean,
       default: false,
@@ -94,14 +135,17 @@ export default {
   },
   data() {
     return {
-      minCommentRows: 3,
-      maxCommentRows: 10,
+      // All changes for the answer will are temporarily stored here
       changeAnswerObject: {
         id: '',
         listOfAnswers: [],
         timeStamp: Date.parse(new Date()),
       },
+
+      //Counter to in crease rating for answer
       newRating: Number(this.aRating) + 1,
+      
+      //settings for markdown editor
       mdeConfig: {
         toolbar: null,
         shortcuts: {},
@@ -125,7 +169,8 @@ export default {
     },
 
     /**
-     * 
+     * Changes the current question by increasing the counter. 
+     * After that it is adjusted in the store
      */
     async increaseRating() {
       // this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
@@ -142,17 +187,17 @@ export default {
           timeStamp: currentDate,
         },
       ];
-      //TODO das geht noch nicht in place
+      
+      //TODO das geht noch nicht in place 
       console.warn('INCRESE Rating AWT', this.changeAnswerObject);
       await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
 
       this.changeAnswerObject.listOfAnswers = [];
-      //reload page
-      // this.$router.go(0);
     },
 
     /**
-     * 
+     * If the user id matches the author of the question it can be edited. 
+     * Here with the user brought to the editing page
      */
     editAnswer() {
       this.$router

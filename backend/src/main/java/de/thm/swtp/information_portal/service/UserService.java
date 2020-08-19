@@ -14,10 +14,20 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     *
+     * @param user
+     * @return
+     */
     public User addUser(User user){
         return userRepository.save(user);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Optional<User> getUser(String id){
         return userRepository.findById(id);
     }

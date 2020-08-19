@@ -32,14 +32,6 @@ public class Comment {
     // Creation Date as Unix-Timestamp
     private long timestamp;
 
-
-    // TODO der muss weg
-    public Comment(String content, int rating) {
-        this.id = UUID.randomUUID().toString();
-        this.content = content;
-        this.rating = rating;
-        this.timestamp = Instant.now().getEpochSecond() * 1000;
-    }
     public Comment(String content, String userId, int rating) {
         this.id = UUID.randomUUID().toString();
         this.content = content;

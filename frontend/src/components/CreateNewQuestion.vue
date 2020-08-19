@@ -1,6 +1,6 @@
 <template>
-  <b-container background="primary">
-    <b-card border-variant="white">
+  <b-container background="primary" class="mb-5">
+    <b-card border-variant="white" class="rounded shadow"> 
       <b-row class="justify-content-xs-top justify-content-sm-center justify-content-center">
         <!-- Imgage for card -->
         <b-col xs="12" sm="12" md="12" lg="5">
@@ -63,20 +63,24 @@ export default {
   components: {'Editor': VueSimplemde},
   data() {
     return {
+      //image for card
       image: require('./../assets/new_question/questions.svg'),
+
+      //this will only enable the content for tags if the data was loaded
       isTagsAreLoaded: false,
+      
+      // plain question object that will used to store the whole information
       newQuestion: {
         id: '',
         header: '',
         content: '',
         tags: [],
       },
+
+      //config for markdown editor
       mdeConfig: {
         placeholder: "Beschreibung ihrer Frage ...",
         spellChecker: false
-      },
-      editorOptions: {
-
       },
     };
   },
@@ -84,19 +88,31 @@ export default {
     this.loadData();
   },
   methods: {
+    /**
+     * Trigger to add content from markdown editor to the quesion object
+     */
     onEditorChange(){
       console.warn(this.$refs.mdeEditor.invoke('getValue'));
       this.newQuestion.content = this.$refs.mdeEditor.invoke('getValue');
     },
+    /**
+     * Trigger to request the tags from backend
+     */
     async loadData(){
       await this.$store.dispatch('act_getAllTags');
     },
-
+    /**
+     * Create the new Question and go this view
+     */
     async createQuestion() {
       let response = await this.$store.dispatch('act_creatNewQuestion', this.newQuestion);
       console.log('res', response);
       this.$router.push(`/question/${response.id}`);
     },
+    /**
+     * To prevent errors, the tags are all capitalized. 
+     * The input when entering a tag is automatically converted
+     */
     formatter(newTag) {
       console.warn(newTag);
       this.newQuestion.tags = newTag.map((tag) => tag.toUpperCase());
@@ -108,13 +124,17 @@ export default {
     ...mapGetters(['getAllTagName']),
     ...mapState(['allTags']),
 
-    availableOptions() {
-      return this.getAllTagName.filter((opt) => this.newQuestion.tags.indexOf(opt) === -1);
-    },
+    /**
+     * If all values for the question creation are available, the send button is activated.
+     */
     enableSendButton() {
       return this.newQuestion.header && this.newQuestion.content && this.newQuestion.tags.length > 0 ? false : true;
     },
-
+    
+    /**
+     * The tag selection is filtered by the already selected and the still available ones. 
+     * All those that have already been selected are automatically no longer offered for selection.
+     */
     filterTags() {
       if (this.newQuestion.tags) {
         return this.getAllTagName.filter((item) => !this.newQuestion.tags.includes(item)).map((item) => item.toUpperCase());

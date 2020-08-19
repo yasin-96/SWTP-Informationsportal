@@ -4,18 +4,28 @@
     <b-row>
       <!-- <b-col>
         <QuestionCard v-if="!!answer" :qId="answer.id" :qHeader="answer.header" :qContent="answer.content" :qTags="answer.tags" :qDate="answer.timeStamp" :qFooter="true" :qEdit="false" />
-      </b-col> -->
+      </b-col>-->
 
       <b-col>
-        <b-card header-tag="header" header-bg-variant="#DFE8DF" header-border-variant="white" style="min-width: 200px; min-height: 300px;" class="bCard">
+        <b-card
+          header-bg-variant="white"
+          style="min-width: 200px; min-height: 300px;"
+          class="bCard rounded shadow"
+        >
           <!-- Information about user & creation date -->
           <template v-slot:header>
             <b-row class="justify-content-left">
               <b-col>
                 <b-button-group>
-                  <h2><fai icon="user-circle" /></h2>
-                  <b-button size="sm" disabled variant="white"> </b-button>
-                  <b-button size="sm" disabled variant="white"> <strong>Frage </strong> erstellt von {{ currentAnswer.userId }} <small class="ml-3"> </small> </b-button>
+                  <h2>
+                    <fai icon="user-circle" />
+                  </h2>
+                  <b-button size="sm" disabled variant="white"></b-button>
+                  <b-button size="sm" disabled variant="white">
+                    <strong>Question</strong>
+                    created by {{ currentAnswer.userId }}
+                    <small class="ml-3"></small>
+                  </b-button>
                   <b-button size="sm" disabled variant="white">
                     <small>
                       <fai icon="clock" />
@@ -54,10 +64,17 @@ export default {
   name: 'AnswerEditView',
   components: { QuestionCard, Editor: VueSimplemde },
   props: {
+    /**
+     * The id of the question
+     */
     qId: {
       type: String,
       required: true,
     },
+
+    /**
+     * The id for getting all answers to this question
+     */
     aId: {
       type: String,
       required: true,
@@ -65,16 +82,22 @@ export default {
   },
   data() {
     return {
+      //Check if answer are loaded and then display the content
       isAnswerLoaded: false,
+
+      //Check if answer are loaded and then display the content
       isQuestionAreLoaded: false,
-      paramId: '',
-      componentKey: '',
-      componentCounter: 0,
+
+      //Copy of all answer from store 
       currentAnswer: {},
+
+      //All changes will be stored here
       updatedAnswer: {
         id: this.qId,
         listOfAnswers: [],
       },
+
+      //Config for markdown editor
       mdeConfig: {
         spellChecker: false,
       },
@@ -86,15 +109,28 @@ export default {
   },
 
   methods: {
+    /**
+     * Trigger data for the question based on the question id
+     * Question and the answers to this will be loaded
+     */
     async loadData() {
       if (this.qId && this.aId) {
         await this.$store.dispatch('act_getOneQuestion', this.qId);
         await this.$store.dispatch('act_getOneAnswerToQuestion', { ids: [this.qId, this.aId] });
       }
     },
+
+    /**
+     * Page will navigate to the view site of a question.
+     * Editing page is left
+     */
     goToDetailView() {
       this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
     },
+
+    /**
+     * Send new change of a answer
+     */
     async sendUpdatedAnswer() {
       if (this.currentAnswer.content) {
         this.updatedAnswer.listOfAnswers.push({

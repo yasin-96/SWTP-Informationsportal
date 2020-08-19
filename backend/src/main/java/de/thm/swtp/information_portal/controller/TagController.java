@@ -54,12 +54,21 @@ public class TagController {
 		return CompletableFuture.completedFuture(tagService.getAllTags());
 	}
 
+	/**
+	 *
+	 * @param tag
+	 * @return
+	 */
 	@Async
 	@PostMapping("/tag/newTag")
 	public Tag createTag(@RequestBody Tag tag) {
 		return tagRepository.save(tag);
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Async
 	@GetMapping("/tagsWithMostQuestions")
 	public CompletableFuture<ResponseEntity<List<Tag>>> getTagsWithMostQuestions() {
@@ -71,6 +80,11 @@ public class TagController {
 		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveTags, HttpStatus.OK));
 	}
 
+	/**
+	 *
+	 * @param myMap
+	 * @return
+	 */
 	public List<Tag> getTagsWithMostQuestions(Map<Tag, Long> myMap) {
 		List<Tag> tags = new ArrayList<>();
 		Map<Tag, Long> sorted = myMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))

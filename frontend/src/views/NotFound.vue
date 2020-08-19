@@ -28,10 +28,13 @@
 export default {
   name: 'NotFound',
   data: () => ({
-    maxHeight: '400px',
-    pageImage: '@/assets/404/2703.jpg',
+    //Http status code
     pageError: '404',
+    
+    //Title of the content
     pageTitle: 'Die Seite kann nicht angezeigt werden, weil:',
+    
+    // List of possible errors
     listOfoptions: [
       'Sie ein veraltetes Lesezeichen aufgerufen haben.',
       'Sie über eine Suchmaschine einen veralteten Index dieser Webseite aufgerufen haben.',
@@ -40,6 +43,8 @@ export default {
       'Die angefragte Quelle wurde nicht gefunden!',
       'Während der Anfrage ist ein Fehler aufgetreten!',
     ],
+
+    // Links to go
     urlOptions: [
       {
         title: 'Startseite',
@@ -52,6 +57,9 @@ export default {
     ],
   }),
   methods: {
+    /**
+     * The page will navigate to the link
+     */
     goToLink(linkAddr) {
       console.log(linkAddr);
       this.$router.push(linkAddr);

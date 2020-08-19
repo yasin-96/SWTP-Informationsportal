@@ -1,15 +1,30 @@
 <template>
   <b-container v-if="isDataLoaded">
     <b-row>
-      <b-col sm="12" md="6" lg="4" xl="3" v-for="quest in questionsBasedOnTopics" :key="quest.id" class="mt-4">
-        <QuestionCard :qId="quest.id" :qHeader="quest.header" :qContent="quest.content" :qTags="quest.tags" :qDate="quest.timeStamp" :qTrimText="true" />
+      <b-col
+        sm="12"
+        md="6"
+        lg="4"
+        xl="3"
+        v-for="quest in questionsBasedOnTopics"
+        :key="quest.id"
+        class="mt-4"
+      >
+        <QuestionCard
+          :qId="quest.id"
+          :qHeader="quest.header"
+          :qContent="quest.content"
+          :qTags="quest.tags"
+          :qDate="quest.timeStamp"
+          :qTrimText="true"
+          :qFooter="true"
+        />
       </b-col>
     </b-row>
   </b-container>
 </template>
 
 <script>
-// @ is an alias to /src
 import QuestionCard from '@/components/QuestionCard';
 import { mapState, mapActions } from 'vuex';
 
@@ -19,35 +34,42 @@ export default {
     QuestionCard,
   },
   props: {
+    /**
+     * The tag that will be used for getting all question
+     */
     tag: {
       type: String,
-      required: true
+      required: true,
     },
   },
   data() {
     return {
-      isDataLoaded: false
-    }
+      //Check if data are loaded and then display the content
+      isDataLoaded: false,
+    };
   },
   mounted() {
-    this.loadData()
+    this.loadData();
   },
- 
+
   methods: {
-    async loadData(){
+    /**
+     * Trigger all questions based on most important topics/tags
+     */
+    async loadData() {
       await this.$store.dispatch('act_getQuestionsBasedOnTopic', this.tag);
-    }
+    },
   },
-   computed: {
+  computed: {
     ...mapActions(['act_getAllQuestions']),
     ...mapState(['questionsBasedOnTopics']),
   },
   watch: {
     questionsBasedOnTopics() {
-      if(this.questionsBasedOnTopics && this.questionsBasedOnTopics.length >0){
-        this.isDataLoaded =true;
-      } else{
-        this.isDataLoaded =false;
+      if (this.questionsBasedOnTopics && this.questionsBasedOnTopics.length > 0) {
+        this.isDataLoaded = true;
+      } else {
+        this.isDataLoaded = false;
       }
     },
   },

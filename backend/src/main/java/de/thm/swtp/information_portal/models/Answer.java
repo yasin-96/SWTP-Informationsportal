@@ -32,13 +32,6 @@ public class Answer {
 	// save currentdate in unix timestamp
 	private Long timeStamp;
 
-	//TODO der muss weg
-	public Answer(String content, int rating) {
-		this.id = UUID.randomUUID().toString();
-		this.content = content;
-		this.rating = rating;
-		this.timeStamp = Instant.now().getEpochSecond() * 1000;
-	}
 	public Answer(String content, String userId, int rating) {
 		this.id = UUID.randomUUID().toString();
 		this.content = content;
@@ -46,7 +39,6 @@ public class Answer {
 		this.rating = rating;
 		this.timeStamp = Instant.now().getEpochSecond() * 1000;
 	}
-
 }
 
 

@@ -2,8 +2,15 @@
   <b-container v-if="isDataLoaded">
     <b-row>
       <b-col sm="12" md="4" lg="4" xl="4" v-for="quest in activeQuestions" :key="quest.id" class="mt-4">
-        <QuestionCard :qId="quest.id" :qHeader="quest.header" :qContent="quest.content" :qTags="quest.tags" :qDate="quest.timeStamp" :qTrimText="true" :qUserId="quest.userId"
-        :qUserName="quest.userName"
+        <QuestionCard
+          :qId="quest.id"
+          :qHeader="quest.header"
+          :qContent="quest.content"
+          :qTags="quest.tags"
+          :qDate="quest.timeStamp"
+          :qUserId="quest.userId"
+          :qUserName="quest.userName"
+          :qFooter="true"
         />
       </b-col>
     </b-row>
@@ -22,6 +29,7 @@ export default {
   },
   data() {
     return {
+      //Check if questions are loaded and then display the content
       isDataLoaded: false,
     };
   },
@@ -29,6 +37,9 @@ export default {
     this.loadData();
   },
   methods: {
+    /**
+     * Load all questions that are currently very popular 
+     */
     async loadData() {
       await this.$store.dispatch('act_getMostActiveQuestions');
     },

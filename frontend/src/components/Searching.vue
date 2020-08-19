@@ -1,9 +1,9 @@
 <template>
-  <b-container>
+  <div class="mt-1">
     <b-row>
       <b-col>
-        <b-input-group>
-          <b-input-group-append>
+        <b-input-group class="roundedCornerLeft">
+          <b-input-group-append > 
             <b-button variant="success" v-on:enter="searchData()" @click="searchData()">
               <fai icon="search" />
             </b-button>
@@ -12,27 +12,26 @@
         </b-input-group>
       </b-col>
     </b-row>
-  </b-container>
+  </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 
+//TODO trigger für enter einfügen
+
 export default {
   name: 'Searching',
-  props: {
-    disable: {
-      type: Boolean,
-      default: true,
-    },
-  },
   data() {
     return {
-      enableSearchOptions: true,
+      //input of search textfield
       searchInput: '',
     };
   },
   methods: {
+    /**
+     * The search query is sent to the backend to get a result
+     */
     searchData() {
       this.$router
         .push({

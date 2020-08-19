@@ -1,44 +1,47 @@
 <template>
   <div class="navigationBar navbar-dark">
-    <div>
-      <b-navbar>
+    <b-navbar toggleable="lg">
+      <b-navbar-brand to="/">
+        <img
+          src="https://www.thm.de/_thm/logos/thm.svg"
+          fluid
+          :width="imgX"
+          :height="imgY"
+          alt="THM LOGO"
+        />
+      </b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <!-- <b-collapse> -->
-            
-          <!-- </b-collapse> -->
+          <b-nav-item class="mt-1" to="/home">Home</b-nav-item>
+          <b-nav-item class="mt-1" to="/new">New</b-nav-item>
+          <b-nav-item class="mt-1" to="/questions">General</b-nav-item>
+          <b-nav-item class="mt-1" to="/topics">Topics</b-nav-item>
+          <b-nav-item class="mt-1" to="/about">About</b-nav-item>
+          <b-nav-item class="mt-1">
+            <Sidebar />
+          </b-nav-item>
+          <b-nav-item class="mt-1" disabled="">| </b-nav-item>
+          <b-nav-item class="mt-1" href="/chat">Chat</b-nav-item>
+          <b-nav-item class="mt-1" href="/microblog/microblog">Microblog</b-nav-item>
         </b-navbar-nav>
-      </b-navbar>
-    </div>
-    <div>
-      <div class="mt-4">
-        <b-navbar toggleable="md">
-          <b-navbar-nav>
-            <b-navbar-brand to="/">
-              <img src="https://www.thm.de/_thm/logos/thm.svg" fluid  :width="imgX" :height="imgY" alt="THM LOGO" />
-            </b-navbar-brand>
-            <b-nav-item to="/home">Home</b-nav-item>
-            <b-nav-item to="/new">New</b-nav-item>
-            <b-nav-item to="/questions">General</b-nav-item>
-            <b-nav-item to="/topics">Topics</b-nav-item>
-            <b-nav-item to="/about">About</b-nav-item>
-            <b-nav-item> 
-              <Sidebar />
-            </b-nav-item>
-          </b-navbar-nav>
-          <b-navbar-nav class="ml-auto">
-            <Searching />
-            <b-nav-item-dropdown right>
+
+        <b-navbar-nav class="ml-auto">
+          <Searching />
+            <b-nav-item-dropdown  right>
               <template v-slot:button-content>
-                <b-avatar variant="success" :text="getFirstLetterFromUser"></b-avatar>
+                <template>
+                  <b-avatar size="2rem" variant="info" :text="getFirstLetterFromUser"></b-avatar>
+                </template>
               </template>
-              <b-dropdown-item to="#">Profile</b-dropdown-item>
-              <b-dropdown-item to="/logout">Sign Out</b-dropdown-item>
+              <b-dropdown-item :href="'/microblog/profile/'+ userUUID ">Profile</b-dropdown-item>
+              <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
-          </b-navbar-nav>
-          
-        </b-navbar>
-      </div>
-    </div>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
   </div>
 </template>
 
@@ -53,37 +56,52 @@ export default {
   components: {
     Searching,
     'b-navbar': BNavbar,
-    Sidebar
+    Sidebar,
   },
   data() {
     return {
+      //logo from thm 
       thmSVGURl: 'https://www.thm.de/_thm/logos/thm.svg',
-      disableSearchBar: true,
-      searchInput: '',
-      isHovered: false,
+      
+      //width of logo
       imgX: 92,
-      imgY: 38
+
+      //height of logo
+      imgY: 38,
     };
   },
 
   methods: {
+    /**
+     * Go the site of the link
+     */
     goToLink(link) {
       this.$router.push(`${link}`);
     },
-    handleHover(hovered) {
-      this.isHovered = hovered;
-    },
   },
-  computed: { ...mapGetters(['getFirstLetterFromUser']),
-  avatarLetter() {
-    if(this.getFirstLetterFromUser) {
-      return this.getFirstLetterFromUser;
-    } else {
-      return ""
+  computed: {
+    ...mapGetters(['getFirstLetterFromUser','getUserId']),
+    
+    /**
+     * Show the Avatar from user, if user was loaded
+     */
+    avatarLetter() {
+      if (this.getFirstLetterFromUser) {
+        return this.getFirstLetterFromUser;
+      } else {
+        return '';
+      }
+    },
+    /**
+     * Read the userid for set the profile link
+     */
+    userUUID(){
+      if (this.getUserId) {
+        return this.getUserId;
+      } else {
+        return ""
+      }
     }
-  } },
+  },
 };
 </script>
-<style>
-
-</style>
