@@ -1,4 +1,4 @@
-package de.thm.swtp.information_portal.Services;
+package de.thm.swtp.information_portal.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,8 @@ import de.thm.swtp.information_portal.service.TagService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 
 import de.thm.swtp.information_portal.models.Tag;
 import de.thm.swtp.information_portal.models.Question;

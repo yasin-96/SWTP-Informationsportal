@@ -42,6 +42,9 @@ export default {
     clearInterval(this.initUserData);
   },
   methods: {
+
+    //TODO check if ws connection is not died
+
     //reload data each 5 min
     pullUserWithIntervall() {
       this.initUserData = setInterval(async () => {
