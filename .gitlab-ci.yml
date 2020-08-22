@@ -11,6 +11,7 @@ build-frontend:
     - npm i
   script:
     - npm run build:dev
+    - cp frontend/dist/** backend/src/main/resources/static/
   artifacts:
     paths:
       - frontend/dist/**
@@ -21,7 +22,6 @@ build-backend:
   image: maven:latest
   stage: build
   before_script:
-    - cp frontend/dist/** backend/src/main/resources/static/
     - cd backend
   script:
     - mvn clean install -DskipTests
