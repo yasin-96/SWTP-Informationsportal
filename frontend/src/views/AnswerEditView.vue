@@ -23,7 +23,7 @@
                   <b-button size="sm" disabled variant="white"></b-button>
                   <b-button size="sm" disabled variant="white">
                     <strong>Answer</strong>
-                    created by {{ currentAnswer.userId }}
+                    created by {{ currentAnswer.userName }}
                     <small class="ml-3"></small>
                   </b-button>
                   <b-button size="sm" disabled variant="white">
