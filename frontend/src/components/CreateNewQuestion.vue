@@ -33,7 +33,7 @@
 
                 <!-- Tags for this question -->
                 <b-row class="justify-content-center pt-4">
-                  <b-col v-if="isTagsAreLoaded" xs="12" sm="12" md="12" lg="12">
+                  <b-col xs="12" sm="12" md="12" lg="12">
                     <b-form-tags @input="formatter($event)" v-model="newQuestion.tags" :remove-on-delete="true" :input-attrs="{ list: 'alltags' }" :input-handlers="{ input: 'alltags' }"> </b-form-tags>
 
                     <b-datalist id="alltags" :options="filterTags"> </b-datalist>
@@ -66,9 +66,6 @@ export default {
       //image for card
       image: require('./../assets/new_question/questions.svg'),
 
-      //this will only enable the content for tags if the data was loaded
-      isTagsAreLoaded: false,
-      
       // plain question object that will used to store the whole information
       newQuestion: {
         id: '',
@@ -140,17 +137,6 @@ export default {
         return this.getAllTagName.filter((item) => !this.newQuestion.tags.includes(item)).map((item) => item.toUpperCase());
       }
       return this.getAllTagName.map((item) => item.toUpperCase());
-    },
-  },
-  watch: {
-    allTags() {
-      if (this.allTags && this.allTags.length > 0) {
-        console.log('TAGS geladen');
-        this.isTagsAreLoaded = true;
-      } else {
-        console.log('TAGS nicht geladen');
-        this.isTagsAreLoaded = false;
-      }
     },
   },
 };

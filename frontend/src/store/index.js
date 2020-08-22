@@ -73,9 +73,9 @@ export default new Vuex.Store({
       //all mutation for questions
 
       /**
-       * Init all question from backend in the store
-       * @param {Object} state The vuex store
-       * @param {Object} data All question 
+       * 
+       * @param {Object} state [vuex store]
+       * @param {Object} data [question as payload]
        */
       SET_ALL_QUESTIONS(state, data) {
         console.debug('SET_ALL_QUESTIONS');
@@ -456,8 +456,9 @@ export default new Vuex.Store({
     },
 
     /**
-     * Increase raing for one answer and the reload all answer for the question
-     * @param {Object} answer Answer to increase the rating
+     * 
+     * @param {*} param0 
+     * @param {*} answer 
      */
     async increaseRatingForAnswer({ state, dispatch }, answer) {
       console.log('increaseAnswerRating', answer);
@@ -475,10 +476,9 @@ export default new Vuex.Store({
     //#endregion answer
 
     //#region comment
-    //comments
     /**
-     * Request all comments for one answer based on the id of the answer
-     * @param {String} answerId Id of Answer
+     * 
+     * @param {*} answerId 
      */
     async act_getAllComments({ commit }, answerId) {
       console.log('act_getAllComments');
@@ -499,8 +499,8 @@ export default new Vuex.Store({
     },
 
     /**
-     * Add new comment for one answer and then reload all commens
-     * @param {Object} newComment Comment to add 
+     * 
+     * @param {*} newComment 
      */
     async act_addNewComment({ state, dispatch }, newComment) {
       console.log('act_addNewComment', newComment);
@@ -516,8 +516,8 @@ export default new Vuex.Store({
     },
 
     /**
-     * Increase the rating of the one comment and then reload all comments
-     * @param {Object} comment Comment to increase the rating
+     * TODO
+     * @param {*} comment 
      */
     async act_increaseCommentRating({ state, dispatch }, comment) {
       console.log('act_increaseCommentRating', comment);
@@ -535,10 +535,8 @@ export default new Vuex.Store({
     //#endregion comment
 
     //#region tags
-
-    //tags
     /**
-     * Request all tags from backend and the save them in the store
+     * TODO
      */
     async act_getAllTags({ commit }) {
       await RestCalls.getAllTags()
@@ -553,7 +551,7 @@ export default new Vuex.Store({
     },
 
     /**
-     * Request most favourite topics
+     * TODO
      */
     async act_getCurrentTopics({ commit }) {
       console.log('act_getCurrentTopics()');
@@ -565,10 +563,10 @@ export default new Vuex.Store({
           console.error(error);
         });
     },
-
     //#endregion tags
+
     /**
-     * Request all User Informationen
+     * TODO
      */
     async act_getUserInfo({ commit }) {
       await RestCalls.getUserInfo().then((response) => {
@@ -577,23 +575,7 @@ export default new Vuex.Store({
     },
 
     /**
-     * Parse the username based on the id
-     * @param {String} id Id of User
-     */
-    async act_getUserNameFromID({}, id) {
-      return await RestCalls.getUserNameFromId(id)
-        .then((response) => {
-          console.warn('STORE ID->NAME', response);
-          return response.userName;
-        })
-        .catch((error) => {
-          console.error(error);
-          return id;
-        });
-    },
-
-    /**
-     * Creat new websocket and stomp connection to listen for events
+     * TODO
      */
     act_createConnectSocketAndStompClient({ state, commit, dispatch }) {
       // commit('CREATE_NEW_SOCKET', websocketURL);
@@ -648,7 +630,7 @@ export default new Vuex.Store({
     },
 
     /**
-     * Close the stomp connection
+     * Disconnect from websocket
      */
     act_disconnectStompClient({ state }) {
       if (state.stompClient) {
@@ -657,15 +639,16 @@ export default new Vuex.Store({
     },
 
     /**
-     * Enable or disable the stomp connection
+     * TODO
+     * Reconnect websocket connection if connection losed
      */
     act_toggleConnectionState({ state, dispatch }) {
       state.clientConnection ? dispatch('act_disconnectStompClient') : dispatch('act_createConnectSocketAndStompClient');
     },
 
     /**
-     * Send the new ws-message to backend  
-     * @param {Object} wsMessages Message for stomp
+     * TODO
+     * @param {*} wsMessages 
      */
     async act_sendStompMessage({ state }, wsMessages) {
       if (wsMessages) {
@@ -676,22 +659,11 @@ export default new Vuex.Store({
         }
       }
     },
-
-
+    
     /**
-     * Load all ws-messages from localstorage
-     */
-    async loadNotificationFromLocalStorage({commit}){
-      let loadNotification = await this.$localStore.get('notify');
-
-      let parsedJsonObject = JSON.parse(loadNotification);
-
-    },
-
-    /**
-     * Remove the message in localstorage from device at position x
-     * @param {Remove} param0 
-     * @param {Int} index Postion of WS-Message 
+     * Remove websocket message from local storage based on index 
+     * @param {*} param0 
+     * @param {Int} index [position of messages] 
      */
     act_removeOneWSMessage({commit}, index){
       commit('REMOVE_WS_MESSAGE', index);
@@ -724,7 +696,7 @@ export default new Vuex.Store({
      * returns the uuid from logged in user
      */
     getUserId: (state) => {
-      return state.currentUser._id;
+      return state.currentUser.id;
     },
 
     /**
@@ -746,8 +718,9 @@ export default new Vuex.Store({
       return state.currentUser.preferred_username;
     },
   },
+
   modules: {},
 
-  //load the lib to store websocket messages in local storage of the 
+  //load the lib to store websocket messages in local storage in browser
   plugins: [localStore]
 });
