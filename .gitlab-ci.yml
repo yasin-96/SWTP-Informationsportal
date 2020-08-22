@@ -12,7 +12,7 @@ build-frontend:
   script:
     - npm run build:dev
   artifacts:
-    paths: 
+    paths: asdadadada
       - frontend/dist/**
     when: always
     expire_in: 2 hours
@@ -21,6 +21,7 @@ build-backend:
   image: maven:latest
   stage: build
   before_script:
+    - cp frontend/dist/** backend/src/main/resources/static/
     - cd backend
   script:
     - mvn clean install -DskipTests
