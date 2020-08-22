@@ -1,6 +1,5 @@
 package de.thm.swtp.information_portal.controller;
 
-import com.mongodb.util.Hash;
 import de.thm.swtp.information_portal.models.*;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
