@@ -22,7 +22,7 @@
                   </h2>
                   <b-button size="sm" disabled variant="white"></b-button>
                   <b-button size="sm" disabled variant="white">
-                    <strong>Question</strong>
+                    <strong>Answer</strong>
                     created by {{ currentAnswer.userId }}
                     <small class="ml-3"></small>
                   </b-button>

@@ -4,10 +4,10 @@
       <!-- Depending on the property, the addition of a new answer or comment is shown  -->
 
       <!-- Card for adding new Answer  -->
-      <b-form-textarea v-if="nIsAnswer" v-model="contentForAnswer" :placeholder="nAnswerText" :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
+      <b-form-textarea class="removeTRCorner" v-if="nIsAnswer" v-model="contentForAnswer" :placeholder="nAnswerText" :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
 
       <!-- Card for adding new Comment  -->
-      <b-form-textarea v-if="nIsComment" v-model="contentForComment" :placeholder="nCommentText" :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
+      <b-form-textarea class="removeTRCorner" v-if="nIsComment" v-model="contentForComment" :placeholder="nCommentText" :rows="nRows" :no-resize="nResize" :size="bTextSize"></b-form-textarea>
 
       <b-button v-if="nIsAnswer" @click="addNewAnswer()" :variant="nSendColor"><fai :icon="nSendIcon" /></b-button>
       <b-button v-if="nIsComment" @click="addNewComment()" :variant="nSendColor"><fai :icon="nSendIcon" /></b-button>
@@ -225,4 +225,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.removeTRCorner {
+  
+}
+
+</style>

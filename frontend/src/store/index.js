@@ -167,6 +167,9 @@ export default new Vuex.Store({
       SET_ONE_ANSWER_TO_QUESTION(state, data) {
         console.debug('SET_ONE_ANSWER_TO_QUESTION');
         if (data) {
+
+          data.timeStamp = convertUnixTimeStampToString(data.timeStamp);
+
           state.oneAnswer = data;
         }
       },
@@ -420,7 +423,7 @@ export default new Vuex.Store({
         });
     },
 
-    /**
+    /**act_updateAnswerFromQuestion
      * Update answer information for one question
      * @param {Object} updatedAnswerToQuestion Answer to update
      */

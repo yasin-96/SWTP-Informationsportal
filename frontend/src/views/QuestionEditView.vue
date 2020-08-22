@@ -147,12 +147,16 @@ export default {
     async sendUpdatedQuestion() {
       console.warn('QID in EDIT', this.question);
       let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
-      this.$router
-        .go({
-          path: `/question/${response.id}`,
-          props: response.id,
-        })
-        .catch((err) => {});
+      
+      this.goToDetailView();
+      
+      
+      // this.$router
+      //   .go({
+      //     path: `/question/${response.id}`,
+      //     props: response.id,
+      //   })
+      //   .catch((err) => {});
     },
 
     /**
