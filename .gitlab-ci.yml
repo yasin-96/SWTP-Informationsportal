@@ -12,7 +12,7 @@ build-frontend:
   script:
     - npm run build:dev
   artifacts:
-    paths: asdadadada
+    paths:
       - frontend/dist/**
     when: always
     expire_in: 2 hours
@@ -66,4 +66,3 @@ deploy-backend:
     - develop
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_BACKEND
-
