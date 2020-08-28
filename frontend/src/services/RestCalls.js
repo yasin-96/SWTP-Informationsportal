@@ -84,7 +84,7 @@ export default {
   async getOneQuestion(qId) {
     console.debug(`RestCall: getOneQuestion(${qId})`);
     return await client
-      .get(`/questionById/${qId}`)
+      .get(`/question/questionById/${qId}`)
       .then((response) => {
         return response.data;
       })
@@ -100,7 +100,7 @@ export default {
   async getAllQuestions() {
     console.debug('RestCall: getAllQuestions()');
     return await client
-      .get('/allQuestions')
+      .get('/question/allQuestions')
       .then((response) => {
         return response.data;
       })
@@ -134,7 +134,7 @@ export default {
   async getAllAnswersToQuestions(questionId) {
     console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
     return await client
-      .get(`/answersByQuestionId/${questionId}`)
+      .get(`/answer/answersByQuestionId/${questionId}`)
       .then((response) => {
         return response.data;
       })
@@ -202,7 +202,7 @@ export default {
   async getAllTags() {
     console.info('RestCall: getAllTags()');
     return await client
-      .get(`/getAllTags`)
+      .get(`/tag/getAllTags`)
       .then((response) => {
         return response.data;
       })
@@ -375,7 +375,7 @@ export default {
    */
   async getUserInfo() {
     return await client
-      .get('/user')
+      .get('/user/info')
       .then((response) => {
         console.log('userinfo:', response.data);
         return response.data;
@@ -391,7 +391,7 @@ export default {
    */
   async getUserNameFromId(id) {
     return await client
-      .post('/userNameFromId', id)
+      .post('/user/userNameFromId', id)
       .then((response) => {
         console.log('Name from id all:', response);
         console.log('Name from id:', response.data);

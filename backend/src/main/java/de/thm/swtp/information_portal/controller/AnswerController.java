@@ -74,7 +74,7 @@ public class AnswerController {
      * @throws InterruptedException
      */
     @Async
-    @GetMapping("/answersByQuestionId/{id}")
+    @GetMapping("/answer/answersByQuestionId/{id}")
     public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable String id) {
 
         //TODO ID prüfen?

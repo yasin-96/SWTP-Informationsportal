@@ -31,7 +31,7 @@ public class UserController {
      * @throws URISyntaxException
      */
     @Async
-    @GetMapping("/user")
+    @GetMapping("/user/info")
     CompletableFuture<ResponseEntity<User>> getLoggedInUser(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
 
         return CompletableFuture.completedFuture(userService.getLoggedInUser(jwt));
@@ -44,7 +44,7 @@ public class UserController {
      * @return
      */
     @Async
-    @PostMapping("/userNameFromId")
+    @PostMapping("/user/userNameFromId")
     CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody String id) {
         return CompletableFuture.completedFuture(userService.getUserById(id));
     }

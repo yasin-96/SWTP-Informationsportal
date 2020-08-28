@@ -45,7 +45,7 @@ public class TagController {
 	 * @throws InterruptedException
 	 */
 	@Async
-	@GetMapping("/getAllTags")
+	@GetMapping("/tag/getAllTags")
 	public CompletableFuture<List<Tag>> getAllTags() {
 		return CompletableFuture.completedFuture(tagService.getAllTags());
 	}

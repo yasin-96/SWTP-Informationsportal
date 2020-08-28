@@ -137,25 +137,10 @@ public class AnswerService {
         var answers = this.findByQuestionId(id);
 
         if (answers.isPresent()) {
-            var allAnswers = answers.get().getListOfAnswers();
-
-            //write userName to structure
-            allAnswers.forEach( aData -> {
-                if (aData.getUserId() != null) {
-                    var user = userRepository.findById(aData.getUserId());
-                    if(user.isPresent()){
-                        var userName = user.get().getPreferred_username();
-                        aData.setUserName(!userName.isEmpty() ? userName : "Unknown");
-                    }
-                } else {
-                    aData.setUserName("Unknown");
-                }
-            });
-
-            //wird sortiert aber dann nicht mehr benutzt
-            //allAnswers.sort(compareByRating);
+            answers.get()
+                .getListOfAnswers()
+                .sort(compareByRating);
         }
-        //TODO warum geben wir eigentlich hier answers zurück
         return answers
                 .map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));

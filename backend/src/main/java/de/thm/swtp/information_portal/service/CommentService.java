@@ -100,25 +100,10 @@ public class CommentService {
     public ResponseEntity<Comments> getCommentsByAnswerId(String answerId) {
         var comments = this.findByAnswerId(answerId);
         if (comments.isPresent()) {
-            var allComments = comments.get().getComments();
-
-            allComments.forEach(comment -> {
-                if (comment.getUserId() != null) {
-                    var user = userRepository.findById(comment.getUserId());
-                    if (user.isPresent()) {
-                        var userName = user.get().getPreferred_username();
-                        comment.setUserName(
-                                !userName.isEmpty() ? userName : "Unknown");
-                    }
-                } else {
-                    comment.setUserName("Unknown");
-                }
-            });
-
-            //TODO sortiert aber nicht benutzt?
-            allComments.sort(compareByRating);
+            comments.get()
+                    .getComments()
+                    .sort(compareByRating);
         }
-        //TODO auch hier wird comments zurück gegeben und nicht das sortiert ?
         return comments
                 .map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));

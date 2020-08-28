@@ -52,7 +52,7 @@ public class QuestionController {
 	 * @throws InterruptedException
 	 */
 	@Async
-	@GetMapping("/questionById/{id}")
+	@GetMapping("/question/questionById/{id}")
 	public CompletableFuture<ResponseEntity<Question>> getQuestion(@PathVariable String id)
 			throws InterruptedException {
 
