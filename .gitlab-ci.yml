@@ -24,7 +24,8 @@ build-backend:
     - build-frontend
   stage: build-backend
   before_script:
-    - cp -R ./frontend/dist/index.html ./backend/src/main/resources/static/
+    - ls
+    #- cp -R ./frontend/dist/index.html ./backend/src/main/resources/static/
     - cd backend
   script:
     - mvn clean install -DskipTests
