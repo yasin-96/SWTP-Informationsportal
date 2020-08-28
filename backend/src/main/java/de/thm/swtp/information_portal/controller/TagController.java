@@ -27,9 +27,6 @@ public class TagController {
 	@Autowired
 	private TagService tagService;
 
-	@Autowired
-	private QuestionService questionService;
-
 	/**
 	 * 
 	 * @param tagsToBeChecked
@@ -61,6 +58,8 @@ public class TagController {
 	@Async
 	@PostMapping("/tag/newTag")
 	public Tag createTag(@RequestBody Tag tag) {
+		//TAG prüfen??
+		//Wenn das tag schon vorhanden ist brauchen wir es doch nicht mehr speichern oder?
 		return tagRepository.save(tag);
 	}
 
@@ -71,28 +70,8 @@ public class TagController {
 	@Async
 	@GetMapping("/tagsWithMostQuestions")
 	public CompletableFuture<ResponseEntity<List<Tag>>> getTagsWithMostQuestions() {
-		List<Question> allQuestions = questionService.getAllQuestions();
-		List<Tag> allTags = tagService.getAllTags();
-		Map<Tag, Long> map = allQuestions.stream().flatMap(q -> q.getTags().stream()).filter(allTags::contains)
-				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-		var mostActiveTags = getTagsWithMostQuestions(map);
-		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveTags, HttpStatus.OK));
+		return CompletableFuture.completedFuture(tagService.getTagsWithMostQuestions());
 	}
 
-	/**
-	 *
-	 * @param myMap
-	 * @return
-	 */
-	public List<Tag> getTagsWithMostQuestions(Map<Tag, Long> myMap) {
-		List<Tag> tags = new ArrayList<>();
-		Map<Tag, Long> sorted = myMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-		for (var entry : sorted.entrySet()) {
-			tags.add(entry.getKey());
-		}
-
-		return tags.stream().limit(12).collect(Collectors.toList());
-	}
 }
