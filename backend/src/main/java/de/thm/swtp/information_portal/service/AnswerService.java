@@ -43,7 +43,6 @@ public class AnswerService {
      * @throws URISyntaxException
      */
     public ResponseEntity<Answers> add(Answers answerList, String jwtSub) throws URISyntaxException {
-        ResponseEntity<Answers> response ;
         var answers = this.findByQuestionId(answerList.getId());
 
         if (answers.isEmpty()) {
