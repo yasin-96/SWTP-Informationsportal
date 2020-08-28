@@ -12,7 +12,7 @@ public class IndexController {
     @GetMapping
     public ResponseEntity<Void> index() {
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, "/info-portal/index.html")
+                .header(HttpHeaders.LOCATION, "/index.html")
                 .build();
     }
 
