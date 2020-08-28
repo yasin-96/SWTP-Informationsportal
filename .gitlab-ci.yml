@@ -20,6 +20,8 @@ build-frontend:
 build-backend: 
   image: maven:latest
   stage: build
+    dependencies:
+      - build-frontend
   before_script:
     #- cp frontend/dist/index.html backend/src/main/resources/static/
     - ls 
