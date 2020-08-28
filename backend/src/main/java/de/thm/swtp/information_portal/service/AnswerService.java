@@ -153,7 +153,7 @@ public class AnswerService {
             });
 
             //wird sortiert aber dann nicht mehr benutzt
-            allAnswers.sort(compareByRating);
+            //allAnswers.sort(compareByRating);
         }
         //TODO warum geben wir eigentlich hier answers zurück
         return answers
