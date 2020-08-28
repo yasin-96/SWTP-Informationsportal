@@ -137,6 +137,8 @@ export default {
           id: this.aId,
           content: this.currentAnswer.content,
           rating: 0,
+          userId: this.getUserId,
+          userName: this.getUsersPreferedName,
           timeStamp: Date.parse(new Date()),
         });
         let response = await this.$store.dispatch('act_updateAnswerFromQuestion', this.updatedAnswer);
@@ -147,6 +149,7 @@ export default {
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getOneAnswerToQuestion', 'act_updateAnswerFromQuestion']),
     ...mapState(['oneAnswer', 'oneQuestion']),
+    ...mapGetters(['getUserId', 'getUsersPreferedName']),
   },
   watch: {
     oneAnswer() {
