@@ -24,9 +24,8 @@ build-backend:
     - build-frontend
   stage: build-backend
   before_script:
-    - mkdir -p backend/src/main/resources/static/
-    - mv frontend/dist/index.html backend/src/main/resources/static/
-    - ls backend/src/main/resources/static/
+    - mkdir -p backend/src/main/resources/templates/
+    - mv frontend/dist/index.html backend/src/main/resources/templates/
     - cd backend
   script:
     - mvn clean install -DskipTests
