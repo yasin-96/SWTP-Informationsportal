@@ -51,7 +51,8 @@ public class AnswerService {
                         new Answer(
                             answerList.getListOfAnswers().get(0).getContent(),
                             jwtSub,
-                            0
+                            0,
+                                answerList.getListOfAnswers().get(0).getUserName()
                         )
                     ),
                     answerList.getId());
@@ -65,7 +66,8 @@ public class AnswerService {
             var newAnswer = new Answer(
                     answerList.getListOfAnswers().get(0).getContent(),
                     jwtSub,
-                    0
+                    0,
+                    answerList.getListOfAnswers().get(0).getUserName()
             );
             answersPresent.add(newAnswer);
 
@@ -139,21 +141,9 @@ public class AnswerService {
         if (answers.isPresent()) {
             var allAnswers = answers.get().getListOfAnswers();
 
-            //write userName to structure
-            allAnswers.forEach( aData -> {
-                if (aData.getUserId() != null) {
-                    var user = userRepository.findById(aData.getUserId());
-                    if(user.isPresent()){
-                        var userName = user.get().getPreferred_username();
-                        aData.setUserName(!userName.isEmpty() ? userName : "Unknown");
-                    }
-                } else {
-                    aData.setUserName("Unknown");
-                }
-            });
 
             //wird sortiert aber dann nicht mehr benutzt
-            //allAnswers.sort(compareByRating);
+            allAnswers.sort(compareByRating);
         }
         //TODO warum geben wir eigentlich hier answers zurück
         return answers

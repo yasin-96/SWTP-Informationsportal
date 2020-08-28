@@ -67,7 +67,8 @@ public class CommentService {
                             new Comment(
                                     commentList.getComments().get(0).getContent(),
                                     jwtSub,
-                                    commentList.getComments().get(0).getRating()
+                                    commentList.getComments().get(0).getRating(),
+                                    commentList.getComments().get(0).getUserName()
                             )
                     ),
                     commentList.getId()
@@ -80,7 +81,8 @@ public class CommentService {
             var newComment = new Comment(
                     existingComment.getContent(),
                     jwtSub,
-                    existingComment.getRating()
+                    existingComment.getRating(),
+                    commentList.getComments().get(0).getUserName()
             );
             //TODO add und set ? brauchen wir hier beides
             commentsPresent.add(newComment);

@@ -32,11 +32,12 @@ public class Comment {
     // Creation Date as Unix-Timestamp
     private long timestamp;
 
-    public Comment(String content, String userId, int rating) {
+    public Comment(String content, String userId, int rating,String userName) {
         this.id = UUID.randomUUID().toString();
         this.content = content;
         this.userId = userId;
         this.rating = rating;
         this.timestamp = Instant.now().getEpochSecond() * 1000;
+        this.userName = userName;
     }
 }
