@@ -8,7 +8,7 @@
               <fai icon="search" />
             </b-button>
           </b-input-group-append>
-          <b-form-input v-model="searchInput" placeholder="Search by tags"></b-form-input>
+          <b-form-input @click="searchData()" v-model="searchInput" placeholder="Search by tags"></b-form-input>
         </b-input-group>
       </b-col>
     </b-row>
