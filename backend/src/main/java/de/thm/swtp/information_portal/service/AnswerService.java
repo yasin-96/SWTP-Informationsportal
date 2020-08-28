@@ -51,7 +51,8 @@ public class AnswerService {
                         new Answer(
                             answerList.getListOfAnswers().get(0).getContent(),
                             jwtSub,
-                            0
+                            0,
+                                answerList.getListOfAnswers().get(0).getUserName()
                         )
                     ),
                     answerList.getId());
@@ -65,7 +66,8 @@ public class AnswerService {
             var newAnswer = new Answer(
                     answerList.getListOfAnswers().get(0).getContent(),
                     jwtSub,
-                    0
+                    0,
+                    answerList.getListOfAnswers().get(0).getUserName()
             );
             answersPresent.add(newAnswer);
 

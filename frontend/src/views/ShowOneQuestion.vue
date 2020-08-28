@@ -25,7 +25,7 @@
 
 
         <!-- Display all available Answers  -->
-        <b-container v-if="isDataLoaded.answers &&!!allAnswers.listOfAnswers">
+        <b-container v-if="!!allAnswers.listOfAnswers">
           <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index" class="pb-3">
             <AnswerCard
               :nId="oneQuestion.id"
