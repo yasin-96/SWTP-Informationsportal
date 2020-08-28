@@ -1,11 +1,12 @@
 stages:
-  - build
+  - build-frontend
+  - build-backend
   - deliver
   - deploy
   
 build-frontend:
   image: node:12
-  stage: build
+  stage: build-frontend
   before_script:
     - cd frontend
     - npm i
@@ -19,9 +20,13 @@ build-frontend:
 
 build-backend: 
   image: maven:latest
-  stage: build
+  dependencies:
+    - build-frontend
+  stage: build-backend
   before_script:
-    - cp frontend/dist/index.html backend/src/main/resources/static/
+    - mkdir -p backend/src/main/resources/static/
+    - mv frontend/dist/index.html backend/src/main/resources/static/
+    - ls backend/src/main/resources/static/
     - cd backend
   script:
     - mvn clean install -DskipTests
