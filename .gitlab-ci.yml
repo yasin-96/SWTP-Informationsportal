@@ -22,9 +22,7 @@ build-backend:
   stage: build
   before_script:
     #- cp frontend/dist/index.html backend/src/main/resources/static/
-    - ls build/frontend
-    - ls build
-    - ls frontend
+    - ls 
     - cd backend
   script:
     - mvn clean install -DskipTests
