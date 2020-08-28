@@ -1,6 +1,5 @@
 package de.thm.swtp.information_portal.models;
 
-import com.mongodb.util.Hash;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
