@@ -20,10 +20,9 @@ build-frontend:
 build-backend: 
   image: maven:latest
   stage: build
-  trigger:
-    include:
-      - artifact: artifacts.zip
-        job: build-frontend
+  include:
+    - artifact: artifacts.zip
+      job: build-frontend
   before_script:
     #- cp frontend/dist/index.html backend/src/main/resources/static/
     - ls 
