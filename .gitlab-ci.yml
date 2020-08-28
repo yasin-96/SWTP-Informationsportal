@@ -1,11 +1,12 @@
 stages:
-  - build
+  - build-frontend
+  - build-backend
   - deliver
   - deploy
   
 build-frontend:
   image: node:12
-  stage: build
+  stage: build-frontend
   before_script:
     - cd frontend
     - npm i
@@ -21,7 +22,7 @@ build-backend:
   image: maven:latest
   dependencies:
     - build-frontend
-  stage: build
+  stage: build-backend
   before_script:
     - cp -R ./frontend/dist/index.html ./backend/src/main/resources/static/
     - cd backend
