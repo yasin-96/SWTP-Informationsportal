@@ -72,6 +72,8 @@ export default {
         header: '',
         content: '',
         tags: [],
+        userId: this.getUserId,
+        userName: this.getUsersPreferedName
       },
 
       //config for markdown editor
@@ -118,7 +120,7 @@ export default {
   },
   computed: {
     ...mapActions(['act_getAllTags', 'act_creatNewQuestion']),
-    ...mapGetters(['getAllTagName']),
+    ...mapGetters(['getAllTagName', 'getUserId', 'getUsersPreferedName']),
     ...mapState(['allTags']),
 
     /**
