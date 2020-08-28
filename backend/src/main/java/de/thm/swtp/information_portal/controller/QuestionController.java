@@ -59,6 +59,18 @@ public class QuestionController {
 		return CompletableFuture.completedFuture(questionService.getQuestion(id));
 	}
 
+	/**
+	 *
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
+	@GetMapping("/question/allQuestions")
+	public CompletableFuture<List<Question>> getAllQuestions() throws InterruptedException {
+		var response = questionService.getAllQuestions();
+
+		return CompletableFuture.completedFuture(response);
+	}
 
 	/**
 	 * 
