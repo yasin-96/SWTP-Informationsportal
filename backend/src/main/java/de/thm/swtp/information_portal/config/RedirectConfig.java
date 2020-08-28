@@ -10,8 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class RedirectConfig implements WebMvcConfigurer {
 
     @Override
-    public void addViewControllers(ViewControllerRegistry reg){
-        // reg.addViewController("/info-portal/**").setViewName("index");
-        reg.addRedirectViewController("/info-portal/ui/**", "/info-portal/ui");
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/info-portal/**").setViewName("index");
     }
+
 }
