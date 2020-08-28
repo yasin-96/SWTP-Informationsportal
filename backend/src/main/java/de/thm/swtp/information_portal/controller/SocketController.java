@@ -42,8 +42,8 @@ public class SocketController {
 
     /**
      *
-     * @param wsMessage
-     * @return
+     * @param wsMessage             the message for the consumer
+     * @return                      returns the SocketResponse object for the wanted type
      */
     @MessageMapping("/hello")
     @SendTo("/notify")
@@ -85,9 +85,7 @@ public class SocketController {
                 List<Comment> allComments = comments.get().getComments();
                 for(Comment comment: allComments){
                     Optional<User> userToBeAdded = userRepository.findById(comment.getUserId());
-                    if(userToBeAdded != null){
-                        users.add(userToBeAdded.get());
-                    }
+                    userToBeAdded.ifPresent(users::add);
                 }
 
                 socketResponse = new SocketResponse(wsData.getQuestionId(),wsData.getAnswerId(),users,headerOfQuestion,

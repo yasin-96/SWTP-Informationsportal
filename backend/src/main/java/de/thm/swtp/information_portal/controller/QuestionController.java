@@ -45,50 +45,12 @@ public class QuestionController {
 	@Autowired
 	private UserService userService;
 
-	/**
-	 * 
-	 * @return
-	 * @throws InterruptedException
-	 */
-	@Async
-	@GetMapping("/allQuestions")
-	public CompletableFuture<List<Question>> getAllQuestions() throws InterruptedException {
-		var response = questionService.getAllQuestions();
 
-		setParsedUserNameById(response);
-
-		return CompletableFuture.completedFuture(response);
-	}
-
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 * @throws InterruptedException
-	 */
-	@Async
-	@GetMapping("/questionById/{id}")
-	public CompletableFuture<ResponseEntity<Question>> getQuestion(@PathVariable String id)
-			throws InterruptedException {
-		Optional<Question> question = questionService.getQuestion(id);
-
-		if(question.get().getUserId() != null) {
-			var userName = userService.getUser(question.get().getUserId()).get().getPreferred_username();
-			question.get().setUserName( !userName.isEmpty() || userName != null ? userName : "Unknown");
-		} else {
-			question.get().setUserName("Unknown");
-		}
-
-
-		ResponseEntity<Question> quest = question.map(response -> ResponseEntity.ok().body(response))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-		return CompletableFuture.completedFuture(quest);
-	}
 
 	/**
 	 * 
 	 * @param tag
-	 * @return
+	 * @return CompletableFuture<ResponseEntity<List<Question>>>
 	 * @throws InterruptedException
 	 */
 	@Async
@@ -96,16 +58,14 @@ public class QuestionController {
 	public CompletableFuture<ResponseEntity<List<Question>>> findByTag(@PathVariable String tag)
 			throws InterruptedException {
 		List<Question> questions = questionService.findByTag(tag);
-		
-		setParsedUserNameById(questions);
 
-		return CompletableFuture.completedFuture(new ResponseEntity<List<Question>>(questions, HttpStatus.OK));
+		return CompletableFuture.completedFuture(new ResponseEntity<>(questions, HttpStatus.OK));
 	}
 
 	/**
 	 * 
 	 * @param questionBody
-	 * @return
+	 * @return CompletableFuture<ResponseEntity<Question>>
 	 * @throws URISyntaxException
 	 * @throws InterruptedException
 	 */
@@ -113,37 +73,35 @@ public class QuestionController {
 	@PostMapping("/newQuestion")
 	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Validated @RequestBody Question questionBody,
 			@AuthenticationPrincipal Jwt jwt)
-			throws URISyntaxException, InterruptedException {
+			throws URISyntaxException {
 
 		Question quest = new Question(questionBody.getHeader(), questionBody.getContent(), questionBody.getTags(),
-				jwt.getClaimAsString("sub"));
+				jwt.getClaimAsString("sub"),questionBody.getUserName());
 
-		Question question = questionService.postQuestion(quest);
+
 		return CompletableFuture
-				.completedFuture(ResponseEntity.created(new URI("/api/question" + question.getId())).body(question));
+				.completedFuture(questionService.postQuestion(quest));
 	}
 
 	/**
 	 *
-	 * @param questionBody
-	 * @return
+	 * @param questionBody  the question which will be modified
+	 * @return returns the modified question
 	 * @throws URISyntaxException
 	 */
 	@Async
 	@PutMapping("/question")
 	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Validated @RequestBody Question questionBody)
 			throws URISyntaxException {
-		List<Tag> tagList = tagService.checkIfTagsExist(questionBody.getTags());
-		questionBody.setTags(tagList);
-		Question question = questionService.editQuestion(questionBody);
+
 		return CompletableFuture
-				.completedFuture(ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question));
+				.completedFuture(questionService.editQuestion(questionBody));
 	}
 
 	/**
 	 *
-	 * @param searchQuery
-	 * @return
+	 * @param searchQuery       Our entered search query from our frontend
+	 * @return 					returns all questions for the search
 	 * @throws URISyntaxException
 	 * @throws InterruptedException
 	 */
@@ -151,8 +109,6 @@ public class QuestionController {
 	@GetMapping("/question/query")
 	public CompletableFuture<ResponseEntity<List<Question>>> getDataByQuery(@Validated @RequestParam String searchQuery)
 			throws URISyntaxException, InterruptedException {
-
-
 
 		List<String> listQuery = Arrays.stream(searchQuery.toUpperCase().split(" ")).filter(item -> !item.isEmpty())
 				.collect(Collectors.toList());
@@ -171,16 +127,14 @@ public class QuestionController {
 			}
 		}
 
-		var filteredQuestionsAsList = new ArrayList<Question>(filteredQuestions);
+		var filteredQuestionsAsList = new ArrayList<>(filteredQuestions);
 
-		setParsedUserNameById(filteredQuestionsAsList);
-		
 		return CompletableFuture.completedFuture(new ResponseEntity<>(filteredQuestionsAsList, HttpStatus.OK));
 	}
 
 	/**
 	 *
-	 * @return
+	 * @return returns the most active questions as a list
 	 */
 	@Async
 	@GetMapping("/question/getMostActiveQuestions")
@@ -193,14 +147,13 @@ public class QuestionController {
 			answers.ifPresent(value -> myMap.put(item, value.getListOfAnswers().size()));
 		}
 		mostActiveQuestions = getListOfMostActiveQuestions(myMap);
-		setParsedUserNameById(mostActiveQuestions);
 		return CompletableFuture.completedFuture(new ResponseEntity<>(mostActiveQuestions, HttpStatus.OK));
 	}
 
 	/**
 	 *
-	 * @param myMap
-	 * @return
+	 * @param  myMap   		map as parameter for our mostActiveQuestions() method
+	 * @return Returns 		the sorted list for our mostActiveQuestions() method
 	 */
 	public List<Question> getListOfMostActiveQuestions(Map<Question, Integer> myMap) {
 		List<Question> questions = new ArrayList<>();
@@ -211,37 +164,7 @@ public class QuestionController {
 		for (var entry : sorted.entrySet()) {
 			questions.add(entry.getKey());
 		}
-		setParsedUserNameById(questions);
 
 		return questions.stream().limit(12).collect(Collectors.toList());
-	}
-
-	/**
-	 *
-	 * @param question
-	 */
-	public void setParsedUserNameById(Optional<Question> question){
-		if(question.get().getUserId() != null) {
-			var userName = userService.getUser(question.get().getUserId()).get().getPreferred_username();
-			question.get().setUserName( !userName.isEmpty() || userName != null ? userName : "Unknown");
-		} else {
-			question.get().setUserName("Unknown");
-		}
-	}
-
-	/**
-	 *
-	 * @param listOfQuestions
-	 */
-	public void setParsedUserNameById(List<Question> listOfQuestions){
-		
-		listOfQuestions.forEach(question -> {
-			if(question.getUserId() != null) {
-				var userName = userService.getUser(question.getUserId()).get().getPreferred_username();
-				question.setUserName( !userName.isEmpty() || userName != null ? userName : "Unknown");
-			} else {
-				question.setUserName("Unknown");
-			}
-		});
 	}
 }

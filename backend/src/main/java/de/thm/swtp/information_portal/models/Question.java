@@ -42,12 +42,13 @@ public class Question {
 	// save currentdate in unix timestamp
 	private Long timeStamp;
 
-	public Question(String header, String content, List<Tag> tags, String userId) {
+	public Question(String header, String content, List<Tag> tags, String userId,String userName) {
 		this.id = UUID.randomUUID().toString();
 		this.header = header;
 		this.content = content;
 		this.tags = tags;
 		this.timeStamp = Instant.now().getEpochSecond() * 1000;
 		this.userId = userId;
+		this.userName = userName;
 	}
 }
