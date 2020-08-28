@@ -108,6 +108,8 @@ export default {
         id: '',
         header: '',
         content: '',
+        userId: this.getUserId,
+        userName: this.getUsersPreferedName,
         tags: [],
       },
 
@@ -171,7 +173,7 @@ export default {
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllTags', 'act_updateCurrentQuestion']),
     ...mapState(['oneQuestion', 'allTags']),
-    ...mapGetters(['getAllTagName']),
+    ...mapGetters(['getAllTagName' , 'getUserId', 'getUsersPreferedName']),
     
     /**
      * The tag selection is filtered by the already selected and the still available ones. 
