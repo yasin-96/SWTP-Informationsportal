@@ -32,15 +32,10 @@ public class UserController {
      */
     @Async
     @GetMapping("/user")
-    CompletableFuture<ResponseEntity<User>> getUser(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
-        Optional<User> user = userService.getUser(jwt.getClaimAsString("sub"));
-        if (user.isPresent()) {
-            ResponseEntity<User> reqUser = user.map(response -> ResponseEntity.ok().body(response))
-                    .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-            return CompletableFuture.completedFuture(reqUser);
-        } else {
-            return saveUserIfNotExists(jwt);
-        }
+    CompletableFuture<ResponseEntity<User>> getLoggedInUser(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
+
+        return CompletableFuture.completedFuture(userService.getLoggedInUser(jwt));
+
     }
 
     /**
@@ -51,33 +46,10 @@ public class UserController {
     @Async
     @PostMapping("/userNameFromId")
     CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody String id) {
-        Optional<User> user = userService.getUser(id);
-        if (user.isPresent()) {
-            ResponseUser responseUser = new ResponseUser(user.get().getPreferred_username());
-            return CompletableFuture.completedFuture(new ResponseEntity<ResponseUser>(responseUser, HttpStatus.OK));
-        }
-        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.NO_CONTENT).body(null));
+        return CompletableFuture.completedFuture(userService.getUserById(id));
     }
 
 
-    /**
-     *
-     * @param jwt
-     * @return
-     * @throws URISyntaxException
-     */
-    @Async
-    CompletableFuture<ResponseEntity<User>> saveUserIfNotExists(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
-        if(jwt != null){
-            String userId = jwt.getClaimAsString("sub");
 
-            User newUser = new User(userId, jwt.getClaimAsString("name"), jwt.getClaimAsString("email"), jwt.getClaimAsString("preferred_username"));
-            userService.addUser(newUser);
-            return CompletableFuture
-                    .completedFuture(ResponseEntity.created(new URI("/api/user" + newUser.getId())).body(newUser));
-        }
-        return CompletableFuture
-                .completedFuture(ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(null));
-    }
 
 }

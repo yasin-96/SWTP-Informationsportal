@@ -1,10 +1,16 @@
 package de.thm.swtp.information_portal.service;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import de.thm.swtp.information_portal.models.Question;
@@ -24,12 +30,18 @@ public class QuestionService {
 	@Autowired
 	private TagRepository tagRepository;
 
+	@Autowired
+	UserService userService;
+
 	/**
 	 *
 	 * @param tags
 	 * @return
 	 */
 	public List<Question> findByTag(String tags) {
+
+		var filteredQuestions = new HashSet<Question>();
+
 
 		Tag existingTag = tagRepository.findByName(tags);
 		List<Question> allQuestions = questionRepository.findAll();
@@ -57,8 +69,11 @@ public class QuestionService {
 	 * @param question
 	 * @return
 	 */
-	public Question editQuestion(Question question){
-		return questionRepository.save(question);
+	public ResponseEntity<Question> editQuestion(Question question) throws URISyntaxException {
+		List<Tag> tagList = tagService.checkIfTagsExist(question.getTags());
+		question.setTags(tagList);
+		questionRepository.save(question);
+		return ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question);
 	}
 
 	/**
@@ -66,10 +81,13 @@ public class QuestionService {
 	 * @param question
 	 * @return
 	 */
-	public Question postQuestion(Question question) {
+	public ResponseEntity<Question> postQuestion(Question question) throws URISyntaxException {
 		List<Tag> newQuestionTags = tagService.checkIfTagsExist(question.getTags());
-		Question newQuestion = new Question(question.getHeader(), question.getContent(), newQuestionTags, question.getUserId());
-		return questionRepository.save(newQuestion);
+		Question newQuestion = new Question(question.getHeader(), question.getContent(), newQuestionTags,
+				question.getUserId(),question.getUserName());
+		questionRepository.save(newQuestion);
+		return ResponseEntity.created(new URI("/api/question" +
+				question.getId())).body(question);
 	}
 
 	/**
@@ -77,7 +95,23 @@ public class QuestionService {
 	 * @param id
 	 * @return
 	 */
+
+	/*
 	public Optional<Question> getQuestion(String id) {
+
+		var question = questionRepository.findById(id);
+
+		if(question.get().getUserId() != null) {
+			var userName = userService.getUser(question.get().getUserId()).get().getPreferred_username();
+			question.get().setUserName( !userName.isEmpty() || userName != null ? userName : "Unknown");
+		} else {
+			question.get().setUserName("Unknown");
+		}
+
+
+		ResponseEntity<Question> quest = question.map(response -> ResponseEntity.ok().body(response))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		return CompletableFuture.completedFuture(quest);
 		return questionRepository.findById(id);
-	}
+	}*/
 }
