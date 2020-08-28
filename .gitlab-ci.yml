@@ -22,7 +22,7 @@ build-backend:
   stage: build
   include:
     - artifact: artifacts.zip
-      job: build-frontend
+    - job: build-frontend
   before_script:
     #- cp frontend/dist/index.html backend/src/main/resources/static/
     - ls 
