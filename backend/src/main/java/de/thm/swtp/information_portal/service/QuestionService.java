@@ -5,9 +5,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
+import de.thm.swtp.information_portal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class QuestionService {
 	private TagRepository tagRepository;
 
 	@Autowired
-	UserService userService;
+	UserRepository userRepository;
 
 	/**
 	 *
@@ -96,22 +95,13 @@ public class QuestionService {
 	 * @return
 	 */
 
-	/*
-	public Optional<Question> getQuestion(String id) {
+
+	public ResponseEntity<Question> getQuestion(String id) {
 
 		var question = questionRepository.findById(id);
 
-		if(question.get().getUserId() != null) {
-			var userName = userService.getUser(question.get().getUserId()).get().getPreferred_username();
-			question.get().setUserName( !userName.isEmpty() || userName != null ? userName : "Unknown");
-		} else {
-			question.get().setUserName("Unknown");
-		}
-
-
-		ResponseEntity<Question> quest = question.map(response -> ResponseEntity.ok().body(response))
+		return question
+				.map(response -> ResponseEntity.ok().body(response))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-		return CompletableFuture.completedFuture(quest);
-		return questionRepository.findById(id);
-	}*/
+	}
 }

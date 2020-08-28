@@ -45,6 +45,19 @@ public class QuestionController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 *
+	 * @param id
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@Async
+	@GetMapping("/questionById/{id}")
+	public CompletableFuture<ResponseEntity<Question>> getQuestion(@PathVariable String id)
+			throws InterruptedException {
+
+		return CompletableFuture.completedFuture(questionService.getQuestion(id));
+	}
 
 
 	/**
@@ -70,7 +83,7 @@ public class QuestionController {
 	 * @throws InterruptedException
 	 */
 	@Async
-	@PostMapping("/newQuestion")
+	@PostMapping("/question/newQuestion")
 	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Validated @RequestBody Question questionBody,
 			@AuthenticationPrincipal Jwt jwt)
 			throws URISyntaxException {
