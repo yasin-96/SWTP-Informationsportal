@@ -20,15 +20,14 @@ build-frontend:
 build-backend: 
   image: maven:latest
   stage: build
-  include:
-    - artifact: artifacts.zip
-    - job: build-frontend
   before_script:
     #- cp frontend/dist/index.html backend/src/main/resources/static/
     - ls 
     - cd backend
   script:
     - mvn clean install -DskipTests
+  dependencies:
+    - build-frontend
   artifacts:
     paths: 
       - backend/target/**
