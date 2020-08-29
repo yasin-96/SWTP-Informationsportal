@@ -52,7 +52,7 @@ public class SocketService {
                 var answersOfQuestion = answers.get().getListOfAnswers();
                 for (Answer answer : answersOfQuestion) {
                     userRepository
-                            .findById(answer.getUserId())
+                            .findById(answer.getUserId().toString())
                             .ifPresent(users::add);
                 }
 
@@ -77,8 +77,13 @@ public class SocketService {
                             .ifPresent(users::add);
                 }
 
-                socketResponse = new SocketResponse(wsData.getQuestionId(),wsData.getAnswerId(),users,headerOfQuestion,
-                        wsData.getIsAnswer(),wsData.getIsComment(),wsData.getMinimalUser());
+                socketResponse = new SocketResponse(
+                        wsData.getQuestionId(),
+                        wsData.getAnswerId(),
+                        users,headerOfQuestion,
+                        wsData.getIsAnswer(),
+                        wsData.getIsComment(),
+                        wsData.getMinimalUser());
 
             }
 
