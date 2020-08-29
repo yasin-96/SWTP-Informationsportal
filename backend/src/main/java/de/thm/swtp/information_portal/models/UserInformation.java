@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.UUID;
+
 @Data
 @Getter
 @Setter
@@ -15,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "userInfo")
 public class UserInformation {
 
-    private String id;
+    private UUID id;
     private int numberOfQuestions;
     private int numberOfAnswers;
 
@@ -24,7 +26,7 @@ public class UserInformation {
      * @param numberOfQuestions
      * @param numberOfAnswers
      */
-    public UserInformation(String id, int numberOfQuestions, int numberOfAnswers) {
+    public UserInformation(UUID id, int numberOfQuestions, int numberOfAnswers) {
         this.id = id;
         this.numberOfQuestions = numberOfQuestions;
         this.numberOfAnswers = numberOfAnswers;
