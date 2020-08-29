@@ -20,11 +20,6 @@ public class AnswerService {
     @Autowired
     private AnswerRepository answerRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-
-
     /**
      * @param answerList
      * @return
@@ -39,7 +34,7 @@ public class AnswerService {
      * @return
      * @throws URISyntaxException
      */
-    public ResponseEntity<Answers> add(Answers answerList, UUID userId, String userPreferedName) throws URISyntaxException {
+    public ResponseEntity<Answers> add(Answers answerList, String userId, String userPreferedName) throws URISyntaxException {
         var answers = this.findByQuestionId(answerList.getId());
 
         if (answers.isEmpty()) {
@@ -80,7 +75,7 @@ public class AnswerService {
      * @return
      */
     public Optional<Answers> findByQuestionId(String id) {
-        return answerRepository.findById(id);
+        return answerRepository.findById(id.toString());
     }
 
     public ResponseEntity<Answer> getAnswerToEdit(String[] ids){
@@ -122,8 +117,6 @@ public class AnswerService {
         return ResponseEntity
                 .created(new URI("/api/answer/" + answersToBeModified.get().getId())).body(answersToBeModified.get());
     }
-
-
 
 
     /**

@@ -90,7 +90,6 @@ export default {
      */
     qId: {
       type: String,
-      required: true
     },
 
     /**

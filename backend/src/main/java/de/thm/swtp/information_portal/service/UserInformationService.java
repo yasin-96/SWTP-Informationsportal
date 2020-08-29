@@ -35,12 +35,11 @@ public class UserInformationService {
      * @param userId
      * @return
      */
-    public ResponseEntity<UserInformation> getUserInfo(UUID userId) throws URISyntaxException {
+    public ResponseEntity<UserInformation> getUserInfo(String userId) throws URISyntaxException {
 
         var userInfo = userInformationRepository.findById(userId);
 
         if(userInfo.isPresent()){
-            System.out.println("ist da");
             return  userInfo
                     .map(response -> ResponseEntity.ok().body(response))
                     .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -49,18 +48,25 @@ public class UserInformationService {
             var questionsOfUser = new ArrayList<>();
 
             if(!allQuestions.isEmpty()){
-                for(Question question: allQuestions){
+
+                var numberOfQuestions = Math.toIntExact(allQuestions.stream()
+                        .filter(quest -> quest.getUserId().equals(userId))
+                        .count()
+                );
+
+                /*for(Question question: allQuestions){
                     if(question.getUserId().equals(userId)){
                         questionsOfUser.add(question);
                     }
-                }
+                }*/
 
                 int numberOfAnswers = this.getNumberOfAnswers(userId);
 
                 var newUserInfo = new UserInformation(
                         userId,
-                        questionsOfUser.size(),
-                        numberOfAnswers);
+                        numberOfQuestions,
+                        numberOfAnswers
+                );
 
                 this.addUserInfo(newUserInfo);
 
@@ -88,24 +94,10 @@ public class UserInformationService {
      * @param id
      * @return
      */
-    int getNumberOfAnswers(UUID id) {
+    int getNumberOfAnswers(String id) {
         var allAnswers = answerRepository.findAll();
 
         if(!allAnswers.isEmpty()){
-//            var allSingleAnswers = new ArrayList<>();
-//            var userAnswers = new ArrayList<>();
-//
-//            for(Answers answers: allAnswers){
-//                List<Answer> answersOfOneAnswersObject = answers.getListOfAnswers();
-//                allSingleAnswers.addAll(answersOfOneAnswersObject);
-//            }
-//
-//            for(Answer answer: allSingleAnswers){
-//                if(answer.getUserId().equals(id)) {
-//                    userAnswers.add(answer);
-//                }
-//            }
-
             var numberOfAllAnswers = Math.toIntExact(
                     allAnswers.stream()
                     .map(listOfAllAnswers -> listOfAllAnswers.getListOfAnswers())
@@ -114,11 +106,8 @@ public class UserInformationService {
                             .stream()
                             .count()
             );
-
-
             return numberOfAllAnswers;
         }
-
         return 0;
     }
 }

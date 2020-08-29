@@ -20,7 +20,7 @@
                   <b-button size="sm" disabled variant="white"></b-button>
                   <b-button size="sm" disabled variant="white">
                     <strong>Frage</strong>
-                    vom {{ oneQuestion.userId }}
+                    vom {{ oneQuestion.userName }}
                     <small class="ml-3"></small>
                   </b-button>
                 </b-button-group>
@@ -140,7 +140,7 @@ export default {
      * Leave current page and go to the view of a question
      */
     goToDetailView() {
-      this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
+      this.$router.push(`/question/${this.$props.id}`).catch((err) => {});
     },
 
     /**
@@ -148,7 +148,7 @@ export default {
      */
     async sendUpdatedQuestion() {
       console.warn('QID in EDIT', this.question);
-      let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
+      await this.$store.dispatch('act_updateCurrentQuestion', this.question);
       
       this.goToDetailView();
       

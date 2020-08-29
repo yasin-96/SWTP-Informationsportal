@@ -17,7 +17,7 @@ import java.util.UUID;
 @Document(collection = "userInfo")
 public class UserInformation {
 
-    private UUID id;
+    private String id;
     private int numberOfQuestions;
     private int numberOfAnswers;
 
@@ -26,7 +26,7 @@ public class UserInformation {
      * @param numberOfQuestions
      * @param numberOfAnswers
      */
-    public UserInformation(UUID id, int numberOfQuestions, int numberOfAnswers) {
+    public UserInformation(String id, int numberOfQuestions, int numberOfAnswers) {
         this.id = id;
         this.numberOfQuestions = numberOfQuestions;
         this.numberOfAnswers = numberOfAnswers;

@@ -33,8 +33,7 @@ public class Question {
 
 	private String userId;
 
-
-	private String userName = "";
+	private String userName;
 
 	// keywords for this question
 	private List<Tag> tags;
@@ -42,7 +41,7 @@ public class Question {
 	// save currentdate in unix timestamp
 	private Long timeStamp;
 
-	public Question(String header, String content, List<Tag> tags, String userId,String userName) {
+	public Question(String header, String content, List<Tag> tags, String userId, String userName) {
 		this.id = UUID.randomUUID().toString();
 		this.header = header;
 		this.content = content;

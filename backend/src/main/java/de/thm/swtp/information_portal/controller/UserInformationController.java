@@ -38,8 +38,9 @@ public class UserInformationController {
     @GetMapping("/info/{userId}")
     public CompletableFuture<ResponseEntity<UserInformation>> getUserInfo(@PathVariable UUID userId) throws URISyntaxException {
 
-        //TODO: userID prüfen
-        return CompletableFuture.completedFuture(userInformationService.getUserInfo(userId));
+        return CompletableFuture.completedFuture(
+                userInformationService.getUserInfo(userId.toString())
+        );
     }
 
 

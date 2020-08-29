@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Data
@@ -41,7 +42,7 @@ public class SocketResponse {
         this.minimalUser = minimalUser;
     }
 
-    public SocketResponse(String questionId, String answerId,HashSet<User> listOfUsers, String headerOfQuestion, Boolean isAnswer, boolean isComment, MinimalUser minimalUser) {
+    public SocketResponse(String questionId, String answerId, HashSet<User> listOfUsers, String headerOfQuestion, Boolean isAnswer, boolean isComment, MinimalUser minimalUser) {
         this(questionId,listOfUsers, headerOfQuestion);
         this.answerId = answerId;
         this.isAnswer = isAnswer;

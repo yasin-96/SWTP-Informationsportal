@@ -72,8 +72,6 @@ export default {
         header: '',
         content: '',
         tags: [],
-        userId: this.getUserId,
-        userName: this.getUsersPreferedName
       },
 
       //config for markdown editor
@@ -120,9 +118,9 @@ export default {
   },
   computed: {
     ...mapActions(['act_getAllTags', 'act_creatNewQuestion']),
-    ...mapGetters(['getAllTagName', 'getUserId', 'getUsersPreferedName']),
+    ...mapGetters(['getAllTagName']),
     ...mapState(['allTags']),
-
+    
     /**
      * If all values for the question creation are available, the send button is activated.
      */

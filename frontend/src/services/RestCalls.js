@@ -76,6 +76,17 @@ switch (serverConfig.softwareDevelopState) {
     break;
 }
 
+
+const routes = {
+    question: "/question",
+    answer: "/answer",
+    comment: "/comment",
+    user: "/user",
+    tag: "/tag"
+};
+
+
+
 export default {
   /**
    * Queries from the backend one question, based on the id
@@ -84,7 +95,7 @@ export default {
   async getOneQuestion(qId) {
     console.debug(`RestCall: getOneQuestion(${qId})`);
     return await client
-      .get(`/question/questionById/${qId}`)
+      .get(`${routes.question}/questionById/${qId}`)
       .then((response) => {
         return response.data;
       })
@@ -100,7 +111,7 @@ export default {
   async getAllQuestions() {
     console.debug('RestCall: getAllQuestions()');
     return await client
-      .get('/question/allQuestions')
+      .get(`${routes.question}/allQuestions`)
       .then((response) => {
         return response.data;
       })
@@ -117,7 +128,7 @@ export default {
   async getAllDataByQuery(searchQuery) {
     console.debug(`RestCall: getAllDataByQuery(${searchQuery})`);
     return await client
-      .get(`/question/query/`, { params: { searchQuery } })
+      .get(`${routes.question}/query/`, { params: { searchQuery } })
       .then((response) => {
         return response.data;
       })
@@ -134,7 +145,7 @@ export default {
   async getAllAnswersToQuestions(questionId) {
     console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
     return await client
-      .get(`/answer/answersByQuestionId/${questionId}`)
+      .get(`${routes.answer}/answersByQuestionId/${questionId}`)
       .then((response) => {
         return response.data;
       })
@@ -151,7 +162,7 @@ export default {
   async getOneAnswerToQuestion(id) {
     console.debug(`RestCall: getOneAnswerToQuestion(${id})`, id);
     return await client
-      .post('/answer/answerTobeEdited', id.ids)
+      .post(`${routes.answer}/answerTobeEdited`, id.ids)
       .then((response) => {
         console.log(response.data);
         return response.data;
@@ -169,7 +180,7 @@ export default {
   async setOneAnswerToQuestion(updatedAnswer) {
     console.debug('setOneAnswerToQuestion():', updatedAnswer);
     return await client
-      .put('/answer/', updatedAnswer)
+      .put(`${routes.answer}`, updatedAnswer)
       .then((response) => {
         return response.data;
       })
@@ -186,7 +197,7 @@ export default {
   async getAllCommentsToAnswers(answerId) {
     console.info(`RestCall: getAllCommentsToAnswers(${answerId})`);
     return await client
-      .get(`/commentsByAnswerId/${answerId}`)
+      .get(`${routes.comment}/commentsByAnswerId/${answerId}`)
       .then((response) => {
         return response.data;
       })
@@ -202,7 +213,7 @@ export default {
   async getAllTags() {
     console.info('RestCall: getAllTags()');
     return await client
-      .get(`/tag/getAllTags`)
+      .get(`${routes.tag}/getAllTags`)
       .then((response) => {
         return response.data;
       })
@@ -224,7 +235,7 @@ export default {
   async addNewQuestion(newQuestion) {
     console.debug(`RestCall: addNewQuestion()`, newQuestion);
     return await client
-      .post('/newQuestion', newQuestion)
+      .post(`${routes.question}/newQuestion`, newQuestion)
       .then((response) => {
         return response.data;
       })
@@ -241,7 +252,7 @@ export default {
   async updateCurrentQuestion(updatedQuestion) {
     console.debug(`RestCall: updateCurrentQuestion()`, updatedQuestion);
     return await client
-      .put('/question', updatedQuestion)
+      .put(`${routes.question}`, updatedQuestion)
       .then((response) => {
         return response.data;
       })
@@ -292,7 +303,7 @@ export default {
   async addNewComment(newComment) {
     console.debug(`RestCall: addNewComment(${newComment})`);
     return await client
-      .post('/newComments', newComment)
+      .post(`${routes.comment}/newComments`, newComment)
       .then((response) => {
         return response.data;
       })
@@ -359,7 +370,7 @@ export default {
   async getQuestionBasedOnTopic(tag) {
     console.debug(`RestCall: getQuestionBasedOnTopic(${tag})`);
     return await client
-      .get(`/questionByTag/${tag}`)
+      .get(`${routes.question}/questionByTag/${tag}`)
       .then((response) => {
         console.warn('Topics', response.data);
         return response.data;
@@ -391,7 +402,7 @@ export default {
    */
   async getUserNameFromId(id) {
     return await client
-      .post('/user/userNameFromId', id)
+      .post(`${routes.user}/userNameFromId`, id)
       .then((response) => {
         console.log('Name from id all:', response);
         console.log('Name from id:', response.data);

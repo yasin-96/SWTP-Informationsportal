@@ -11,6 +11,7 @@ public class ResponseUser {
     String userName;
 
     public ResponseUser(String userName) {
+
         this.userName = userName;
     }
 }

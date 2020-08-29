@@ -1,6 +1,7 @@
 package de.thm.swtp.information_portal.repositories;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

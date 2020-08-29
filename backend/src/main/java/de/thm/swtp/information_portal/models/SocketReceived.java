@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @NoArgsConstructor
 @Data
 @Getter
@@ -21,14 +23,10 @@ public class SocketReceived {
     private Boolean isAnswer;
     private Boolean isComment;
 
-    //User that has post new answer/comment
-    private MinimalUser minimalUser;
-
-    public SocketReceived(String questionId, String answerId, Boolean isAnswer, Boolean isComment, MinimalUser minimalUser) {
+    public SocketReceived(String questionId, String answerId, Boolean isAnswer, Boolean isComment) {
         this.questionId = questionId;
         this.answerId = answerId;
         this.isAnswer = isAnswer;
         this.isComment = isComment;
-        this.minimalUser = minimalUser;
     }
 }

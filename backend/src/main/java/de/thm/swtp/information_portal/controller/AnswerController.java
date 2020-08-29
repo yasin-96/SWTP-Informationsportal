@@ -1,5 +1,6 @@
 package de.thm.swtp.information_portal.controller;
 
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -38,8 +39,8 @@ public class AnswerController {
     public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList,
                                                                  @AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
         //TODO anserlist prüfen
-        var userId = UUID.fromString(jwt.getClaimAsString("sub"));
-        var userPreferedName = jwt.getClaimAsString("sub");
+        var userId = jwt.getClaimAsString("sub");
+        var userPreferedName = jwt.getClaimAsString("preferred_username");
         return CompletableFuture.completedFuture(answerService.add(answerList, userId, userPreferedName));
     }
 
@@ -49,11 +50,11 @@ public class AnswerController {
      */
     @Async
     @PostMapping("/answer/answerTobeEdited")
-    public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(@Validated @RequestBody String[] ids) {
+    public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(@Validated @RequestBody UUID[] ids) {
 
         //TODO: IDS prüfen
-
-        return CompletableFuture.completedFuture(answerService.getAnswerToEdit(ids));
+        var formatedIds = new String[]{ids[0].toString(), ids[1].toString()};
+        return CompletableFuture.completedFuture(answerService.getAnswerToEdit(formatedIds));
     }
 
     /**
@@ -76,10 +77,10 @@ public class AnswerController {
      */
     @Async
     @GetMapping("/answer/answersByQuestionId/{id}")
-    public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable String id) {
+    public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable UUID id) {
 
         //TODO ID prüfen?
-        return CompletableFuture.completedFuture(answerService.getAnswers(id));
+        return CompletableFuture.completedFuture(answerService.getAnswers(id.toString()));
     }
 
     /**

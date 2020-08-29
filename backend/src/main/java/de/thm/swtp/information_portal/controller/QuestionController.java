@@ -34,16 +34,10 @@ import static java.util.stream.Collectors.*;
 public class QuestionController {
 
 	@Autowired
-	private TagService tagService;
-
-	@Autowired
 	private QuestionService questionService;
 
 	@Autowired
 	private AnswerService answerService;
-
-	@Autowired
-	private UserService userService;
 
 	/**
 	 *
@@ -53,10 +47,10 @@ public class QuestionController {
 	 */
 	@Async
 	@GetMapping("/question/questionById/{id}")
-	public CompletableFuture<ResponseEntity<Question>> getQuestion(@PathVariable String id)
+	public CompletableFuture<ResponseEntity<Question>> getQuestion(@Validated @PathVariable UUID id)
 			throws InterruptedException {
 
-		return CompletableFuture.completedFuture(questionService.getQuestion(id));
+		return CompletableFuture.completedFuture(questionService.getQuestion(id.toString()));
 	}
 
 	/**
@@ -79,7 +73,7 @@ public class QuestionController {
 	 * @throws InterruptedException
 	 */
 	@Async
-	@GetMapping("/questionByTag/{tag}")
+	@GetMapping("/question/questionByTag/{tag}")
 	public CompletableFuture<ResponseEntity<List<Question>>> findByTag(@PathVariable String tag)
 			throws InterruptedException {
 		List<Question> questions = questionService.findByTag(tag);
@@ -100,8 +94,13 @@ public class QuestionController {
 			@AuthenticationPrincipal Jwt jwt)
 			throws URISyntaxException {
 
-		Question quest = new Question(questionBody.getHeader(), questionBody.getContent(), questionBody.getTags(),
-				jwt.getClaimAsString("sub"),questionBody.getUserName());
+		Question quest = new Question(
+				questionBody.getHeader(),
+				questionBody.getContent(),
+				questionBody.getTags(),
+				jwt.getClaimAsString("sub"),
+				jwt.getClaimAsString("preferred_username")
+		);
 
 
 		return CompletableFuture

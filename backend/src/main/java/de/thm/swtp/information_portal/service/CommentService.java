@@ -2,10 +2,7 @@ package de.thm.swtp.information_portal.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import de.thm.swtp.information_portal.models.Answers;
@@ -24,9 +21,6 @@ public class CommentService {
 
     @Autowired
     private CommentRepository commentRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     /**
      * @return
@@ -54,11 +48,11 @@ public class CommentService {
     /**
      *
      * @param commentList
-     * @param jwtSub
+     * @param userId
      * @return
      * @throws URISyntaxException
      */
-    public ResponseEntity<Comments> add(Comments commentList, String jwtSub) throws URISyntaxException {
+    public ResponseEntity<Comments> add(Comments commentList, String userId, String userName) throws URISyntaxException {
         var comments = this.findByAnswerId(commentList.getId());
         var existingComment = commentList.getComments().get(0);
         if (!comments.isPresent()) {
@@ -66,9 +60,9 @@ public class CommentService {
                     List.of(
                             new Comment(
                                     commentList.getComments().get(0).getContent(),
-                                    jwtSub,
-                                    commentList.getComments().get(0).getRating(),
-                                    commentList.getComments().get(0).getUserName()
+                                    userId,
+                                    userName,
+                                    commentList.getComments().get(0).getRating()
                             )
                     ),
                     commentList.getId()
@@ -80,9 +74,9 @@ public class CommentService {
             var commentsPresent = comments.get().getComments();
             var newComment = new Comment(
                     existingComment.getContent(),
-                    jwtSub,
-                    existingComment.getRating(),
-                    commentList.getComments().get(0).getUserName()
+                    userId,
+                    userName,
+                    existingComment.getRating()
             );
             //TODO add und set ? brauchen wir hier beides
             commentsPresent.add(newComment);

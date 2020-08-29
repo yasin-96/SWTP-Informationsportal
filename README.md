@@ -15,49 +15,33 @@ All pages also accessible via this [link](./../../wikis/pages)
 
 ## Table of Content
 0. [Introduction](./../../wikis/documentation/0.1-Introduction)
+1. [Architecture](./../../wikis/documentation/0.2-Architecture)
 1. [Features](./../../wikis/documentation/1-Features)
-   1. [Main Part](./../../wikis/documentation/1-Features#user-content-main-part)
-      - [Questions](./../../wikis/documentation/1-Features#user-content-questions)
-   2. [Answers](./../../wikis/documentation/1-Features#user-content-answers)
-      - [Comments](./../../wikis/documentation/1-Features#user-content-comments)
-      - [Search](./../../wikis/documentation/1-Features#user-content-search)
-      - [Extra Part](./../../wikis/documentation/1-Features#user-content-extra-part)
-         - [User](./../../wikis/documentation/1-Features#user-content-user)
-         - [Markdown support for](./../../wikis/documentation/1-Features#user-content-markdown-support-for)
-         - [Options](./../../wikis/documentation/1-Features#user-content-options)
-         - [Push Notifications](./../../wikis/documentation/1-Features#user-content-push-notifications)
-         - [Swagger UI](./../../wikis/documentation/1-Features#user-content-swagger-ui)
-         - [Features for the coming months](./../../wikis/documentation/1-Features#user-content-features-for-the-coming-months)
 2. [Backend](./../../wikis/documentation/2-Backend)
-   1. [Installation](./../../wikis/documentation/Backend/0-Installation)
-   2. [Application Settings](./../../wikis/documentation/Backend/Application-Settings)
-   3. [Configuration](./../../wikis/documentation/Backend/Configuration)
-   4. [Models](./../../wikis/documentation/Backend/Models)
-   5. [REST-API](./../../wikis/documentation/Backend/REST-API)
 3. [Frontend](./../../wikis/documentation/3-Frontend)
-   1. [Installation](./../../wikis/documentation/Frontend/0-Installation)
-   2. [Environment](./../../wikis/documentation/Frontend/1-Environment)
-   3. [Components](./../../wikis/documentation/Frontend/2-Components)
-      - [AnswerCard](./../../wikis/documentation/Frontend/2.1_AnswerCard)
-      - [CommentCard](./../../wikis/documentation/Frontend/2.2_CommentCard)
-      - [CreateNewQuestion](./../../wikis/documentation/Frontend/2.3-CreateNewQuestion)
-      - [Navigation](./../../wikis/documentation/Frontend/2.4_Navigation)
-      - [NewContent](./../../wikis/documentation/Frontend/2.5_NewContent)
-      - [NotificationCard](./../../wikis/documentation/Frontend/2.6_NotificationCard)
-      - [QuestionCard](./../../wikis/documentation/Frontend/2.7_QuestionCard)
-      - [Searching](./../../wikis/documentation/Frontend/2.8_Searching)
-   4. [Views](./../../wikis/documentation/Frontend/3-Views)
-      - [AnswerEditView](./../../wikis/documentation/Frontend/3.1_AnswerEditView)
-      - [Home](./../../wikis/documentation/Frontend/3.2_Home)
-      - [QuestionEditView](./../../wikis/documentation/Frontend/3.4_QuestionEditView)
-      - [QuestionsByTopics](./../../wikis/documentation/Frontend/3.5_QuestionsByTopics)
-      - [Search](./../../wikis/documentation/Frontend/3.6_Search)
-      - [ShowAllQuestions](./../../wikis/documentation/Frontend/3.7_ShowAllQuestions)
-      - [ShowOneQuestions](./../../wikis/documentation/Frontend/3.8_ShowOneQuestion)
-   5. [CSS](./../../wikis/documentation/Frontend/4-CSS-Style)
-   6. [Design](./../../wikis/documentation/Frontend/5-Design)
-   7. [Font Awesome](./../../wikis/documentation/Frontend/6-)
-4. [Database](./../../wikis/documentation/Database)
+4. [Database](./../../wikis/documentation/4-Database)
 5. [Tools](./../../wikis/documentation/Tools)
-6. [Test's](./../../wikis/documentation/Test)
+6. [Test's](./../../wikis/documentation/6-Test)
+
+
+## Information
+There are two ways to research the Wiki.
+
+1. The first option shows all pages of the wiki that have been created. There you can also navigate through the wiki with the buttons on the bottom.
+
+2. The second option is the sidebar, which is located on the right. The disadvantage of the sidebar is that it only shows a part of the wiki.
+This seems to be a bug and will be fixed in the next version.
+
+
+## Navigate by Pages
+- [All Pages](/pages)
+![image](uploads/2e90ab8775a4108f8c21331a411b8f2d/image.png)
+
+
+## Navigate by Topic
+![image](uploads/88ef67785e72d89b3f883a55ac026bc3/image.png)
+
+
+
+
 

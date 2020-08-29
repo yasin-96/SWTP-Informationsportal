@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -29,9 +32,11 @@ public class SocketController {
      */
     @MessageMapping("/hello")
     @SendTo("/notify")
-    public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage) {
+    public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage, @AuthenticationPrincipal Jwt jwt) {
 
+        var userId = jwt.getClaimAsString("sub");
+        var userName = jwt.getClaimAsString("preferred_username");
         //TODO valid massge??
-        return CompletableFuture.completedFuture(socketService.createMessage(wsMessage));
+        return CompletableFuture.completedFuture(socketService.createMessage(wsMessage, userId, userName));
     }
 }

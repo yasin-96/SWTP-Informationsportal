@@ -12,8 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SocketService {
@@ -30,7 +29,7 @@ public class SocketService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public ResponseEntity<SocketResponse> createMessage(String wsMessage){
+    public ResponseEntity<SocketResponse> createMessage(String wsMessage, String userId, String userName){
 
         // init data
         var wsData = new SocketReceived();
@@ -48,11 +47,10 @@ public class SocketService {
             if (wsData.getIsAnswer()) {
                 var answers = answerRepository.findById(wsData.getQuestionId());
 
-
                 var answersOfQuestion = answers.get().getListOfAnswers();
                 for (Answer answer : answersOfQuestion) {
                     userRepository
-                            .findById(answer.getUserId().toString())
+                            .findById(answer.getUserId())
                             .ifPresent(users::add);
                 }
 
@@ -63,7 +61,7 @@ public class SocketService {
                         headerOfQuestion,
                         wsData.getIsAnswer(),
                         wsData.getIsComment(),
-                        wsData.getMinimalUser()
+                        new MinimalUser(userId, userName)
                 );
             }
 
@@ -83,7 +81,8 @@ public class SocketService {
                         users,headerOfQuestion,
                         wsData.getIsAnswer(),
                         wsData.getIsComment(),
-                        wsData.getMinimalUser());
+                        new MinimalUser(userId, userName)
+                );
 
             }
 

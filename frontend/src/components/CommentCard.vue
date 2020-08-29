@@ -127,7 +127,6 @@ export default {
           {
             id: comment.id,
             content: comment.content,
-            userName: comment.userName,
             rating: newRating,
             timestamp: Date.parse(new Date()),
           },

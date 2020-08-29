@@ -137,7 +137,7 @@ export default {
           id: this.aId,
           content: this.currentAnswer.content,
           rating: 0,
-          userId: this.getUserId,
+          userId: this.userId,
           userName: this.getUsersPreferedName,
           timeStamp: Date.parse(new Date()),
         });
@@ -150,6 +150,11 @@ export default {
     ...mapActions(['act_getOneQuestion', 'act_getOneAnswerToQuestion', 'act_updateAnswerFromQuestion']),
     ...mapState(['oneAnswer', 'oneQuestion']),
     ...mapGetters(['getUserId', 'getUsersPreferedName']),
+    userId: {
+      get() { 
+        return this.$store.userId
+      }
+    }
   },
   watch: {
     oneAnswer() {

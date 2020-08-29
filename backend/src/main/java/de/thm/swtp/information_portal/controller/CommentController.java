@@ -2,10 +2,7 @@ package de.thm.swtp.information_portal.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +33,12 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @Autowired
-    private UserService userService;
-
     /**
      * @return
      * @throws InterruptedException
      */
     @Async
-    @GetMapping("/allComments")
+    @GetMapping("/comment/allComments")
     public CompletableFuture<List<Comments>> findAllComments() throws InterruptedException {
         return CompletableFuture.completedFuture(commentService.findAllComments());
     }
@@ -55,11 +49,10 @@ public class CommentController {
      * @throws InterruptedException
      */
     @Async
-    @GetMapping("/commentsByAnswerId/{id}")
-    public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable String id)
+    @GetMapping("/comment/commentsByAnswerId/{id}")
+    public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable UUID id)
             throws InterruptedException {
-        //TODO id prüfen oder Springboot es überlassen?!
-        return CompletableFuture.completedFuture(commentService.getCommentsByAnswerId(id));
+        return CompletableFuture.completedFuture(commentService.getCommentsByAnswerId(id.toString()));
     }
 
     /**
@@ -81,11 +74,12 @@ public class CommentController {
      * @throws InterruptedException
      */
     @Async
-    @PostMapping("/newComments")
+    @PostMapping("/comment/newComments")
     public CompletableFuture<ResponseEntity<Comments>> postComments(@RequestBody Comments commentList, @AuthenticationPrincipal Jwt jwt)
             throws URISyntaxException {
         //TODO liste prüfen?
-        var jwtSub = jwt.getClaimAsString("sub");
-        return CompletableFuture.completedFuture(commentService.add(commentList, jwtSub));
+        var userId = jwt.getClaimAsString("sub");
+        var userName = jwt.getClaimAsString("preferred_username");
+        return CompletableFuture.completedFuture(commentService.add(commentList, userId, userName));
     }
 }

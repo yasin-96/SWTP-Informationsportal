@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import de.thm.swtp.information_portal.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,8 +101,10 @@ public class QuestionService {
 
 		var question = questionRepository.findById(id);
 
-		return question
-				.map(response -> ResponseEntity.ok().body(response))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+		if(question.isPresent()){
+			return new ResponseEntity(question, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 }

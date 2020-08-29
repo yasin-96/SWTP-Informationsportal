@@ -2,6 +2,8 @@ package de.thm.swtp.information_portal.models;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.Data;
 import lombok.Getter;

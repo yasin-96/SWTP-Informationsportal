@@ -18,6 +18,8 @@
           :qDate="quest.timeStamp"
           :qTrimText="true"
           :qFooter="true"
+          :qUserId="quest.userId"
+          :qUserName="quest.userName"
         />
       </b-col>
     </b-row>

@@ -113,10 +113,10 @@ export default {
     /**
      * The id of the user who created this answer
      */
-    aUserId: {
-      type: String,
-      required: true,
-    },
+    // aUserId: {
+    //   type: String,
+    //   required: true,
+    // },
     /**
      * The creator of this answer
      */
