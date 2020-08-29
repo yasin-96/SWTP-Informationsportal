@@ -38,8 +38,9 @@ public class AnswerController {
     public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList,
                                                                  @AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
         //TODO anserlist prüfen
-        var jwtSub = jwt.getClaimAsString("sub");
-        return CompletableFuture.completedFuture(answerService.add(answerList, jwtSub));
+        var userId = UUID.fromString(jwt.getClaimAsString("sub"));
+        var userPreferedName = jwt.getClaimAsString("sub");
+        return CompletableFuture.completedFuture(answerService.add(answerList, userId, userPreferedName));
     }
 
     /**

@@ -2,10 +2,7 @@ package de.thm.swtp.information_portal.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import de.thm.swtp.information_portal.models.Answer;
@@ -42,7 +39,7 @@ public class AnswerService {
      * @return
      * @throws URISyntaxException
      */
-    public ResponseEntity<Answers> add(Answers answerList, String jwtSub) throws URISyntaxException {
+    public ResponseEntity<Answers> add(Answers answerList, UUID userId, String userPreferedName) throws URISyntaxException {
         var answers = this.findByQuestionId(answerList.getId());
 
         if (answers.isEmpty()) {
@@ -50,9 +47,9 @@ public class AnswerService {
                     List.of(
                         new Answer(
                             answerList.getListOfAnswers().get(0).getContent(),
-                            jwtSub,
                             0,
-                                answerList.getListOfAnswers().get(0).getUserName()
+                            userId,
+                            userPreferedName
                         )
                     ),
                     answerList.getId());
@@ -65,9 +62,9 @@ public class AnswerService {
             var answersPresent = answers.get().getListOfAnswers();
             var newAnswer = new Answer(
                     answerList.getListOfAnswers().get(0).getContent(),
-                    jwtSub,
                     0,
-                    answerList.getListOfAnswers().get(0).getUserName()
+                    userId,
+                    userPreferedName
             );
             answersPresent.add(newAnswer);
 

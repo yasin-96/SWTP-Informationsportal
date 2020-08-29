@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Answer {
 
-	private String id;
+	private UUID id;
 
 	// the answer to the question
 	private String content;
@@ -25,20 +25,20 @@ public class Answer {
 	private int rating;
 
 	// User that has written this answer
-	private String userId;
+	private UUID userId;
 
-	private String userName = "";
+	private String userName;
 
 	// save currentdate in unix timestamp
 	private Long timeStamp;
 
-	public Answer(String content, String userId, int rating,String userName) {
-		this.id = UUID.randomUUID().toString();
+	public Answer(String content, int rating, UUID userId, String userName) {
+		this.id = UUID.randomUUID();
 		this.content = content;
-		this.userId = userId;
 		this.rating = rating;
-		this.timeStamp = Instant.now().getEpochSecond() * 1000;
+		this.userId = userId;
 		this.userName = userName;
+		this.timeStamp = Instant.now().getEpochSecond() * 1000;
 	}
 }
 
