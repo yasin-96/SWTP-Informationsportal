@@ -40,9 +40,9 @@ export default new Vuex.Store({
     //questions
     allQuestions: {},
     oneQuestion: {},
-    questionsBasedOnTopics: [],
+    questionsBasedOnTopics: new Array(),
     activeQuestions: [],
-    allQueryData: [],
+    allQueryData: new Array(),
     reloadQuestions: false,
 
     //anwser
@@ -317,7 +317,10 @@ export default new Vuex.Store({
       console.log('act_getQuestionsBasedOnTopic()');
       await RestCalls.getQuestionBasedOnTopic(topic)
         .then((response) => {
-          commit('SET_QUESTIONS_BASED_ON_TOPICS', response);
+          if(response != null){
+            commit('SET_QUESTIONS_BASED_ON_TOPICS', response);
+          }
+          
         })
         .catch((error) => {
           console.error(error);
@@ -361,11 +364,15 @@ export default new Vuex.Store({
      * Create and save new question 
      * @param {Object} newQuestion Question to add
      */
-    async act_creatNewQuestion({}, newQuestion) {
-      console.log('act_creatNewQuestion()', newQuestion);
+    async act_createNewQuestion({}, newQuestion) {
+      console.log('act_createNewQuestion()', newQuestion);
       return await RestCalls.addNewQuestion(newQuestion)
         .then((response) => {
-          return response;
+          if(response != null){
+            console.log(response)
+            return response.id
+          }
+          //return response;
         })
         .catch((error) => {
           console.error(error);
@@ -737,6 +744,27 @@ export default new Vuex.Store({
     getUsersPreferedName: (state) => {
       return state.currentUser.preferred_username;
     },
+
+    getQuestionsBasedOnTopics: (state) =>{
+      return state.questionsBasedOnTopics;
+    },
+
+    getTopicsBasedOnTags: (state) => {
+      return state.topicsBasedOnTags;
+    },
+    
+    getAllQuestions: (state) => {
+      return state.allQuestions;
+    },
+
+    getActiveQuestions: (state) => {
+      return state.activeQuestions;
+    },
+
+    getQueryData: (state) => {
+      return state.allQueryData
+    } 
+
   },
 
   modules: {},

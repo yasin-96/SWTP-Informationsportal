@@ -80,17 +80,12 @@ public class QuestionController {
 			@AuthenticationPrincipal Jwt jwt)
 			throws URISyntaxException {
 
-		Question quest = new Question(
-				questionBody.getHeader(),
-				questionBody.getContent(),
-				questionBody.getTags(),
-				jwt.getClaimAsString("sub"),
-				jwt.getClaimAsString("preferred_username")
-		);
+		var userId = jwt.getClaimAsString("sub");
+		var userName = jwt.getClaimAsString("preferred_username");
 
 
 		return CompletableFuture
-				.completedFuture(questionService.postQuestion(quest));
+				.completedFuture(questionService.postQuestion(questionBody, userId, userName));
 	}
 
 	/**

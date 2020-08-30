@@ -45,8 +45,8 @@ public class QuestionService {
 
 		var response = Arrays.stream(searchQuery.toUpperCase().split(" "))
 				.filter(item -> !item.isEmpty())
-				.collect(Collectors.toList())
-				.stream()
+				//.collect(Collectors.toList())
+				//.stream()
 				.map(query -> {
 					var existingTag = tagRepository.findByName(query);
 
@@ -60,13 +60,13 @@ public class QuestionService {
 											.filter(item ->
 												item.getName().toLowerCase().equals(existingTag.getName().toLowerCase())
 											)
-									);
+									).collect(Collectors.toList());
 							return questionByTags;
 						}
 					}
 					return null;
 				})
-				.filter(list -> list != null);
+				.filter(list -> !list.isEmpty());
 
 		if(response != null){
 			return new ResponseEntity(response, HttpStatus.OK);
@@ -104,18 +104,21 @@ public class QuestionService {
 	 * @param question
 	 * @return
 	 */
-	public ResponseEntity<Question> postQuestion(Question question) throws URISyntaxException {
+	public ResponseEntity<Question> postQuestion(Question question, String userId, String userName) throws URISyntaxException {
 		var newQuestionTags = tagService.checkIfTagsExist(question.getTags());
+
 		var newQuestion = new Question(
 				question.getHeader(),
 				question.getContent(),
 				newQuestionTags,
-				question.getUserId(),
-				question.getUserName()
+				userId,
+				userName
 		);
-		questionRepository.save(newQuestion);
 
-		return new ResponseEntity(question, HttpStatus.OK);
+		//TODO prüfen??
+		var response = questionRepository.save(newQuestion);
+
+		return new ResponseEntity(response, HttpStatus.OK);
 	}
 
 	/**

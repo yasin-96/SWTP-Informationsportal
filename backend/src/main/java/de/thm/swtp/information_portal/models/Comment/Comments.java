@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 
 //Name of collection in MongoDB
-@Document(collection = "comments")
+@Document(collection = "comment")
 public class Comments {
 
     private String id;

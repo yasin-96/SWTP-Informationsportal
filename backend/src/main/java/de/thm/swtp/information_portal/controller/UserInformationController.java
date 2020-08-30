@@ -26,7 +26,7 @@ public class UserInformationController {
      * @throws URISyntaxException
      */
     @Async
-    @GetMapping("/info/id/{userId}")
+    @GetMapping("/info/{userId}")
     public CompletableFuture<ResponseEntity<UserInformation>> getUserInfo(@PathVariable UUID userId) throws URISyntaxException {
 
         return CompletableFuture.completedFuture(

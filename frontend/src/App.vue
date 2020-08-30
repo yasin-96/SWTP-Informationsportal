@@ -73,6 +73,9 @@ export default {
 
       //topics
       await this.$store.dispatch('act_getAllTags');
+
+      //check notifications
+      await this.$store.dispatch('act_checkWSMessageWithQuestion');
     },
     async refreshUser() {
       //load user data
@@ -81,7 +84,7 @@ export default {
   },
   computed: {
     ...mapState(['clientConnection']),
-    ...mapActions(['act_getUserInfo', 'act_getAllQuestions', 'act_getMostActiveQuestions', '', 'act_getAllTags', 'act_getCurrentTopics', 'act_createConnectSocketAndStompClient']),
+    ...mapActions(['act_getUserInfo', 'act_getAllQuestions', 'act_getMostActiveQuestions', '', 'act_getAllTags', 'act_getCurrentTopics', 'act_createConnectSocketAndStompClient', 'act_checkWSMessageWithQuestion']),
   },
   watch: {
     clientConnection() {
