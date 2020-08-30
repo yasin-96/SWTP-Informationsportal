@@ -19,10 +19,10 @@
 //import org.springframework.boot.test.web.client.TestRestTemplate;
 //import org.springframework.boot.web.server.LocalServerPort;
 //
-//import de.thm.swtp.information_portal.models.Answer;
-//import de.thm.swtp.information_portal.models.Answers;
-//import de.thm.swtp.information_portal.models.Question;
-//import de.thm.swtp.information_portal.models.Tag;
+//import de.thm.swtp.information_portal.models.Answer.Answer;
+//import de.thm.swtp.information_portal.models.Answer.Answers;
+//import de.thm.swtp.information_portal.models.Question.Question;
+//import de.thm.swtp.information_portal.models.Tag.Tag;
 //import de.thm.swtp.information_portal.repositories.AnswerRepository;
 //import de.thm.swtp.information_portal.repositories.QuestionRepository;
 //import de.thm.swtp.information_portal.repositories.TagRepository;

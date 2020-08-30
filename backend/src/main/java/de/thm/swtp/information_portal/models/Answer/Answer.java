@@ -1,4 +1,4 @@
-package de.thm.swtp.information_portal.models;
+package de.thm.swtp.information_portal.models.Answer;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -41,5 +41,4 @@ public class Answer {
 		this.timeStamp = Instant.now().getEpochSecond() * 1000;
 	}
 }
-
 

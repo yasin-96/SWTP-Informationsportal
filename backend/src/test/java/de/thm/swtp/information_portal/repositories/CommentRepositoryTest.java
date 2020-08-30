@@ -12,8 +12,8 @@
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 //
-//import de.thm.swtp.information_portal.models.Comment;
-//import de.thm.swtp.information_portal.models.Comments;
+//import de.thm.swtp.information_portal.models.Comment.Comment;
+//import de.thm.swtp.information_portal.models.Comment.Comments;
 //
 //@DataMongoTest
 //class CommentRepositoryTest {

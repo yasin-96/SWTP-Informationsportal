@@ -76,7 +76,7 @@ switch (serverConfig.softwareDevelopState) {
     break;
 }
 
-
+/* All routes for backen */
 const routes = {
     question: "/question",
     answer: "/answer",
@@ -95,7 +95,7 @@ export default {
   async getOneQuestion(qId) {
     console.debug(`RestCall: getOneQuestion(${qId})`);
     return await client
-      .get(`${routes.question}/questionById/${qId}`)
+      .get(`${routes.question}/id/${qId}`)
       .then((response) => {
         return response.data;
       })
@@ -111,7 +111,59 @@ export default {
   async getAllQuestions() {
     console.debug('RestCall: getAllQuestions()');
     return await client
-      .get(`${routes.question}/allQuestions`)
+      .get(`${routes.question}/all`)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   * Queries from the backend all questions based on this tag
+   * @param {String} tag [tag for query]
+   */
+  async getQuestionBasedOnTopic(tag) {
+    console.debug(`RestCall: getQuestionBasedOnTopic(${tag})`);
+    return await client
+      .get(`${routes.question}/tag/${tag}`)
+      .then((response) => {
+        console.warn('Topics', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   * Send a new question object to the backend
+   * @param {Object} newQuestion [question to create]
+   */
+  async addNewQuestion(newQuestion) {
+    console.debug(`RestCall: addNewQuestion()`, newQuestion);
+    return await client
+      .post(`${routes.question}/new`, newQuestion)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+  /**
+   * Send new information for question to the backend
+   * @param {Object} updatedQuestion [new changes for this question]
+   */
+  async updateCurrentQuestion(updatedQuestion) {
+    console.debug(`RestCall: updateCurrentQuestion()`, updatedQuestion);
+    return await client
+      .put(`${routes.question}/update`, updatedQuestion)
       .then((response) => {
         return response.data;
       })
@@ -139,18 +191,35 @@ export default {
   },
 
   /**
-   * Requests from the backend all answers of a question, based on the id 
-   * @param {String} questionId [id of one question]
+   * Queries from the backend all questions that are current relevant and regarded
    */
-  async getAllAnswersToQuestions(questionId) {
-    console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
+  async getMostActiveQuestions() {
+    console.debug('RestCall: getMostActiveQuestions()');
     return await client
-      .get(`${routes.answer}/answersByQuestionId/${questionId}`)
+      .get(`${routes.question}/active`)
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
-        console.error(error);
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+
+   /**
+   * Send new answer for one question to the backend
+   * @param {*} newAnswer [answer to add]
+   */
+  async addNewAnswer(newAnswer) {
+    console.debug(`RestCall: addNewAnswer(${newAnswer})`);
+    return await client
+      .post('/answer/new', newAnswer)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('addNewAnswer():', error);
         return null;
       });
   },
@@ -162,7 +231,7 @@ export default {
   async getOneAnswerToQuestion(id) {
     console.debug(`RestCall: getOneAnswerToQuestion(${id})`, id);
     return await client
-      .post(`${routes.answer}/answerTobeEdited`, id.ids)
+      .get(`${routes.answer}/edit`, { params: { qId: id.questionId, aId: id.answerId }})
       .then((response) => {
         console.log(response.data);
         return response.data;
@@ -180,7 +249,7 @@ export default {
   async setOneAnswerToQuestion(updatedAnswer) {
     console.debug('setOneAnswerToQuestion():', updatedAnswer);
     return await client
-      .put(`${routes.answer}`, updatedAnswer)
+      .patch(`${routes.answer}/update`, updatedAnswer)
       .then((response) => {
         return response.data;
       })
@@ -191,21 +260,23 @@ export default {
   },
 
   /**
-   * Queries from the backend all comments on a question, based on the id
-   * @param {String} answerId [id of one answer]
+   * Requests from the backend all answers of a question, based on the id 
+   * @param {String} questionId [id of one question]
    */
-  async getAllCommentsToAnswers(answerId) {
-    console.info(`RestCall: getAllCommentsToAnswers(${answerId})`);
+  async getAllAnswersToQuestions(questionId) {
+    console.debug(`RestCall: getAllAnswersToQuestions(${questionId})`);
     return await client
-      .get(`${routes.comment}/commentsByAnswerId/${answerId}`)
+      .get(`${routes.answer}/question/${questionId}`)
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        console.error(error);
         return null;
       });
   },
+
+
 
   /**
    * Queries from the backend all tags
@@ -213,7 +284,7 @@ export default {
   async getAllTags() {
     console.info('RestCall: getAllTags()');
     return await client
-      .get(`${routes.tag}/getAllTags`)
+      .get(`${routes.tag}/all`)
       .then((response) => {
         return response.data;
       })
@@ -229,13 +300,32 @@ export default {
   },
 
   /**
-   * Send a new question object to the backend
-   * @param {Object} newQuestion [question to create]
+   * Queries from the backend all questions with most famouse tags
    */
-  async addNewQuestion(newQuestion) {
-    console.debug(`RestCall: addNewQuestion()`, newQuestion);
+  async getCurrentTopics() {
+    console.debug('RestCall: getCurrentTopics()');
     return await client
-      .post(`${routes.question}/newQuestion`, newQuestion)
+      .get(`${routes.tag}/questions`)
+      .then((response) => {
+        console.warn('Topics', response.data);
+        return response.data;
+      })
+      .catch((error) => {
+        console.error('No Data: ', error);
+        return null;
+      });
+  },
+
+
+
+  /**
+   * Queries from the backend all comments on a question, based on the id
+   * @param {String} answerId [id of one answer]
+   */
+  async getAllCommentsToAnswers(answerId) {
+    console.info(`RestCall: getAllCommentsToAnswers(${answerId})`);
+    return await client
+      .get(`${routes.comment}/answer/${answerId}`)
       .then((response) => {
         return response.data;
       })
@@ -246,52 +336,18 @@ export default {
   },
 
   /**
-   * Send new information for question to the backend
-   * @param {Object} updatedQuestion [new changes for this question]
+   * Send updated comment that has increased rating to the backend
+   * @param {Comment} comment [comment to increase rating]
    */
-  async updateCurrentQuestion(updatedQuestion) {
-    console.debug(`RestCall: updateCurrentQuestion()`, updatedQuestion);
+  async updateComment(comment) {
+    console.debug(`RestCall: updateComment(${comment})`);
     return await client
-      .put(`${routes.question}`, updatedQuestion)
+      .patch('/comment/update', comment)
       .then((response) => {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
-        return null;
-      });
-  },
-
-  /**
-   * Send new answer for one question to the backend
-   * @param {*} newAnswer [answer to add]
-   */
-  async addNewAnswer(newAnswer) {
-    console.debug(`RestCall: addNewAnswer(${newAnswer})`);
-    return await client
-      .post('/answer', newAnswer)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('addNewAnswer():', error);
-        return null;
-      });
-  },
-
-  /**
-   * Send updated answer that has increased rating to the backend
-   * @param {Answer} answer [answer to increase rating]
-   */
-  async increaseAnswerRating(answer) {
-    console.debug(`RestCall: increaseAnswerRating(${answer})`);
-    return await client
-      .post('/answer/increaseRating', answer)
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error(error);
+        console.error('updateComment():', error);
         return null;
       });
   },
@@ -303,7 +359,7 @@ export default {
   async addNewComment(newComment) {
     console.debug(`RestCall: addNewComment(${newComment})`);
     return await client
-      .post(`${routes.comment}/newComments`, newComment)
+      .post(`${routes.comment}/new`, newComment)
       .then((response) => {
         return response.data;
       })
@@ -314,6 +370,7 @@ export default {
   },
 
   /**
+   * TODO kann das weg?
    * Send updated comment that has increased rating to the backend
    * @param {Comment} comment [comment to increase rating]
    */
@@ -330,56 +387,6 @@ export default {
       });
   },
 
-  /**
-   * Queries from the backend all questions that are current relevant and regarded
-   */
-  async getMostActiveQuestions() {
-    console.debug('RestCall: getMostActiveQuestions()');
-    return await client
-      .get('/question/getMostActiveQuestions')
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('No Data: ', error);
-        return null;
-      });
-  },
-
-  /**
-   * Queries from the backend all questions with most famouse tags
-   */
-  async getCurrentTopics() {
-    console.debug('RestCall: getCurrentTopics()');
-    return await client
-      .get('/tagsWithMostQuestions')
-      .then((response) => {
-        console.warn('Topics', response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('No Data: ', error);
-        return null;
-      });
-  },
-
-  /**
-   * Queries from the backend all questions based on this tag
-   * @param {String} tag [tag for query]
-   */
-  async getQuestionBasedOnTopic(tag) {
-    console.debug(`RestCall: getQuestionBasedOnTopic(${tag})`);
-    return await client
-      .get(`${routes.question}/questionByTag/${tag}`)
-      .then((response) => {
-        console.warn('Topics', response.data);
-        return response.data;
-      })
-      .catch((error) => {
-        console.error('No Data: ', error);
-        return null;
-      });
-  },
 
   /**
    * Queries from the backend all information about the user
@@ -402,7 +409,7 @@ export default {
    */
   async getUserNameFromId(id) {
     return await client
-      .post(`${routes.user}/userNameFromId`, id)
+      .post(`${routes.user}/name`, id)
       .then((response) => {
         console.log('Name from id all:', response);
         console.log('Name from id:', response.data);

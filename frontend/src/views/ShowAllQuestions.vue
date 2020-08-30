@@ -1,6 +1,6 @@
 <template>
   <b-container v-if="isDataLoaded">
-    <b-row>
+    <b-row v-if="allQuestions.length > 0">
       <b-col sm="12" md="4" lg="4" xl="4" v-for="quest in allQuestions" :key="quest.id" class="mt-4">
         <QuestionCard 
           :qId="quest.id" 
@@ -14,6 +14,11 @@
         />
       </b-col>
     </b-row>
+
+   <b-row v-else>
+     No question
+   </b-row>
+
   </b-container>
 </template>
 

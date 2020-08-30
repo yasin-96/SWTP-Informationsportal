@@ -1,5 +1,7 @@
-package de.thm.swtp.information_portal.models;
+package de.thm.swtp.information_portal.models.Socket;
 
+import de.thm.swtp.information_portal.models.User.MinimalUser;
+import de.thm.swtp.information_portal.models.User.User;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +9,6 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.UUID;
 
 @NoArgsConstructor
 @Data

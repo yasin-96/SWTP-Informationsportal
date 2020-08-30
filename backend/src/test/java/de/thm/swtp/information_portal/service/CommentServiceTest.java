@@ -10,8 +10,8 @@
 //import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 //import org.springframework.context.annotation.ComponentScan;
 //
-//import de.thm.swtp.information_portal.models.Comment;
-//import de.thm.swtp.information_portal.models.Comments;
+//import de.thm.swtp.information_portal.models.Comment.Comment;
+//import de.thm.swtp.information_portal.models.Comment.Comments;
 //import de.thm.swtp.information_portal.service.CommentService;
 //
 //@ComponentScan(basePackages={"de.thm.swtp.information_portal"})

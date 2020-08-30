@@ -1,6 +1,6 @@
 <template>
  <b-container v-if="!!topics && topics.length">
-   <b-row>
+   <b-row v-if="topics.length > 0">
      <b-col sm="12" md="6" lg="4" xl="4" v-for="topic in topics" :key="topic.id" class="mt-4">
       <TagCard 
         :tId="topic.id"
@@ -8,6 +8,10 @@
         :tDate="topic.timeStamp"
       />
      </b-col>
+   </b-row>
+
+   <b-row v-else>
+     No Topics
    </b-row>
  </b-container>
 </template>

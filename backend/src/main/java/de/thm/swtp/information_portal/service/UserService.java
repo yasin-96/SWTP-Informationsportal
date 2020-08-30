@@ -1,7 +1,7 @@
 package de.thm.swtp.information_portal.service;
 
-import de.thm.swtp.information_portal.models.ResponseUser;
-import de.thm.swtp.information_portal.models.User;
+import de.thm.swtp.information_portal.models.User.ResponseUser;
+import de.thm.swtp.information_portal.models.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.thm.swtp.information_portal.repositories.UserRepository;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -39,7 +37,7 @@ public class UserService {
      */
     public ResponseEntity<User> getLoggedInUser(String userId, User user) throws URISyntaxException {
         if(userRepository.existsById(userId)){
-            return ResponseEntity.ok().body(user);
+            return new ResponseEntity(user, HttpStatus.OK);
         }
         return saveUserIfNotExists(user);
     }
@@ -56,7 +54,7 @@ public class UserService {
             var responseUser = new ResponseUser(user.get().getPreferred_username());
             return new ResponseEntity(responseUser, HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -73,7 +71,7 @@ public class UserService {
                     .created(new URI("/api/user" + user.getId()))
                     .body(user);
         }
-        return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(null);
+        return new ResponseEntity(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
     }
 }
 

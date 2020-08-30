@@ -136,15 +136,8 @@ export default {
   data() {
     return {
       // All changes for the answer will are temporarily stored here
-      changeAnswerObject: {
-        id: '',
-        listOfAnswers: [],
-        timeStamp: Date.parse(new Date()),
-      },
-
-      //Counter to in crease rating for answer
-      newRating: Number(this.aRating) + 1,
       
+
       //settings for markdown editor
       mdeConfig: {
         toolbar: null,
@@ -173,26 +166,16 @@ export default {
      * After that it is adjusted in the store
      */
     async increaseRating() {
-      // this.changeAnswerObject.id = this.nId || this.$localStore.get('rQuetionId');
-      this.changeAnswerObject.id = this.nId;
-      let currentDate = Date.parse(new Date());
-      // let newRating = Number(this.aRating) + 1;
-      console.warn('NEW R', this.newRating);
 
-      this.changeAnswerObject.listOfAnswers = [
-        {
-          id: this.cId,
-          content: this.aContent,
-          rating: this.newRating,
-          timeStamp: currentDate,
-        },
-      ];
-      
+      const changeAnswerObject = {
+        id: this.nId,
+        answerId: this.cId,
+        rating: Number(this.aRating) + 1,
+      }
+
       //TODO das geht noch nicht in place 
-      console.warn('INCRESE Rating AWT', this.changeAnswerObject);
-      await this.$store.dispatch('increaseRatingForAnswer', this.changeAnswerObject);
-
-      this.changeAnswerObject.listOfAnswers = [];
+      console.warn('INCRESE Rating AWT', changeAnswerObject);
+      await this.$store.dispatch('act_updateAnswerFromQuestion', changeAnswerObject);
     },
 
     /**
@@ -212,7 +195,7 @@ export default {
     },
   },
   computed: {
-    ...mapActions(['act_getAllComments', 'increaseRatingForAnswer']),
+    ...mapActions(['act_getAllComments', 'act_updateAnswerFromQuestion']),
     ...mapState(['allComments']),
   },
 };

@@ -2,8 +2,8 @@
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import de.thm.swtp.information_portal.controller.AnswerController;
-//import de.thm.swtp.information_portal.models.Answer;
-//import de.thm.swtp.information_portal.models.Answers;
+//import de.thm.swtp.information_portal.models.Answer.Answer;
+//import de.thm.swtp.information_portal.models.Answer.Answers;
 //import de.thm.swtp.information_portal.service.AnswerService;
 //import de.thm.swtp.information_portal.service.UserService;
 //import org.junit.jupiter.api.BeforeEach;

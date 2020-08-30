@@ -22,8 +22,8 @@
 //import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 //
 //import de.thm.swtp.information_portal.controller.TagController;
-//import de.thm.swtp.information_portal.models.Question;
-//import de.thm.swtp.information_portal.models.Tag;
+//import de.thm.swtp.information_portal.models.Question.Question;
+//import de.thm.swtp.information_portal.models.Tag.Tag;
 //import de.thm.swtp.information_portal.repositories.TagRepository;
 //import de.thm.swtp.information_portal.service.QuestionService;
 //import de.thm.swtp.information_portal.service.TagService;

@@ -1,24 +1,23 @@
 package de.thm.swtp.information_portal.controller;
 
-import java.lang.reflect.Array;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+import de.thm.swtp.information_portal.models.Answer.UpdateAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import de.thm.swtp.information_portal.models.Answer;
-import de.thm.swtp.information_portal.models.Answers;
+import de.thm.swtp.information_portal.models.Answer.Answer;
+import de.thm.swtp.information_portal.models.Answer.Answers;
 import de.thm.swtp.information_portal.service.AnswerService;
-import de.thm.swtp.information_portal.service.UserService;
+
+import static de.thm.swtp.information_portal.Util.checkUpdateAnswerModel;
 
 @RestController
 @RequestMapping("/info-portal/api")
@@ -35,7 +34,7 @@ public class AnswerController {
      * @throws InterruptedException
      */
     @Async
-    @PostMapping("/answer")
+    @PostMapping("/answer/new")
     public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList,
                                                                  @AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
         //TODO anserlist prüfen
@@ -45,28 +44,31 @@ public class AnswerController {
     }
 
     /**
-     * @param ids
+     * @param
      * @return
      */
     @Async
-    @PostMapping("/answer/answerTobeEdited")
-    public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(@Validated @RequestBody UUID[] ids) {
+    @GetMapping("/answer/edit")
+    public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(
+            @RequestParam UUID qId, @RequestParam UUID aId) {
 
-        //TODO: IDS prüfen
-        var formatedIds = new String[]{ids[0].toString(), ids[1].toString()};
-        return CompletableFuture.completedFuture(answerService.getAnswerToEdit(formatedIds));
+        return CompletableFuture.completedFuture(
+                answerService.getAnswerToEdit(qId.toString(), aId.toString())
+        );
     }
 
-    /**
-     * @param answersBody
-     * @return
-     * @throws URISyntaxException
-     */
-    @Async
-    @PutMapping("/answer")
-    public CompletableFuture<ResponseEntity<Answers>> editAnswer(@Validated @RequestBody Answers answersBody) throws URISyntaxException {
-        //TODO objekt prüfen??
-        return CompletableFuture.completedFuture(answerService.updateAnwer(answersBody));
+    @PatchMapping("/answer/update")
+    public CompletableFuture<ResponseEntity<Answers>> updateContent(@RequestBody UpdateAnswer updateAnswer,
+                                                                    @AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
+        if (checkUpdateAnswerModel(updateAnswer)) {
+            var userId = jwt.getClaimAsString("sub");
+            var userPreferedName = jwt.getClaimAsString("preferred_username");
+            return CompletableFuture.completedFuture(answerService.updateAnswer(updateAnswer, userId, userPreferedName));
+        }
+
+        return CompletableFuture.completedFuture(
+                new ResponseEntity(HttpStatus.BAD_REQUEST)
+        );
     }
 
     /**
@@ -76,22 +78,8 @@ public class AnswerController {
      * @throws InterruptedException
      */
     @Async
-    @GetMapping("/answer/answersByQuestionId/{id}")
+    @GetMapping("/answer/question/{id}")
     public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable UUID id) {
-
-        //TODO ID prüfen?
         return CompletableFuture.completedFuture(answerService.getAnswers(id.toString()));
-    }
-
-    /**
-     * @param answerList
-     * @return
-     */
-    @Async
-    @PostMapping("/answer/increaseRating")
-    public CompletableFuture<ResponseEntity<Answers>> increaseAnswerRating(@RequestBody Answers answerList) {
-
-        //CHECK answerlist
-        return CompletableFuture.completedFuture(answerService.increaseRating(answerList));
     }
 }

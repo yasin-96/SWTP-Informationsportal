@@ -27,8 +27,8 @@
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //
 //import de.thm.swtp.information_portal.controller.CommentController;
-//import de.thm.swtp.information_portal.models.Comment;
-//import de.thm.swtp.information_portal.models.Comments;
+//import de.thm.swtp.information_portal.models.Comment.Comment;
+//import de.thm.swtp.information_portal.models.Comment.Comments;
 //import de.thm.swtp.information_portal.service.CommentService;
 //
 //@ExtendWith(SpringExtension.class)

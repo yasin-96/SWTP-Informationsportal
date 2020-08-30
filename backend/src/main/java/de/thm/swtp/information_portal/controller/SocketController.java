@@ -1,9 +1,9 @@
 package de.thm.swtp.information_portal.controller;
 
-import de.thm.swtp.information_portal.models.*;
-
+import de.thm.swtp.information_portal.models.Socket.SocketResponse;
 import de.thm.swtp.information_portal.service.SocketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -32,11 +31,11 @@ public class SocketController {
      */
     @MessageMapping("/hello")
     @SendTo("/notify")
-    public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage, @AuthenticationPrincipal Jwt jwt) {
+    public CompletableFuture<ResponseEntity<SocketResponse>> socketResponse(@RequestBody String wsMessage) {
 
-        var userId = jwt.getClaimAsString("sub");
-        var userName = jwt.getClaimAsString("preferred_username");
-        //TODO valid massge??
-        return CompletableFuture.completedFuture(socketService.createMessage(wsMessage, userId, userName));
+        if(wsMessage != null) {
+            return CompletableFuture.completedFuture(socketService.createMessage(wsMessage));
+        }
+        return CompletableFuture.completedFuture(new ResponseEntity(HttpStatus.BAD_REQUEST));
     }
 }

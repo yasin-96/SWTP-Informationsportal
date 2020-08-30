@@ -1,10 +1,10 @@
 package de.thm.swtp.information_portal.controller;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+import de.thm.swtp.information_portal.models.Comment.UpdateComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,18 +12,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import de.thm.swtp.information_portal.models.Comment;
-import de.thm.swtp.information_portal.models.Comments;
+import de.thm.swtp.information_portal.models.Comment.Comments;
 import de.thm.swtp.information_portal.service.CommentService;
-import de.thm.swtp.information_portal.service.UserService;
+
+import static de.thm.swtp.information_portal.Util.checkUpdateCommentModel;
 
 @RestController
 @RequestMapping("/info-portal/api")
@@ -34,37 +28,35 @@ public class CommentController {
     private CommentService commentService;
 
     /**
-     * @return
-     * @throws InterruptedException
-     */
-    @Async
-    @GetMapping("/comment/allComments")
-    public CompletableFuture<List<Comments>> findAllComments() throws InterruptedException {
-        return CompletableFuture.completedFuture(commentService.findAllComments());
-    }
-
-    /**
      * @param id
      * @return
      * @throws InterruptedException
      */
     @Async
-    @GetMapping("/comment/commentsByAnswerId/{id}")
+    @GetMapping("/comment/answer/{id}")
     public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable UUID id)
             throws InterruptedException {
         return CompletableFuture.completedFuture(commentService.getCommentsByAnswerId(id.toString()));
     }
 
     /**
-     * @param commentList
+     *
+     * @param updateComment
+     * @param jwt
      * @return
      */
     @Async
-    @PostMapping("/comment/increaseRating")
-    public CompletableFuture<ResponseEntity<Comments>> increaseCommentRating(
-            @Validated @RequestBody Comments commentList) {
-        //TODO liste validieren?
-        return CompletableFuture.completedFuture(commentService.increaseRating(commentList));
+    @PatchMapping("/comment/update")
+    public CompletableFuture<ResponseEntity<Comments>> updateComment(
+            @RequestBody UpdateComment updateComment,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        if(checkUpdateCommentModel(updateComment)){
+            var userId = jwt.getClaimAsString("sub");
+            var userName = jwt.getClaimAsString("preferred_username");
+            return CompletableFuture.completedFuture(commentService.update(updateComment, userId, userName));
+        }
+        return CompletableFuture.completedFuture(new ResponseEntity(HttpStatus.BAD_REQUEST));
     }
 
     /**
@@ -74,9 +66,12 @@ public class CommentController {
      * @throws InterruptedException
      */
     @Async
-    @PostMapping("/comment/newComments")
-    public CompletableFuture<ResponseEntity<Comments>> postComments(@RequestBody Comments commentList, @AuthenticationPrincipal Jwt jwt)
+    @PostMapping("/comment/new")
+    public CompletableFuture<ResponseEntity<Comments>> postComments(
+            @RequestBody Comments commentList,
+            @AuthenticationPrincipal Jwt jwt)
             throws URISyntaxException {
+
         //TODO liste prüfen?
         var userId = jwt.getClaimAsString("sub");
         var userName = jwt.getClaimAsString("preferred_username");

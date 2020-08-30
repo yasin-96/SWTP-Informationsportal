@@ -3,17 +3,15 @@ package de.thm.swtp.information_portal.service;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
-import de.thm.swtp.information_portal.models.Answers;
-import de.thm.swtp.information_portal.models.Comment;
-import de.thm.swtp.information_portal.repositories.UserRepository;
+import de.thm.swtp.information_portal.models.Comment.Comment;
+import de.thm.swtp.information_portal.models.Comment.UpdateComment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import de.thm.swtp.information_portal.models.Comments;
+import de.thm.swtp.information_portal.models.Comment.Comments;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 
 @Service
@@ -83,7 +81,8 @@ public class CommentService {
             comments.get().setComments(commentsPresent);
 
             this.postComments(comments.get());
-            return ResponseEntity.created(new URI("/api/answer" + comments.get().getId())).body(comments.get());
+            return ResponseEntity.created(new URI("/api/answer" + comments.get().getId()))
+                    .body(comments.get());
         }
     }
 
@@ -131,6 +130,33 @@ public class CommentService {
         return commentsToBeModified
                 .map(response -> ResponseEntity.ok().body(response))
                 .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+    }
+
+
+    public ResponseEntity<Comments> update(UpdateComment updateComment, String userId, String userName){
+        var commentsToBeModified = this.findByAnswerId(updateComment.getId());
+
+        commentsToBeModified.get().getComments()
+                .stream()
+                .forEach(item -> {
+                    if(item.getId().equals(updateComment.getCommentId())){
+                        if(item.getUserId().equals(userId) && item.getUserName().equals(userName)){
+
+                            if(updateComment.getContent() != null){
+                                item.setContent(updateComment.getContent());
+                            }
+
+                            if(updateComment.getRating() != -1){
+                                item.setRating(updateComment.getRating());
+                            }
+                        }
+                    }
+                });
+
+        this.postComments(commentsToBeModified.get());
+
+        return new ResponseEntity(commentsToBeModified.get(), HttpStatus.OK);
+        //.created(new URI("/api/answer/" + answersToBeModified.get().getId()))
     }
 
 

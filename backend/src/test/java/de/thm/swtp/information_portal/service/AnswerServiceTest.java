@@ -11,8 +11,8 @@
 //import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 //import org.springframework.context.annotation.ComponentScan;
 //
-//import de.thm.swtp.information_portal.models.Answer;
-//import de.thm.swtp.information_portal.models.Answers;
+//import de.thm.swtp.information_portal.models.Answer.Answer;
+//import de.thm.swtp.information_portal.models.Answer.Answers;
 //
 //@ComponentScan(basePackages={"de.thm.swtp.information_portal"})
 //@DataMongoTest

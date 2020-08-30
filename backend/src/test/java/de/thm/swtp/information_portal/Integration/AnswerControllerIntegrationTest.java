@@ -25,8 +25,8 @@
 //import org.springframework.util.MultiValueMap;
 //import org.springframework.web.client.HttpClientErrorException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import de.thm.swtp.information_portal.models.Answer;
-//import de.thm.swtp.information_portal.models.Answers;
+//import de.thm.swtp.information_portal.models.Answer.Answer;
+//import de.thm.swtp.information_portal.models.Answer.Answers;
 //import de.thm.swtp.information_portal.repositories.AnswerRepository;
 //
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

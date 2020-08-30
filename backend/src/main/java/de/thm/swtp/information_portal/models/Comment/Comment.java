@@ -1,4 +1,4 @@
-package de.thm.swtp.information_portal.models;
+package de.thm.swtp.information_portal.models.Comment;
 
 import java.time.Instant;
 import java.util.UUID;

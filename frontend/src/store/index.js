@@ -155,6 +155,9 @@ export default new Vuex.Store({
        * @param {Obejct} data All answers
        */
       SET_ALL_ANSWERS(state, data) {
+
+        state.allAnswers = new Object();
+
         console.debug('SET_ALL_ANSWERS');
         state.allAnswers = data;
       },
@@ -183,6 +186,7 @@ export default new Vuex.Store({
        * @param {Object} data Comments to set
        */
       SET_ALL_COMMENTS(state, data) {
+        state.allComments = new Array();
         if (data) {
           console.debug('SET_ALL_COMMENTS');
           console.debug('SET', data);
@@ -265,13 +269,19 @@ export default new Vuex.Store({
         //   // ws.pop(index);
         // })
       }
+    },
+
+    CHECK_WS_MESSAGE_AND_QUESTION(state){
+      if(state.allQuestions.length <=0){
+          state.wsMessages = new Array();
+      }
     }
   },
   actions: {
     //#region question
 
     //questions
-    async act_getAllQuestions({ commit, dispatch }) {
+    async act_getAllQuestions({ commit }) {
       console.log('act_getAllQuestions');
       await RestCalls.getAllQuestions()
         .then((response) => {
@@ -388,7 +398,7 @@ export default new Vuex.Store({
      * Request all answers to one question
      * @param {String} questionId Id of the list of answer
      */
-    async act_getAllAnswers({ commit, dispatch }, questionId) {
+    async act_getAllAnswers({ commit }, questionId) {
       console.log('act_getAllAnswers', questionId);
       await RestCalls.getAllAnswersToQuestions(questionId)
         .then((response) => {
@@ -414,6 +424,7 @@ export default new Vuex.Store({
       console.log('act_getOneAnswerToQuestion', id);
       await RestCalls.getOneAnswerToQuestion(id)
         .then((response) => {
+          console.info("GOATO", response)
           if (response != null) {
             commit('SET_ONE_ANSWER_TO_QUESTION', response);
           }
@@ -427,11 +438,18 @@ export default new Vuex.Store({
      * Update answer information for one question
      * @param {Object} updatedAnswerToQuestion Answer to update
      */
-    async act_updateAnswerFromQuestion({}, updatedAnswerToQuestion) {
+    async act_updateAnswerFromQuestion({commit}, updatedAnswerToQuestion) {
       console.log('act_updateAnswerFromQuestion');
-      return await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
+      await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
         .then((response) => {
-          return response;
+          if (response) {
+            response.listOfAnswers.forEach((d) => {
+              console.debug('ANSWERS', d);
+              d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
+            });
+            
+            commit('SET_ALL_ANSWERS', response);
+          }
         })
         .catch((error) => {
           console.error('act_updateAnswerFromQuestion: ', error);
@@ -442,12 +460,18 @@ export default new Vuex.Store({
      * Add new answer for one question and the reload all answer for this question
      * @param {Object} newAnswer Answer to add 
      */
-    async act_addNewAnswer({ dispatch }, newAnswer) {
+    async act_addNewAnswer({ commit }, newAnswer) {
       console.log('act_addNewAnswer', newAnswer);
       await RestCalls.addNewAnswer(newAnswer)
         .then(async (response) => {
-          // return response;
-          await dispatch('act_getAllAnswers', newAnswer.id);
+          if (response) {
+            response.listOfAnswers.forEach((d) => {
+              console.debug('ANSWERS', d);
+              d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
+            });
+            
+            commit('SET_ALL_ANSWERS', response);
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -455,24 +479,7 @@ export default new Vuex.Store({
         });
     },
 
-    /**
-     * 
-     * @param {*} param0 
-     * @param {*} answer 
-     */
-    async increaseRatingForAnswer({ state, dispatch }, answer) {
-      console.log('increaseAnswerRating', answer);
-
-      await RestCalls.increaseAnswerRating(answer)
-        .then(async () => {
-          state.allAnswers = [];
-          await dispatch('act_getAllAnswers', answer.id);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-
+    
     //#endregion answer
 
     //#region comment
@@ -502,13 +509,17 @@ export default new Vuex.Store({
      * 
      * @param {*} newComment 
      */
-    async act_addNewComment({ state, dispatch }, newComment) {
+    async act_addNewComment({ commit }, newComment) {
       console.log('act_addNewComment', newComment);
       await RestCalls.addNewComment(newComment)
         .then(async (response) => {
-          console.log('response', response);
-          state.allComments = [];
-          await dispatch('act_getAllComments', newComment.id);
+          if (response && response.comments) {
+            response.comments.forEach((dd) => {
+              console.debug(dd);
+              dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
+            });
+          }
+          commit('SET_ALL_COMMENTS', response);
         })
         .catch((error) => {
           console.error(error);
@@ -519,13 +530,17 @@ export default new Vuex.Store({
      * TODO
      * @param {*} comment 
      */
-    async act_increaseCommentRating({ state, dispatch }, comment) {
-      console.log('act_increaseCommentRating', comment);
-      await RestCalls.increaseCommentRating(comment)
-        .then(async () => {
-          //reset all comments
-          state.allComments = [];
-          await dispatch('act_getAllComments', comment.id);
+    async act_updateComment({ state, commit }, comment) {
+      console.log('act_updateComment', comment);
+      await RestCalls.updateComment(comment)
+        .then((response) => {
+          if (response && response.comments) {
+            response.comments.forEach((dd) => {
+              console.debug(dd);
+              dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
+            });
+          }
+          commit('SET_ALL_COMMENTS', response);
         })
         .catch((error) => {
           console.error(error);
@@ -569,7 +584,8 @@ export default new Vuex.Store({
      * TODO
      */
     async act_getUserInfo({ commit }) {
-      await RestCalls.getUserInfo().then((response) => {
+      await RestCalls.getUserInfo()
+      .then((response) => {
         commit('SET_USER_INFO', response);
       });
     },
@@ -577,7 +593,7 @@ export default new Vuex.Store({
     /**
      * TODO
      */
-    act_createConnectSocketAndStompClient({ state, commit, dispatch }) {
+    act_createConnectSocketAndStompClient({ state, commit }) {
       // commit('CREATE_NEW_SOCKET', websocketURL);
       // commit('CREATE_NEW_STOMP_CLIENT');
 
@@ -667,6 +683,10 @@ export default new Vuex.Store({
      */
     act_removeOneWSMessage({commit}, index){
       commit('REMOVE_WS_MESSAGE', index);
+    },
+
+    act_checkWSMessageWithQuestion({commit}){
+      commit("CHECK_WS_MESSAGE_AND_QUESTION");
     }
   },
 

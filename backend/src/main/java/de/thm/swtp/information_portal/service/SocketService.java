@@ -1,7 +1,12 @@
 package de.thm.swtp.information_portal.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.thm.swtp.information_portal.models.*;
+import de.thm.swtp.information_portal.models.Answer.Answer;
+import de.thm.swtp.information_portal.models.Comment.Comment;
+import de.thm.swtp.information_portal.models.Socket.SocketReceived;
+import de.thm.swtp.information_portal.models.Socket.SocketResponse;
+import de.thm.swtp.information_portal.models.User.MinimalUser;
+import de.thm.swtp.information_portal.models.User.User;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
@@ -12,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.UUID;
 
 @Service
 public class SocketService {
@@ -29,7 +33,7 @@ public class SocketService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public ResponseEntity<SocketResponse> createMessage(String wsMessage, String userId, String userName){
+    public ResponseEntity<SocketResponse> createMessage(String wsMessage){
 
         // init data
         var wsData = new SocketReceived();
@@ -61,7 +65,7 @@ public class SocketService {
                         headerOfQuestion,
                         wsData.getIsAnswer(),
                         wsData.getIsComment(),
-                        new MinimalUser(userId, userName)
+                        wsData.getMinimalUser()
                 );
             }
 
@@ -81,7 +85,7 @@ public class SocketService {
                         users,headerOfQuestion,
                         wsData.getIsAnswer(),
                         wsData.getIsComment(),
-                        new MinimalUser(userId, userName)
+                        wsData.getMinimalUser()
                 );
 
             }

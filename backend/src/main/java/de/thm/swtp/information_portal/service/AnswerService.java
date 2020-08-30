@@ -3,15 +3,14 @@ package de.thm.swtp.information_portal.service;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
-import de.thm.swtp.information_portal.models.Answer;
-import de.thm.swtp.information_portal.repositories.UserRepository;
+import de.thm.swtp.information_portal.models.Answer.Answer;
+import de.thm.swtp.information_portal.models.Answer.UpdateAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import de.thm.swtp.information_portal.models.Answers;
+import de.thm.swtp.information_portal.models.Answer.Answers;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
 
 @Service
@@ -75,47 +74,53 @@ public class AnswerService {
      * @return
      */
     public Optional<Answers> findByQuestionId(String id) {
-        return answerRepository.findById(id.toString());
+
+        return answerRepository.findById(id);
     }
 
-    public ResponseEntity<Answer> getAnswerToEdit(String[] ids){
-        var answers = this.findByQuestionId(ids[0]);
-        var answerList = answers.get().getListOfAnswers();
+    public ResponseEntity<Answer> getAnswerToEdit(String questionId, String answerId){
+        var answers = answerRepository.findById(questionId);
 
+        if(answers.isPresent()){
+            var foundAnswer = answers.get()
+                    .getListOfAnswers()
+                    .stream()
+                    .filter(item -> item.getId().equals(answerId))
+                    .findFirst();
 
-        //TODO: brauchen wir garnicht entweder wir finden was und returnen das oder geben nichts zurück
-        var foundAnswer = new Answer();
-
-        for (var answer : answerList) {
-            if (answer.getId().equals(ids[1])) {
-                foundAnswer = answer;
-
-            }
+            return new ResponseEntity(foundAnswer, HttpStatus.OK);
         }
-
-        return new ResponseEntity<Answer>(foundAnswer, HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
 
 
-    public ResponseEntity<Answers> updateAnwer(Answers answersBody) throws URISyntaxException {
-        var answersToBeModified = this.findByQuestionId(answersBody.getId());
-        var modifiedAnswer = answersBody.getListOfAnswers().get(0);
-        var listOfAnswers = answersToBeModified.get().getListOfAnswers();
+    public ResponseEntity<Answers> updateAnswer(UpdateAnswer updateAnswer, String userId, String userName) throws URISyntaxException {
+        var answersToBeModified = this.findByQuestionId(updateAnswer.getId());
+
+        answersToBeModified.get().getListOfAnswers()
+                .stream()
+                .forEach(item -> {
+                  if(item.getId().equals(updateAnswer.getAnswerId())){
+                      if(item.getUserId().equals(userId) && item.getUserName().equals(userName)){
+
+                          if(updateAnswer.getContent() != null){
+                              item.setContent(updateAnswer.getContent());
+                          }
+
+                          if(updateAnswer.getRating() != -1){
+                              item.setRating(updateAnswer.getRating());
+                          }
 
 
-        listOfAnswers.forEach((item -> {
-            if (item.getId().equals(modifiedAnswer.getId())) {
-                listOfAnswers.set(listOfAnswers.indexOf(item), modifiedAnswer);
-            }
-        }));
-
-        answersToBeModified.get().setListOfAnswers(listOfAnswers);
-
+                      }
+                  }
+                });
+        answersToBeModified.get().getListOfAnswers().sort(compareByRating);
         this.postAnswer(answersToBeModified.get());
 
-        return ResponseEntity
-                .created(new URI("/api/answer/" + answersToBeModified.get().getId())).body(answersToBeModified.get());
+        return new ResponseEntity(answersToBeModified.get(), HttpStatus.OK);
+                //.created(new URI("/api/answer/" + answersToBeModified.get().getId()))
     }
 
 

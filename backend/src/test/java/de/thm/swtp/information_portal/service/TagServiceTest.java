@@ -11,8 +11,8 @@
 //import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 //import org.springframework.boot.test.mock.mockito.MockBean;
 //
-//import de.thm.swtp.information_portal.models.Tag;
-//import de.thm.swtp.information_portal.models.Question;
+//import de.thm.swtp.information_portal.models.Tag.Tag;
+//import de.thm.swtp.information_portal.models.Question.Question;
 //import de.thm.swtp.information_portal.service.QuestionService;
 //
 //@DataMongoTest

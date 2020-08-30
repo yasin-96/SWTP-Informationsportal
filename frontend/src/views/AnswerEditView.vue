@@ -1,11 +1,6 @@
 <template>
   <b-container class="mt-3">
-    <!-- <b-row b-if="oneQuestion && isQuestionAreLoaded"> -->
     <b-row>
-      <!-- <b-col>
-        <QuestionCard v-if="!!answer" :qId="answer.id" :qHeader="answer.header" :qContent="answer.content" :qTags="answer.tags" :qDate="answer.timeStamp" :qFooter="true" :qEdit="false" />
-      </b-col>-->
-
       <b-col>
         <b-card
           header-bg-variant="white"
@@ -23,13 +18,13 @@
                   <b-button size="sm" disabled variant="white"></b-button>
                   <b-button size="sm" disabled variant="white">
                     <strong>Answer</strong>
-                    created by {{ currentAnswer.userName }}
+                    created by {{ oneAnswer.userName }}
                     <small class="ml-3"></small>
                   </b-button>
                   <b-button size="sm" disabled variant="white">
                     <small>
                       <fai icon="clock" />
-                      {{ currentAnswer.timeStamp }}
+                      {{ oneAnswer.timeStamp }}
                     </small>
                   </b-button>
                 </b-button-group>
@@ -39,7 +34,7 @@
 
           <!-- Answer content -->
           <b-card-text>
-            <Editor v-model="currentAnswer.content" :configs="mdeConfig" />
+            <Editor v-model="updatedAnswer.content" :configs="mdeConfig" />
           </b-card-text>
         </b-card>
       </b-col>
@@ -88,13 +83,11 @@ export default {
       //Check if answer are loaded and then display the content
       isQuestionAreLoaded: false,
 
-      //Copy of all answer from store 
-      currentAnswer: {},
-
       //All changes will be stored here
       updatedAnswer: {
         id: this.qId,
-        listOfAnswers: [],
+        answerId: this.aId,
+        content: "",
       },
 
       //Config for markdown editor
@@ -116,7 +109,7 @@ export default {
     async loadData() {
       if (this.qId && this.aId) {
         await this.$store.dispatch('act_getOneQuestion', this.qId);
-        await this.$store.dispatch('act_getOneAnswerToQuestion', { ids: [this.qId, this.aId] });
+        await this.$store.dispatch('act_getOneAnswerToQuestion', { questionId: this.qId, answerId: this.aId } );
       }
     },
 
@@ -132,34 +125,20 @@ export default {
      * Send new change of a answer
      */
     async sendUpdatedAnswer() {
-      if (this.currentAnswer.content) {
-        this.updatedAnswer.listOfAnswers.push({
-          id: this.aId,
-          content: this.currentAnswer.content,
-          rating: 0,
-          userId: this.userId,
-          userName: this.getUsersPreferedName,
-          timeStamp: Date.parse(new Date()),
-        });
-        let response = await this.$store.dispatch('act_updateAnswerFromQuestion', this.updatedAnswer);
-        this.$router.push(`/question/${response.id}`);
+      if (this.updatedAnswer.content) {
+        await this.$store.dispatch('act_updateAnswerFromQuestion', this.updatedAnswer);
+        this.$router.push(`/question/${this.$props.qId}`);
       }
     },
   },
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getOneAnswerToQuestion', 'act_updateAnswerFromQuestion']),
     ...mapState(['oneAnswer', 'oneQuestion']),
-    ...mapGetters(['getUserId', 'getUsersPreferedName']),
-    userId: {
-      get() { 
-        return this.$store.userId
-      }
-    }
   },
   watch: {
     oneAnswer() {
       if (this.oneAnswer) {
-        this.currentAnswer = Object.assign({}, this.oneAnswer);
+        this.updatedAnswer.content = this.oneAnswer.content;
       }
     },
     oneQuestion() {

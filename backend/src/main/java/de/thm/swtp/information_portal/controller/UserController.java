@@ -1,7 +1,7 @@
 package de.thm.swtp.information_portal.controller;
 
-import de.thm.swtp.information_portal.models.ResponseUser;
-import de.thm.swtp.information_portal.models.User;
+import de.thm.swtp.information_portal.models.User.ResponseUser;
+import de.thm.swtp.information_portal.models.User.User;
 import de.thm.swtp.information_portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,12 +49,8 @@ public class UserController {
      * @return
      */
     @Async
-    @PostMapping("/user/userNameFromId")
+    @PostMapping("/user/name")
     CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody UUID id) {
         return CompletableFuture.completedFuture(userService.getUserById(id.toString()));
     }
-
-
-
-
 }

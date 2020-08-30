@@ -1,5 +1,6 @@
-package de.thm.swtp.information_portal.models;
+package de.thm.swtp.information_portal.models.Socket;
 
+import de.thm.swtp.information_portal.models.User.MinimalUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -23,10 +24,13 @@ public class SocketReceived {
     private Boolean isAnswer;
     private Boolean isComment;
 
-    public SocketReceived(String questionId, String answerId, Boolean isAnswer, Boolean isComment) {
+    private MinimalUser minimalUser;
+
+    public SocketReceived(String questionId, String answerId, Boolean isAnswer, Boolean isComment, MinimalUser minimalUser) {
         this.questionId = questionId;
         this.answerId = answerId;
         this.isAnswer = isAnswer;
         this.isComment = isComment;
+        this.minimalUser = minimalUser;
     }
 }

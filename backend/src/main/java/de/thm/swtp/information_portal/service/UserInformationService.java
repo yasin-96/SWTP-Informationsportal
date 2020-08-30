@@ -1,9 +1,6 @@
 package de.thm.swtp.information_portal.service;
 
-import de.thm.swtp.information_portal.models.Answer;
-import de.thm.swtp.information_portal.models.Answers;
-import de.thm.swtp.information_portal.models.Question;
-import de.thm.swtp.information_portal.models.UserInformation;
+import de.thm.swtp.information_portal.models.User.UserInformation;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 import de.thm.swtp.information_portal.repositories.UserInformationRepository;
@@ -15,8 +12,6 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,47 +32,30 @@ public class UserInformationService {
      */
     public ResponseEntity<UserInformation> getUserInfo(String userId) throws URISyntaxException {
 
-        var userInfo = userInformationRepository.findById(userId);
+        var allQuestions = questionRepository.findAll();
+        int numberOfQuestions = 0;
+        int numberOfAnswers = 0;
 
-        if(userInfo.isPresent()){
-            return  userInfo
-                    .map(response -> ResponseEntity.ok().body(response))
-                    .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        if(!allQuestions.isEmpty()) {
+
+            numberOfQuestions = Math.toIntExact(allQuestions.stream()
+                    .filter(quest -> quest.getUserId().equals(userId))
+                    .count()
+            );
         }
-            var allQuestions = questionRepository.findAll();
-            var questionsOfUser = new ArrayList<>();
 
-            if(!allQuestions.isEmpty()){
+        numberOfAnswers = this.getNumberOfAnswers(userId);
 
-                var numberOfQuestions = Math.toIntExact(allQuestions.stream()
-                        .filter(quest -> quest.getUserId().equals(userId))
-                        .count()
-                );
+        var newUserInfo = new UserInformation(
+                userId,
+                numberOfQuestions,
+                numberOfAnswers
+        );
 
-                /*for(Question question: allQuestions){
-                    if(question.getUserId().equals(userId)){
-                        questionsOfUser.add(question);
-                    }
-                }*/
+        this.addUserInfo(newUserInfo);
 
-                int numberOfAnswers = this.getNumberOfAnswers(userId);
+        return new ResponseEntity(newUserInfo, HttpStatus.OK);
 
-                var newUserInfo = new UserInformation(
-                        userId,
-                        numberOfQuestions,
-                        numberOfAnswers
-                );
-
-                this.addUserInfo(newUserInfo);
-
-                return ResponseEntity
-                        .created(new URI("/info-portal/api" + newUserInfo.getId()))
-                        .body(newUserInfo);
-            }
-
-        return ResponseEntity
-                .created(new URI("/info-portal/api" + userId))
-                .body(new UserInformation(userId, 0, 0));
     }
 
     /**
