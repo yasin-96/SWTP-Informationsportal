@@ -102,9 +102,8 @@ export default {
      * Create the new Question and go this view
      */
     async createQuestion() {
-      let response = await this.$store.dispatch('act_creatNewQuestion', this.newQuestion);
-      console.log('res', response);
-      this.$router.push(`/question/${response.id}`);
+      const questionId = await this.$store.dispatch('act_createNewQuestion', this.newQuestion);
+      this.$router.push(`/question/${questionId}`);
     },
     /**
      * To prevent errors, the tags are all capitalized. 
@@ -117,7 +116,7 @@ export default {
     },
   },
   computed: {
-    ...mapActions(['act_getAllTags', 'act_creatNewQuestion']),
+    ...mapActions(['act_getAllTags', 'act_createNewQuestion']),
     ...mapGetters(['getAllTagName']),
     ...mapState(['allTags']),
     
