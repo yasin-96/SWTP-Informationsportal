@@ -36,37 +36,80 @@ public class QuestionService {
 	@Autowired
 	private AnswerRepository answerRepository;
 
+
+	public ResponseEntity<HashSet<Question>> findByTagName(String searchQuery){
+		var listQuery = Arrays.stream(searchQuery.toUpperCase().split(" "))
+				.filter(item -> !item.isEmpty())
+				.collect(Collectors.toList());
+
+		var filteredQuestions = new HashSet<Question>();
+
+		for (var query : listQuery) {
+			var foundedTag = this.findTag(query);
+			if (foundedTag != null) {
+				filteredQuestions.addAll(foundedTag);
+			}
+		}
+
+		if(filteredQuestions != null) {
+			return new ResponseEntity(filteredQuestions, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+
+	public List<Question> findTag(String tags) {
+		var questionByTags = new ArrayList<Question>();
+		var existingTag = tagRepository.findByName(tags);
+
+		if(existingTag != null){
+			var allQuestions = questionRepository.findAll();
+
+			if(allQuestions != null){
+				questionByTags = new ArrayList<Question>();
+				for (var question : allQuestions) {
+					for (Tag tag : question.getTags()) {
+						if (existingTag.getName().toLowerCase().equals(tag.getName().toLowerCase())) {
+							questionByTags.add(question);
+						}
+					}
+				}
+			}
+		}
+
+		return questionByTags != null ? questionByTags : null;
+	}
+
+
 	/**
 	 *
 	 * @param searchQuery
 	 * @return
 	 */
-	public ResponseEntity<List<Question>> findByTag(String searchQuery) {
+	public ResponseEntity<List<Question>> findByQuery(String searchQuery) {
 
-		var response = Arrays.stream(searchQuery.toUpperCase().split(" "))
+		var response = Arrays.stream(searchQuery.trim().toUpperCase().split(" "))
 				.filter(item -> !item.isEmpty())
-				//.collect(Collectors.toList())
-				//.stream()
 				.map(query -> {
+					System.out.println("Query: "+ query);
 					var existingTag = tagRepository.findByName(query);
 
 					if(existingTag != null){
 						var allQuestions = questionRepository.findAll();
 
 						if(allQuestions != null){
-							var questionByTags = allQuestions.stream()
-									.map(listOftag -> listOftag.getTags())
-									.map(tagsList -> tagsList.stream()
-											.filter(item ->
-												item.getName().toLowerCase().equals(existingTag.getName().toLowerCase())
-											)
-									).collect(Collectors.toList());
-							return questionByTags;
+							return allQuestions.stream()
+								.map(listOftag -> listOftag.getTags())
+								.flatMap(tagList -> tagList.stream()
+										.filter(item ->
+												existingTag.getName().toLowerCase().equals(item.getName().toLowerCase())
+										)
+								).collect(Collectors.toList());
 						}
 					}
 					return null;
 				})
-				.filter(list -> !list.isEmpty());
+				.filter(list -> !list.isEmpty())
+				.findFirst();
 
 		if(response != null){
 			return new ResponseEntity(response, HttpStatus.OK);

@@ -57,10 +57,10 @@ public class QuestionController {
 	 */
 	@Async
 	@GetMapping("/question/tag/{tag}")
-	public CompletableFuture<ResponseEntity<List<Question>>> findByTag(@PathVariable String tag)
+	public CompletableFuture<ResponseEntity<HashSet<Question>>> findByTag(@PathVariable String tag)
 			throws InterruptedException {
 		if(tag != null){
-			return CompletableFuture.completedFuture(questionService.findByTag(tag));
+			return CompletableFuture.completedFuture(questionService.findByTagName(tag));
 		}
 
 		return CompletableFuture.completedFuture(new ResponseEntity(HttpStatus.BAD_REQUEST));
@@ -116,7 +116,7 @@ public class QuestionController {
 			throws URISyntaxException, InterruptedException {
 
 		if(searchQuery != null){
-			return CompletableFuture.completedFuture(questionService.findByTag(searchQuery));
+			return CompletableFuture.completedFuture(questionService.findByQuery(searchQuery));
 		}
 
 		return CompletableFuture.completedFuture(new ResponseEntity(HttpStatus.BAD_REQUEST));
