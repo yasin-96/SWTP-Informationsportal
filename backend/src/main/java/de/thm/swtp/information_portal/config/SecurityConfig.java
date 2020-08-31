@@ -12,18 +12,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll().and()
-                .oauth2ResourceServer()
-                .jwt()
+        http
+                .csrf()
+                .disable()
+                .authorizeRequests().anyRequest().permitAll()
+                .and()
+                .oauth2ResourceServer().jwt()
                 .jwtAuthenticationConverter(jwt -> {
                     var jwtAuthToken = new JwtAuthenticationToken(jwt);
 
                     //TODO BUG: need to set this manuel
                     jwtAuthToken.setAuthenticated(true);
+//                    System.out.println(jwtAuthToken.toString());
+//                    System.out.println("IS AUTH: " + jwtAuthToken.isAuthenticated());
                     return jwtAuthToken;
-           
-        });
-        http.csrf().disable();
+
+                });
     }
 
     @Bean
