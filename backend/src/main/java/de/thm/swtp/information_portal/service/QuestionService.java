@@ -1,26 +1,17 @@
 package de.thm.swtp.information_portal.service;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import de.thm.swtp.information_portal.models.Answer.Answers;
+import de.thm.swtp.information_portal.models.Question.Question;
+import de.thm.swtp.information_portal.models.Tag.Tag;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
+import de.thm.swtp.information_portal.repositories.QuestionRepository;
+import de.thm.swtp.information_portal.repositories.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import de.thm.swtp.information_portal.models.Question.Question;
-import de.thm.swtp.information_portal.models.Tag.Tag;
-import de.thm.swtp.information_portal.repositories.QuestionRepository;
-import de.thm.swtp.information_portal.repositories.TagRepository;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -73,7 +64,7 @@ public class QuestionService {
                 return null;
             }
 
-            questionByTags = new ArrayList<Question>();
+            questionByTags = new ArrayList<>();
             for (var question : allQuestions) {
                 for (Tag tag : question.getTags()) {
                     if (existingTag.getName().toLowerCase().equals(tag.getName().toLowerCase())) {
