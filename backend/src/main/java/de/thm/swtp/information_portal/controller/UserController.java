@@ -4,6 +4,7 @@ import de.thm.swtp.information_portal.models.User.ResponseUser;
 import de.thm.swtp.information_portal.models.User.User;
 import de.thm.swtp.information_portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +32,14 @@ public class UserController {
     @Async
     @GetMapping("/user/info")
     CompletableFuture<ResponseEntity<User>> getLoggedInUser(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
+
+        if(jwt == null) {
+            return CompletableFuture.completedFuture(
+                    ResponseEntity
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .body(null)
+            );
+        }
 
         var user = new User(
             jwt.getClaimAsString("sub"),

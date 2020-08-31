@@ -52,6 +52,14 @@ public class CommentController {
             @RequestBody UpdateComment updateComment,
             @AuthenticationPrincipal Jwt jwt) {
 
+        if(jwt == null) {
+            return CompletableFuture.completedFuture(
+                    ResponseEntity
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .body(null)
+            );
+        }
+
         if(checkUpdateCommentModel(updateComment)){
             var userId = jwt.getClaimAsString("sub");
             var userName = jwt.getClaimAsString("preferred_username");
@@ -75,6 +83,14 @@ public class CommentController {
     public CompletableFuture<ResponseEntity<Comments>> postComments(
             @RequestBody Comments commentList,
             @AuthenticationPrincipal Jwt jwt) {
+
+        if(jwt == null) {
+            return CompletableFuture.completedFuture(
+                    ResponseEntity
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .body(null)
+            );
+        }
 
         //TODO liste prüfen?
         var userId = jwt.getClaimAsString("sub");

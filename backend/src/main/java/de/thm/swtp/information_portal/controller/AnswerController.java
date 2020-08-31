@@ -1,6 +1,5 @@
 package de.thm.swtp.information_portal.controller;
 
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
@@ -28,15 +27,25 @@ public class AnswerController {
     private AnswerService answerService;
 
     /**
+     *
      * @param answerList
+     * @param jwt
      * @return
-     * @throws URISyntaxException
-     * @throws InterruptedException
      */
     @Async
     @PostMapping("/answer/new")
-    public CompletableFuture<ResponseEntity<Answers>> postAnswer(@RequestBody Answers answerList,
-                                                                 @AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
+    public CompletableFuture<ResponseEntity<Answers>> postAnswer(
+            @RequestBody Answers answerList,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        if(jwt == null) {
+            return CompletableFuture.completedFuture(
+                    ResponseEntity
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .body(null)
+            );
+        }
+
         //TODO anserlist prüfen
         var userId = jwt.getClaimAsString("sub");
         var userPreferedName = jwt.getClaimAsString("preferred_username");
@@ -44,22 +53,39 @@ public class AnswerController {
     }
 
     /**
-     * @param
+     *
+     * @param qId
+     * @param aId
      * @return
      */
     @Async
     @GetMapping("/answer/edit")
     public CompletableFuture<ResponseEntity<Optional<Answer>>> getAnswerToBeEdited(
             @RequestParam UUID qId, @RequestParam UUID aId) {
-
         return CompletableFuture.completedFuture(
                 answerService.getAnswerToEdit(qId.toString(), aId.toString())
         );
     }
 
+    /**
+     *
+     * @param updateAnswer
+     * @param jwt
+     * @return
+     */
     @PatchMapping("/answer/update")
-    public CompletableFuture<ResponseEntity<Answers>> updateContent(@RequestBody UpdateAnswer updateAnswer,
-                                                                    @AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
+    public CompletableFuture<ResponseEntity<Answers>> updateContent(
+            @RequestBody UpdateAnswer updateAnswer,
+            @AuthenticationPrincipal Jwt jwt){
+
+        if(jwt == null) {
+            return CompletableFuture.completedFuture(
+                    ResponseEntity
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .body(null)
+            );
+        }
+
         if (checkUpdateAnswerModel(updateAnswer)) {
             var userId = jwt.getClaimAsString("sub");
             var userPreferedName = jwt.getClaimAsString("preferred_username");
@@ -67,15 +93,16 @@ public class AnswerController {
         }
 
         return CompletableFuture.completedFuture(
-                new ResponseEntity(HttpStatus.BAD_REQUEST)
+                ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(null)
         );
     }
 
     /**
+     *
      * @param id
      * @return
-     * @throws InterruptedException
-     * @throws InterruptedException
      */
     @Async
     @GetMapping("/answer/question/{id}")

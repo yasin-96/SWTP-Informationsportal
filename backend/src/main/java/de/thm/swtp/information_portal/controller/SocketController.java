@@ -36,6 +36,10 @@ public class SocketController {
         if(wsMessage != null) {
             return CompletableFuture.completedFuture(socketService.createMessage(wsMessage));
         }
-        return CompletableFuture.completedFuture(new ResponseEntity(HttpStatus.BAD_REQUEST));
+        return CompletableFuture.completedFuture(
+                ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(null)
+        );
     }
 }

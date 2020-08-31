@@ -25,17 +25,20 @@ public class TagController {
 	 * 
 	 * @param tagsToBeChecked
 	 * @return
-	 * @throws InterruptedException
 	 */
 	@Async
 	@GetMapping("/tag/check/{tagsToBeChecked}")
-	public CompletableFuture<ResponseEntity<Tag>> checkTags(@PathVariable String tagsToBeChecked) throws InterruptedException {
+	public CompletableFuture<ResponseEntity<Tag>> checkTags(@PathVariable String tagsToBeChecked) {
 
 		if(tagsToBeChecked != null){
 			return CompletableFuture.completedFuture(tagService.getTagByName(tagsToBeChecked));
 		}
 
-		return CompletableFuture.completedFuture(new ResponseEntity(HttpStatus.BAD_REQUEST));
+		return CompletableFuture.completedFuture(
+				ResponseEntity
+						.status(HttpStatus.BAD_REQUEST)
+						.body(null)
+		);
 
 	}
 

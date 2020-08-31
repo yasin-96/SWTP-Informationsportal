@@ -69,12 +69,20 @@ public class QuestionController {
 	 * 
 	 * @param questionBody
 	 * @return CompletableFuture<ResponseEntity<Question>>
-	 * @throws URISyntaxException
 	 */
 	@Async
 	@PostMapping("/question/new")
-	public CompletableFuture<ResponseEntity<Question>> postQuestion(@Validated @RequestBody Question questionBody,
+	public CompletableFuture<ResponseEntity<Question>> postQuestion(
+			@Validated @RequestBody Question questionBody,
 			@AuthenticationPrincipal Jwt jwt) {
+
+		if(jwt == null) {
+			return CompletableFuture.completedFuture(
+					ResponseEntity
+							.status(HttpStatus.UNAUTHORIZED)
+							.body(null)
+			);
+		}
 
 		var userId = jwt.getClaimAsString("sub");
 		var userName = jwt.getClaimAsString("preferred_username");
@@ -88,12 +96,10 @@ public class QuestionController {
 	 *
 	 * @param questionBody  the question which will be modified
 	 * @return returns the modified question
-	 * @throws URISyntaxException
 	 */
 	@Async
 	@PutMapping("/question/update")
-	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Validated @RequestBody Question questionBody)
-			throws URISyntaxException {
+	public CompletableFuture<ResponseEntity<Question>> editQuestion(@Validated @RequestBody Question questionBody) {
 
 		return CompletableFuture
 				.completedFuture(questionService.editQuestion(questionBody));
