@@ -22,8 +22,6 @@
 <script>
 import { mapActions } from 'vuex';
 
-//TODO trigger für enter einfügen
-
 export default {
   name: 'Searching',
   data() {
@@ -37,19 +35,17 @@ export default {
      * The search query is sent to the backend to get a result
      */
     searchData() {
-      if (this.searchInput.length > 0) {
-        this.$router
-          .push({
-            path: '/search',
-            query: {
-              q: `${String(this.searchInput).toUpperCase()}`,
-            },
-          })
-          .catch((err) => {});
-      }
+      this.$router
+        .push({
+          path: '/search',
+          query: {
+            q: `${String(this.searchInput).toUpperCase()}`,
+          },
+        })
+        .catch((err) => {});
     },
+    
   },
-  computed: { ...mapActions(['act_getAllDataByQuery']) },
 };
 </script>
 
