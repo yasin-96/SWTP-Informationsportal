@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "info-portal")
 public class IndexController {
 
-    //    @GetMapping
-//    public ResponseEntity<Void> index() {
-//        return ResponseEntity.status(HttpStatus.FOUND)
-//                .header(HttpHeaders.LOCATION, "/index.html")
-//                .build();
-//    }
-    @RequestMapping(value = "/")
-    public String index() {
-        return "index";
+    @GetMapping
+    public ResponseEntity<Void> index() {
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header(HttpHeaders.LOCATION, "/index.html")
+                .build();
     }
+//    @RequestMapping(value = "/")
+//    public String index() {
+//        return "index";
+//    }
 
 }
