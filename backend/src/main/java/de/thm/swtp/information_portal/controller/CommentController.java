@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import de.thm.swtp.information_portal.models.Comment.Comments;
 import de.thm.swtp.information_portal.service.CommentService;
 
+import javax.swing.text.html.Option;
+
 import static de.thm.swtp.information_portal.Util.checkUpdateCommentModel;
 
 @RestController
@@ -28,14 +30,13 @@ public class CommentController {
     private CommentService commentService;
 
     /**
+     *
      * @param id
      * @return
-     * @throws InterruptedException
      */
     @Async
     @GetMapping("/comment/answer/{id}")
-    public CompletableFuture<ResponseEntity<Comments>> findByAnswerId(@PathVariable UUID id)
-            throws InterruptedException {
+    public CompletableFuture<ResponseEntity<Optional<Comments>>> findByAnswerId(@PathVariable UUID id) {
         return CompletableFuture.completedFuture(commentService.getCommentsByAnswerId(id.toString()));
     }
 
@@ -56,21 +57,24 @@ public class CommentController {
             var userName = jwt.getClaimAsString("preferred_username");
             return CompletableFuture.completedFuture(commentService.update(updateComment, userId, userName));
         }
-        return CompletableFuture.completedFuture(new ResponseEntity(HttpStatus.BAD_REQUEST));
+        return CompletableFuture.completedFuture(
+                ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(null)
+        );
     }
 
     /**
+     *
      * @param commentList
+     * @param jwt
      * @return
-     * @throws URISyntaxException
-     * @throws InterruptedException
      */
     @Async
     @PostMapping("/comment/new")
     public CompletableFuture<ResponseEntity<Comments>> postComments(
             @RequestBody Comments commentList,
-            @AuthenticationPrincipal Jwt jwt)
-            throws URISyntaxException {
+            @AuthenticationPrincipal Jwt jwt) {
 
         //TODO liste prüfen?
         var userId = jwt.getClaimAsString("sub");

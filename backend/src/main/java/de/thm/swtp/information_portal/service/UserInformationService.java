@@ -37,9 +37,10 @@ public class UserInformationService {
         int numberOfAnswers = 0;
 
         if(!allQuestions.isEmpty()) {
-
             numberOfQuestions = Math.toIntExact(allQuestions.stream()
-                    .filter(quest -> quest.getUserId().equals(userId))
+                    .filter(quest ->
+                            quest.getUserId().equals(userId)
+                    )
                     .count()
             );
         }
@@ -52,19 +53,9 @@ public class UserInformationService {
                 numberOfAnswers
         );
 
-        this.addUserInfo(newUserInfo);
-
-        return new ResponseEntity(newUserInfo, HttpStatus.OK);
-
-    }
-
-    /**
-     *
-     * @param userInfo
-     * @return
-     */
-    public UserInformation addUserInfo(UserInformation userInfo){
-       return userInformationRepository.save(userInfo);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userInformationRepository.save(newUserInfo));
     }
 
     /**
@@ -76,7 +67,7 @@ public class UserInformationService {
         var allAnswers = answerRepository.findAll();
 
         if(!allAnswers.isEmpty()){
-            var numberOfAllAnswers = Math.toIntExact(
+            return Math.toIntExact(
                     allAnswers.stream()
                     .map(listOfAllAnswers -> listOfAllAnswers.getListOfAnswers())
                     .map(list-> list.stream().filter(answer -> answer.getId().equals(id)))
@@ -84,7 +75,6 @@ public class UserInformationService {
                             .stream()
                             .count()
             );
-            return numberOfAllAnswers;
         }
         return 0;
     }

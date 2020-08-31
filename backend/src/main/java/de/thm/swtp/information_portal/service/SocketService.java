@@ -5,7 +5,6 @@ import de.thm.swtp.information_portal.models.Answer.Answer;
 import de.thm.swtp.information_portal.models.Comment.Comment;
 import de.thm.swtp.information_portal.models.Socket.SocketReceived;
 import de.thm.swtp.information_portal.models.Socket.SocketResponse;
-import de.thm.swtp.information_portal.models.User.MinimalUser;
 import de.thm.swtp.information_portal.models.User.User;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
@@ -37,7 +36,7 @@ public class SocketService {
 
         // init data
         var wsData = new SocketReceived();
-        var socketResponse = new SocketResponse();
+        SocketResponse socketResponse = null;
         var users = new HashSet<User>();
 
         try {
@@ -46,48 +45,55 @@ public class SocketService {
             var parseJsObject = new ObjectMapper();
             wsData = parseJsObject.readValue(wsMessage, SocketReceived.class);
 
-            var headerOfQuestion = questionRepository.findById(wsData.getQuestionId()).get().getHeader();
+            var question = questionRepository.findById(wsData.getQuestionId());
+            if(question.isPresent()){
+                var headerOfQuestion = question.get().getHeader();
 
-            if (wsData.getIsAnswer()) {
-                var answers = answerRepository.findById(wsData.getQuestionId());
+                if (wsData.getIsAnswer()) {
+                    var answers = answerRepository.findById(wsData.getQuestionId());
 
-                var answersOfQuestion = answers.get().getListOfAnswers();
-                for (Answer answer : answersOfQuestion) {
-                    userRepository
-                            .findById(answer.getUserId())
-                            .ifPresent(users::add);
+                    if(answers.isPresent()) {
+                        var answersOfQuestion = answers.get().getListOfAnswers();
+                        for (Answer answer : answersOfQuestion) {
+                            userRepository
+                                    .findById(answer.getUserId())
+                                    .ifPresent(users::add);
+                        }
+
+
+                        socketResponse = new SocketResponse(
+                                wsData.getQuestionId(),
+                                users,
+                                headerOfQuestion,
+                                wsData.getIsAnswer(),
+                                wsData.getIsComment(),
+                                wsData.getMinimalUser()
+                        );
+                    }
+
                 }
 
+                if (wsData.getIsComment()) {
 
-                socketResponse = new SocketResponse(
-                        wsData.getQuestionId(),
-                        users,
-                        headerOfQuestion,
-                        wsData.getIsAnswer(),
-                        wsData.getIsComment(),
-                        wsData.getMinimalUser()
-                );
-            }
+                    var comments = commentRepository.findById(wsData.getAnswerId());
+                    if(comments.isPresent()){
+                        var allComments = comments.get().getComments();
+                        for(Comment comment: allComments){
+                            userRepository
+                                    .findById(comment.getUserId())
+                                    .ifPresent(users::add);
+                        }
 
-            if (wsData.getIsComment()) {
-
-                var comments = commentRepository.findById(wsData.getAnswerId());
-                var allComments = comments.get().getComments();
-                for(Comment comment: allComments){
-                    userRepository
-                            .findById(comment.getUserId())
-                            .ifPresent(users::add);
+                        socketResponse = new SocketResponse(
+                                wsData.getQuestionId(),
+                                wsData.getAnswerId(),
+                                users,headerOfQuestion,
+                                wsData.getIsAnswer(),
+                                wsData.getIsComment(),
+                                wsData.getMinimalUser()
+                        );
+                    }
                 }
-
-                socketResponse = new SocketResponse(
-                        wsData.getQuestionId(),
-                        wsData.getAnswerId(),
-                        users,headerOfQuestion,
-                        wsData.getIsAnswer(),
-                        wsData.getIsComment(),
-                        wsData.getMinimalUser()
-                );
-
             }
 
         } catch (Exception e) {
@@ -95,8 +101,15 @@ public class SocketService {
             e.printStackTrace();
         }
 
-        //TODO wenn socketResponse leer ist?
-        return new ResponseEntity(socketResponse, HttpStatus.OK);
+        if(socketResponse != null){
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(socketResponse);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(null);
 
     }
 }

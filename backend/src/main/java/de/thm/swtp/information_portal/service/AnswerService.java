@@ -21,157 +21,136 @@ public class AnswerService {
 
     /**
      * @param answerList
+     * @param userId
+     * @param userPreferedName
      * @return
      */
-    public Answers postAnswer(Answers answerList) {
-        return answerRepository.save(answerList);
-    }
-
-    /**
-     *
-     * @param answerList
-     * @return
-     * @throws URISyntaxException
-     */
-    public ResponseEntity<Answers> add(Answers answerList, String userId, String userPreferedName) throws URISyntaxException {
-        var answers = this.findByQuestionId(answerList.getId());
+    public ResponseEntity<Answers> add(Answers answerList, String userId, String userPreferedName) {
+        var answers = answerRepository.findById(answerList.getId());
 
         if (answers.isEmpty()) {
             var newAnswers = new Answers(
                     List.of(
-                        new Answer(
-                            answerList.getListOfAnswers().get(0).getContent(),
-                            0,
-                            userId,
-                            userPreferedName
-                        )
+                            new Answer(
+                                    answerList.getListOfAnswers().get(0).getContent(),
+                                    0,
+                                    userId,
+                                    userPreferedName
+                            )
                     ),
                     answerList.getId());
 
-            //Prüfen?? ob es geklappt hat
-            this.postAnswer(newAnswers);
-
-            return ResponseEntity.created(new URI("/api/answer" + newAnswers.getId())).body(newAnswers);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(answerRepository.save(newAnswers));
         } else {
-            var answersPresent = answers.get().getListOfAnswers();
-            var newAnswer = new Answer(
-                    answerList.getListOfAnswers().get(0).getContent(),
-                    0,
-                    userId,
-                    userPreferedName
-            );
-            answersPresent.add(newAnswer);
+            answers.get()
+                    .getListOfAnswers()
+                    .add(
+                            new Answer(
+                                    answerList.getListOfAnswers().get(0).getContent(),
+                                    0,
+                                    userId,
+                                    userPreferedName
+                            )
+                    );
 
-            //Prüfen?? ob es geklappt hat
-            this.postAnswer(answers.get());
-
-            return ResponseEntity.created(new URI("/api/answer" + answers.get().getId())).body(answers.get());
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(answerRepository.save(answers.get()));
         }
     }
 
     /**
-     * @param id
+     * @param questionId
+     * @param answerId
      * @return
      */
-    public Optional<Answers> findByQuestionId(String id) {
-
-        return answerRepository.findById(id);
-    }
-
-    public ResponseEntity<Answer> getAnswerToEdit(String questionId, String answerId){
+    public ResponseEntity<Optional<Answer>> getAnswerToEdit(String questionId, String answerId) {
         var answers = answerRepository.findById(questionId);
 
-        if(answers.isPresent()){
-            var foundAnswer = answers.get()
-                    .getListOfAnswers()
-                    .stream()
-                    .filter(item -> item.getId().equals(answerId))
-                    .findFirst();
-
-            return new ResponseEntity(foundAnswer, HttpStatus.OK);
+        if (answers.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
         }
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
-    }
 
-
-
-    public ResponseEntity<Answers> updateAnswer(UpdateAnswer updateAnswer, String userId, String userName) throws URISyntaxException {
-        var answersToBeModified = this.findByQuestionId(updateAnswer.getId());
-
-        answersToBeModified.get().getListOfAnswers()
-                .stream()
-                .forEach(item -> {
-                  if(item.getId().equals(updateAnswer.getAnswerId())){
-                      if(item.getUserId().equals(userId) && item.getUserName().equals(userName)){
-
-                          if(updateAnswer.getContent() != null){
-                              item.setContent(updateAnswer.getContent());
-                          }
-
-                          if(updateAnswer.getRating() != -1){
-                              item.setRating(updateAnswer.getRating());
-                          }
-
-
-                      }
-                  }
-                });
-        answersToBeModified.get().getListOfAnswers().sort(compareByRating);
-        this.postAnswer(answersToBeModified.get());
-
-        return new ResponseEntity(answersToBeModified.get(), HttpStatus.OK);
-                //.created(new URI("/api/answer/" + answersToBeModified.get().getId()))
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        answers.get()
+                                .getListOfAnswers()
+                                .stream()
+                                .filter(item -> item.getId().equals(answerId))
+                                .findFirst()
+                );
     }
 
 
     /**
-     *
+     * @param updateAnswer
+     * @param userId
+     * @param userName
+     * @return
+     */
+    public ResponseEntity<Answers> updateAnswer(UpdateAnswer updateAnswer, String userId, String userName) {
+        var answersToBeModified = answerRepository.findById(updateAnswer.getId());
+
+        if (answersToBeModified.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_MODIFIED)
+                    .body(null);
+        }
+        answersToBeModified.get().getListOfAnswers()
+                .forEach(item -> {
+                    if (item.getId().equals(updateAnswer.getAnswerId())) {
+                        if (item.getUserId().equals(userId) && item.getUserName().equals(userName)) {
+
+                            if (updateAnswer.getContent() != null) {
+                                item.setContent(updateAnswer.getContent());
+                            }
+
+                            if (updateAnswer.getRating() != -1) {
+                                item.setRating(updateAnswer.getRating());
+                            }
+                        }
+                    }
+                });
+
+        answersToBeModified.get()
+                .getListOfAnswers()
+                .sort(compareByRating);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(answerRepository.save(answersToBeModified.get()));
+    }
+
+    /**
      * @param id
      * @return
      */
-    public ResponseEntity<Answers> getAnswers(String id) {
+    public ResponseEntity<Optional<Answers>> getAnswers(String id) {
+        var answers = answerRepository.findById(id);
 
-        var answers = this.findByQuestionId(id);
+        if (answers.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
 
-        if (answers.isPresent()) {
-            answers.get()
+        answers.get()
                 .getListOfAnswers()
                 .sort(compareByRating);
-        }
-        return answers
-                .map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(answers);
     }
-
-
 
     /**
      *
-     * @param answerList
-     * @return
      */
-    public ResponseEntity<Answers> increaseRating(Answers answerList){
-
-        var answersToBeModified = this.findByQuestionId(answerList.getId());
-        var modifiedAnswer = answerList.getListOfAnswers().get(0);
-        var listOfAnswers = answersToBeModified.get().getListOfAnswers();
-
-        listOfAnswers.forEach((item -> {
-            if (item.getId().equals(modifiedAnswer.getId())) {
-                listOfAnswers.set(listOfAnswers.indexOf(item), modifiedAnswer);
-            }
-        }));
-
-        answersToBeModified.get().setListOfAnswers(listOfAnswers);
-
-        //TODO das prüfen??
-        var responseList = this.postAnswer(answersToBeModified.get());
-
-        return answersToBeModified
-                .map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
-    }
-
     Comparator<Answer> compareByRating = new Comparator<Answer>() {
         @Override
         public int compare(Answer o1, Answer o2) {

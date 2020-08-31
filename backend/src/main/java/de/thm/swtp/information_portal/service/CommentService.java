@@ -21,37 +21,12 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     /**
-     * @return
-     */
-    public List<Comments> findAllComments() {
-        return commentRepository.findAll();
-    }
-
-    /**
-     * @param id
-     * @return
-     */
-    public Optional<Comments> findByAnswerId(String id) {
-        return commentRepository.findById(id);
-    }
-
-    /**
-     * @param comments
-     * @return
-     */
-    public Comments postComments(Comments comments) {
-        return commentRepository.save(comments);
-    }
-
-    /**
-     *
      * @param commentList
      * @param userId
      * @return
-     * @throws URISyntaxException
      */
-    public ResponseEntity<Comments> add(Comments commentList, String userId, String userName) throws URISyntaxException {
-        var comments = this.findByAnswerId(commentList.getId());
+    public ResponseEntity<Comments> add(Comments commentList, String userId, String userName) {
+        var comments = commentRepository.findById(commentList.getId());
         var existingComment = commentList.getComments().get(0);
         if (!comments.isPresent()) {
             var newComments = new Comments(
@@ -65,98 +40,90 @@ public class CommentService {
                     ),
                     commentList.getId()
             );
-            this.postComments(newComments);
 
-            return ResponseEntity.created(new URI("/api/answer" + newComments.getId())).body(newComments);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(commentRepository.save(newComments));
         } else {
-            var commentsPresent = comments.get().getComments();
-            var newComment = new Comment(
-                    existingComment.getContent(),
-                    userId,
-                    userName,
-                    existingComment.getRating()
-            );
-            //TODO add und set ? brauchen wir hier beides
-            commentsPresent.add(newComment);
-            comments.get().setComments(commentsPresent);
+            comments.get()
+                    .getComments()
+                    .add(
+                        new Comment(
+                            existingComment.getContent(),
+                            userId,
+                            userName,
+                            existingComment.getRating()
+                        )
+                    );
 
-            this.postComments(comments.get());
-            return ResponseEntity.created(new URI("/api/answer" + comments.get().getId()))
-                    .body(comments.get());
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(commentRepository.save(comments.get()));
         }
     }
 
 
     /**
-     *
      * @param answerId
      * @return
      */
-    public ResponseEntity<Comments> getCommentsByAnswerId(String answerId) {
-        var comments = this.findByAnswerId(answerId);
-        if (comments.isPresent()) {
-            comments.get()
-                    .getComments()
-                    .sort(compareByRating);
+    public ResponseEntity<Optional<Comments>> getCommentsByAnswerId(String answerId) {
+        var comments = commentRepository.findById(answerId);
+
+        if(comments.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
         }
-        return comments
-                .map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
+
+        comments.get()
+                .getComments()
+                .sort(compareByRating);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(comments);
     }
 
     /**
      *
-     * @param commentList
+     * @param updateComment
+     * @param userId
+     * @param userName
      * @return
      */
-    public ResponseEntity<Comments> increaseRating(Comments commentList) {
-        var commentsToBeModified = this.findByAnswerId(commentList.getId());
-        var modifiedComment = commentList.getComments().get(0);
+    public ResponseEntity<Comments> update(UpdateComment updateComment, String userId, String userName) {
+        var commentsToBeModified = commentRepository.findById(updateComment.getId());
 
-        var listOfComments = commentsToBeModified.get().getComments();
-
-        listOfComments.forEach((item -> {
-            if (item.getId().equals(modifiedComment.getId())) {
-                listOfComments.set(listOfComments.indexOf(item), modifiedComment);
-            }
-        }));
-
-        //change data in list
-        commentsToBeModified.get().setComments(listOfComments);
-
-        //TODO PRÜFEN ob geklappt hat?
-        this.postComments(commentsToBeModified.get());
-
-        return commentsToBeModified
-                .map(response -> ResponseEntity.ok().body(response))
-                .orElse(new ResponseEntity<>(HttpStatus.NO_CONTENT));
-    }
-
-
-    public ResponseEntity<Comments> update(UpdateComment updateComment, String userId, String userName){
-        var commentsToBeModified = this.findByAnswerId(updateComment.getId());
+        if(commentsToBeModified.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_MODIFIED)
+                    .body(null);
+        }
 
         commentsToBeModified.get().getComments()
-                .stream()
                 .forEach(item -> {
-                    if(item.getId().equals(updateComment.getCommentId())){
-                        if(item.getUserId().equals(userId) && item.getUserName().equals(userName)){
+                    if (item.getId().equals(updateComment.getCommentId())) {
+                        if (item.getUserId().equals(userId) && item.getUserName().equals(userName)) {
 
-                            if(updateComment.getContent() != null){
+                            if (updateComment.getContent() != null) {
                                 item.setContent(updateComment.getContent());
                             }
 
-                            if(updateComment.getRating() != -1){
+                            if (updateComment.getRating() != -1) {
                                 item.setRating(updateComment.getRating());
                             }
                         }
                     }
                 });
 
-        this.postComments(commentsToBeModified.get());
+        commentsToBeModified.get()
+                .getComments()
+                .sort(compareByRating);
 
-        return new ResponseEntity(commentsToBeModified.get(), HttpStatus.OK);
-        //.created(new URI("/api/answer/" + answersToBeModified.get().getId()))
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentRepository.save(commentsToBeModified.get()));
     }
 
 

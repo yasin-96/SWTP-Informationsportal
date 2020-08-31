@@ -19,172 +19,202 @@ import de.thm.swtp.information_portal.models.Tag.Tag;
 import de.thm.swtp.information_portal.repositories.QuestionRepository;
 import de.thm.swtp.information_portal.repositories.TagRepository;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @Service
 public class QuestionService {
 
-	@Autowired
-	private QuestionRepository questionRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
 
-	@Autowired
-	private TagService tagService;
+    @Autowired
+    private TagService tagService;
 
-	@Autowired
-	private TagRepository tagRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
-	@Autowired
-	private AnswerRepository answerRepository;
-
-
-	public ResponseEntity<HashSet<Question>> findByTagName(String searchQuery){
-		var listQuery = Arrays.stream(searchQuery.toUpperCase().split(" "))
-				.filter(item -> !item.isEmpty())
-				.collect(Collectors.toList());
-
-		var filteredQuestions = new HashSet<Question>();
-
-		for (var query : listQuery) {
-			var foundedTag = this.findTag(query);
-			if (foundedTag != null) {
-				filteredQuestions.addAll(foundedTag);
-			}
-		}
-
-		if(filteredQuestions != null) {
-			return new ResponseEntity(filteredQuestions, HttpStatus.OK);
-		}
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
-	}
-
-	public List<Question> findTag(String tagToFind) {
-		var questionByTags = new ArrayList<Question>();
-		var existingTag = tagRepository.findByName(tagToFind);
-
-		if(existingTag != null){
-			var allQuestions = questionRepository.findAll();
-
-			if(allQuestions != null){
-				questionByTags = new ArrayList<Question>();
-				for (var question : allQuestions) {
-					for (Tag tag : question.getTags()) {
-						if (existingTag.getName().toLowerCase().equals(tag.getName().toLowerCase())) {
-							questionByTags.add(question);
-						}
-					}
-				}
-			}
-		}
-
-		return questionByTags != null ? questionByTags : null;
-	}
-
-	public ResponseEntity<List<Question>> findAllTags(String tagToFind){
-		var response = this.findTag(tagToFind);
-
-		if(response != null){
-			return new ResponseEntity(response, HttpStatus.OK);
-		}
-
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public ResponseEntity<List<Question>> getAllQuestions() {
-		var allQuestions = questionRepository.findAll();
-
-		if(allQuestions != null){
-			return new ResponseEntity(allQuestions, HttpStatus.OK);
-		}
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
-	}
-
-	/**
-	 *
-	 * @param question
-	 * @return
-	 */
-	public ResponseEntity<Question> editQuestion(Question question) throws URISyntaxException {
-		var tagList = tagService.checkIfTagsExist(question.getTags());
-		question.setTags(tagList);
-		questionRepository.save(question);
-		return ResponseEntity.created((new URI("/api/question" + question.getId()))).body(question);
-	}
-
-	/**
-	 *
-	 * @param question
-	 * @return
-	 */
-	public ResponseEntity<Question> postQuestion(Question question, String userId, String userName) throws URISyntaxException {
-		var newQuestionTags = tagService.checkIfTagsExist(question.getTags());
-
-		var newQuestion = new Question(
-				question.getHeader(),
-				question.getContent(),
-				newQuestionTags,
-				userId,
-				userName
-		);
-
-		//TODO prüfen??
-		var response = questionRepository.save(newQuestion);
-
-		return new ResponseEntity(response, HttpStatus.OK);
-	}
-
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
-	public ResponseEntity<Question> getQuestion(String id) {
-		var question = questionRepository.findById(id);
-
-		if(question.isPresent()){
-			return new ResponseEntity(question, HttpStatus.OK);
-		}
-
-		return new ResponseEntity(question, HttpStatus.OK);
-	}
+    @Autowired
+    private AnswerRepository answerRepository;
 
 
+    public ResponseEntity<HashSet<Question>> findByTagName(String searchQuery) {
+        var listQuery = Arrays.stream(searchQuery.toUpperCase().split(" "))
+                .filter(item -> !item.isEmpty())
+                .collect(Collectors.toList());
 
-	public ResponseEntity<List<Question>> mostActiveQuestions(){
-		var allQuestions = questionRepository.findAll();
-		Map<Question, Integer> myMap = new HashMap<>();
+        var filteredQuestions = new HashSet<Question>();
 
-		for (var item : allQuestions) {
-			Optional<Answers> answers = answerRepository.findById(item.getId());
-			answers.ifPresent(value -> myMap.put(item, value.getListOfAnswers().size()));
-		}
+        for (var query : listQuery) {
+            var foundedTag = this.findTag(query);
+            if (foundedTag != null) {
+                filteredQuestions.addAll(foundedTag);
+            }
+        }
 
-		return new ResponseEntity(
-				getListOfMostActiveQuestions(myMap),
-				HttpStatus.OK
-		);
-	}
+        if (filteredQuestions.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(filteredQuestions);
+    }
 
-	/**
-	 *
-	 * @param  myMap   		map as parameter for our mostActiveQuestions() method
-	 * @return Returns 		the sorted list for our mostActiveQuestions() method
-	 */
-	public List<Question> getListOfMostActiveQuestions(Map<Question, Integer> myMap) {
-		List<Question> questions = new ArrayList<>();
-		Map<Question, Integer> sorted = myMap.entrySet().stream()
-				.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+    public List<Question> findTag(String tagToFind) {
+        var questionByTags = new ArrayList<Question>();
+        var existingTag = tagRepository.findByName(tagToFind);
 
-		for (var entry : sorted.entrySet()) {
-			questions.add(entry.getKey());
-		}
+        if (existingTag != null) {
+            var allQuestions = questionRepository.findAll();
 
-		return questions.stream()
-				.limit(20)
-				.collect(Collectors.toList());
-	}
+            if (allQuestions.isEmpty()) {
+                return null;
+            }
+
+            questionByTags = new ArrayList<Question>();
+            for (var question : allQuestions) {
+                for (Tag tag : question.getTags()) {
+                    if (existingTag.getName().toLowerCase().equals(tag.getName().toLowerCase())) {
+                        questionByTags.add(question);
+                    }
+                }
+            }
+            return questionByTags;
+        }
+        return null;
+    }
+
+    public ResponseEntity<List<Question>> findAllTags(String tagToFind) {
+        var response = this.findTag(tagToFind);
+
+        if (response.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    /**
+     * @return
+     */
+    public ResponseEntity<List<Question>> getAllQuestions() {
+        var allQuestions = questionRepository.findAll();
+
+        if (allQuestions.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allQuestions);
+    }
+
+    /**
+     * @param question
+     * @return
+     */
+    public ResponseEntity<Question> editQuestion(Question question) {
+        var tagList = tagService.checkIfTagsExist(question.getTags());
+        question.setTags(tagList);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(questionRepository.save(question));
+
+    }
+
+    /**
+     * @param question
+     * @return
+     */
+    public ResponseEntity<Question> postQuestion(Question question, String userId, String userName) {
+        var newQuestionTags = tagService.checkIfTagsExist(question.getTags());
+
+        var newQuestion = new Question(
+                question.getHeader(),
+                question.getContent(),
+                newQuestionTags,
+                userId,
+                userName
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(questionRepository.save(newQuestion));
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    public ResponseEntity<Optional<Question>> getQuestion(String id) {
+        var question = questionRepository.findById(id);
+
+        if (question.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(question);
+    }
+
+
+    public ResponseEntity<List<Question>> mostActiveQuestions() {
+        var allQuestions = questionRepository.findAll();
+        var map = new HashMap<Question, Integer>();
+
+        if(allQuestions.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+
+        for (var item : allQuestions) {
+            answerRepository.findById(item.getId())
+                            .ifPresent(value ->
+                                    map.put(item, value.getListOfAnswers().size())
+                            );
+        }
+
+        if(map.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(getListOfMostActiveQuestions(map));
+    }
+
+    /**
+     * @param map map as parameter for our mostActiveQuestions() method
+     * @return Returns        the sorted list for our mostActiveQuestions() method
+     */
+    public List<Question> getListOfMostActiveQuestions(HashMap<Question, Integer> map) {
+        return map
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e2, LinkedHashMap::new)
+                )
+
+                //get only the key
+                .keySet()
+                .stream()
+
+                //take only 20 items and return as list
+                .limit(20)
+                .collect(Collectors.toList());
+
+    }
 }

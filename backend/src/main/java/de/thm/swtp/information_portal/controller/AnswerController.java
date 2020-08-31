@@ -49,7 +49,7 @@ public class AnswerController {
      */
     @Async
     @GetMapping("/answer/edit")
-    public CompletableFuture<ResponseEntity<Answer>> getAnswerToBeEdited(
+    public CompletableFuture<ResponseEntity<Optional<Answer>>> getAnswerToBeEdited(
             @RequestParam UUID qId, @RequestParam UUID aId) {
 
         return CompletableFuture.completedFuture(
@@ -79,7 +79,7 @@ public class AnswerController {
      */
     @Async
     @GetMapping("/answer/question/{id}")
-    public CompletableFuture<ResponseEntity<Answers>> getAnswers(@PathVariable UUID id) {
+    public CompletableFuture<ResponseEntity<Optional<Answers>>> getAnswers(@PathVariable UUID id) {
         return CompletableFuture.completedFuture(answerService.getAnswers(id.toString()));
     }
 }

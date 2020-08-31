@@ -20,58 +20,55 @@ public class UserService {
     private UserRepository userRepository;
 
     /**
-     *
-     * @param user
-     * @return
-     */
-    public User addUser(User user){
-        return userRepository.save(user);
-    }
-
-    /**
-     *
      * @param userId
      * @param user
      * @return returns the wanted user
      * @throws URISyntaxException
      */
     public ResponseEntity<User> getLoggedInUser(String userId, User user) throws URISyntaxException {
-        if(userRepository.existsById(userId)){
-            return new ResponseEntity(user, HttpStatus.OK);
+        if (userRepository.existsById(userId)) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(user);
         }
         return saveUserIfNotExists(user);
     }
 
 
     /**
-     *
      * @param id
      * @return
      */
-    public ResponseEntity<ResponseUser> getUserById(String id){
+    public ResponseEntity<ResponseUser> getUserById(String id) {
         var user = userRepository.findById(id);
-        if (user.isPresent()) {
-            var responseUser = new ResponseUser(user.get().getPreferred_username());
-            return new ResponseEntity(responseUser, HttpStatus.OK);
+
+        if (user.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
         }
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        new ResponseUser(
+                                user.get().getPreferred_username()
+                        )
+                );
     }
 
     /**
-     *
      * @param user
      * @return
-     * @throws URISyntaxException
      */
-    @Async
-    ResponseEntity<User> saveUserIfNotExists(User user) throws URISyntaxException {
-        if(user != null){
-            addUser(user);
+    public ResponseEntity<User> saveUserIfNotExists(User user) {
+        if (user != null) {
             return ResponseEntity
-                    .created(new URI("/api/user" + user.getId()))
-                    .body(user);
+                    .status(HttpStatus.OK)
+                    .body(userRepository.save(user));
         }
-        return new ResponseEntity(HttpStatus.NON_AUTHORITATIVE_INFORMATION);
+        return ResponseEntity
+                .status(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
+                .body(null);
     }
 }
 
