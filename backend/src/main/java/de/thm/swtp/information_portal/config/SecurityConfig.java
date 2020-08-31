@@ -21,7 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .jwtAuthenticationConverter(jwt -> {
                     var jwtAuthToken = new JwtAuthenticationToken(jwt);
 
-                    //TODO BUG: need to set this manuel
+                    //TODO BUG: need to set value
                     jwtAuthToken.setAuthenticated(true);
 //                    System.out.println(jwtAuthToken.toString());
 //                    System.out.println("IS AUTH: " + jwtAuthToken.isAuthenticated());
