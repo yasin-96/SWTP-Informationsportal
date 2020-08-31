@@ -1,6 +1,18 @@
 <template>
-  <b-container v-if="this.query">
+  <b-container v-if="!!query">
     <b-row v-if="!!getQueryData && getQueryData.length > 0">
+      <b-col cols>
+        <b-card
+          border-variant="success"
+          :header="`Result for search`"
+          header-border-variant="success"
+          header-text-variant="success"
+          align="center"
+        >
+          <b-jumbotron bg-variant="success" size="lg" text-variant="white" border-variant="dark">{{query}}</b-jumbotron>
+        </b-card>
+      </b-col>
+      
       <b-col
         sm="12"
         md="12"
@@ -27,12 +39,12 @@
       <b-col cols>
         <b-card
           border-variant="danger"
-          header="Kein Ergebnis bei der Suche"
+          header="No result in the search"
           header-border-variant="danger"
           header-text-variant="danger"
           align="center"
         >
-          <b-jumbotron bg-variant="danger" text-variant="white" border-variant="dark">{{this.query}}</b-jumbotron>
+          <b-jumbotron bg-variant="danger" text-variant="white" border-variant="dark">{{query}}</b-jumbotron>
         </b-card>
       </b-col>
       <b-col cols="auto"></b-col>
@@ -54,7 +66,7 @@
 
 <script>
 import QuestionCard from '@/components/QuestionCard';
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 export default {
   name: 'Search',
   components: {
@@ -74,10 +86,10 @@ export default {
      *
      */
     async sendQuery() {
-      if (this.query.length) {
+      //if (!!this.query && this.query.length > 0) {
         console.warn('Query:', this.query);
-        await this.$store.dispatch('act_getAllDataByQuery', this.query.toUpperCase().trim());
-      }
+        await this.$store.dispatch('act_getAllDataByQuery', { query: this.query });
+      //}
     },
   },
   computed: { 

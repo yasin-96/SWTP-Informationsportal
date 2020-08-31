@@ -317,10 +317,8 @@ export default new Vuex.Store({
       console.log('act_getQuestionsBasedOnTopic()');
       await RestCalls.getQuestionBasedOnTopic(topic)
         .then((response) => {
-          if(response != null){
+          console.info("getQuestionBasedOnTopic -> state -> res ", response);
             commit('SET_QUESTIONS_BASED_ON_TOPICS', response);
-          }
-          
         })
         .catch((error) => {
           console.error(error);
@@ -334,7 +332,9 @@ export default new Vuex.Store({
       console.log('act_getMostActiveQuestions()');
       await RestCalls.getMostActiveQuestions()
         .then((response) => {
-          commit('SET_MOST_ACTIV_QUESTIONS', response);
+          if (response != null) {
+            commit('SET_MOST_ACTIV_QUESTIONS', response);
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -349,11 +349,10 @@ export default new Vuex.Store({
       console.log('act_getAllQuestionsByQuery', query);
       await RestCalls.getAllDataByQuery(query)
         .then((response) => {
-          // console.warn('getAllDataByQuery', response);
-          // if (response != null) {
-          commit('SET_ALL_QUERY_DATA', response);
-
-          // }
+          console.warn('getAllDataByQuery', response);
+          if (response != null) {
+            commit('SET_ALL_QUERY_DATA', response);
+          }
         })
         .catch((error) => {
           console.error('act_getAllDataByQuery: ', error);

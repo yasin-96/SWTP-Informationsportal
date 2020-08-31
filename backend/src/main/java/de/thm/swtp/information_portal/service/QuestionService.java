@@ -57,9 +57,9 @@ public class QuestionService {
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 
-	public List<Question> findTag(String tags) {
+	public List<Question> findTag(String tagToFind) {
 		var questionByTags = new ArrayList<Question>();
-		var existingTag = tagRepository.findByName(tags);
+		var existingTag = tagRepository.findByName(tagToFind);
 
 		if(existingTag != null){
 			var allQuestions = questionRepository.findAll();
@@ -79,41 +79,13 @@ public class QuestionService {
 		return questionByTags != null ? questionByTags : null;
 	}
 
-
-	/**
-	 *
-	 * @param searchQuery
-	 * @return
-	 */
-	public ResponseEntity<List<Question>> findByQuery(String searchQuery) {
-
-		var response = Arrays.stream(searchQuery.trim().toUpperCase().split(" "))
-				.filter(item -> !item.isEmpty())
-				.map(query -> {
-					System.out.println("Query: "+ query);
-					var existingTag = tagRepository.findByName(query);
-
-					if(existingTag != null){
-						var allQuestions = questionRepository.findAll();
-
-						if(allQuestions != null){
-							return allQuestions.stream()
-								.map(listOftag -> listOftag.getTags())
-								.flatMap(tagList -> tagList.stream()
-										.filter(item ->
-												existingTag.getName().toLowerCase().equals(item.getName().toLowerCase())
-										)
-								).collect(Collectors.toList());
-						}
-					}
-					return null;
-				})
-				.filter(list -> !list.isEmpty())
-				.findFirst();
+	public ResponseEntity<List<Question>> findAllTags(String tagToFind){
+		var response = this.findTag(tagToFind);
 
 		if(response != null){
 			return new ResponseEntity(response, HttpStatus.OK);
 		}
+
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 

@@ -177,11 +177,12 @@ export default {
    * Queries the backend for all questions that match the search query
    * @param {Strings} searchQuery [all queries delimitered by space]
    */
-  async getAllDataByQuery(searchQuery) {
-    console.debug(`RestCall: getAllDataByQuery(${searchQuery})`);
+  async getAllDataByQuery({query}) {
+    console.debug(`RestCall: getAllDataByQuery(${query})`);
     return await client
-      .get(`${routes.question}/query/`, { params: { searchQuery } })
+      .get(`${routes.question}/query/`, { params: { query } })
       .then((response) => {
+        console.info("getAllDataByQuery-> ", response);
         return response.data;
       })
       .catch((error) => {
