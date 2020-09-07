@@ -1,125 +1,101 @@
-//package de.thm.swtp.information_portal.services;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//
-//import de.thm.swtp.information_portal.service.TagService;
-//import org.junit.jupiter.api.*;
-//import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
-//import org.mockito.Mockito;
-//import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//
-//import de.thm.swtp.information_portal.models.Tag.Tag;
-//import de.thm.swtp.information_portal.models.Question.Question;
-//import de.thm.swtp.information_portal.service.QuestionService;
-//
-//@DataMongoTest
-//@TestMethodOrder(Alphanumeric.class)
-//class TagServiceTest {
-//
-//	@MockBean
-//	private QuestionService questionService;
-//
-//	@MockBean
-//	private TagService tagService;
-//
-//	private String uuidForUser;
-//	private List<Tag> tags;
-//
-//	@BeforeEach
-//	public void Setup() {
-//		uuidForUser = "UUUUUUUU-0000-USER-0000-000000000001";
-//		tags = List.of(
-//				new Tag("Tag1"),
-//				new Tag("Tag2")
-//		);
-//	}
-//
-//	@Test
-//	@DisplayName("Save a list of empty Tags in new Question should not worked")
-//	public void addNewEmptyTagListInQuestionAndSave() {
-//
-//		final var question = new Question("Header for Tag", "Content for Tag Service", null, uuidForUser);
-//
-//		Mockito.when(questionService.postQuestion(question)).thenReturn(question);
-//
-//		var questionRes = questionService.postQuestion(question);
-//		var allTagsFromQuestion = questionRes.getTags();
-//
-//
-//		Assertions.assertNotNull(allTagsFromQuestion, "Question has no Tags");
-//	}
-//
-//
-//	@Test
-//	@DisplayName("Can the save a list of Tags in new Question ")
-//	public void addNewTagsInQuestionAndSave() {
-//
-//		final var question = new Question("Header for Tag", "Content for Tag Service", tags, uuidForUser);
-//
-//		Mockito.when(questionService.postQuestion(question)).thenReturn(question);
-//
-//		var questionRes = questionService.postQuestion(question);
-//		var allTagsFromQuestion = questionRes.getTags();
-//
-//
-//		Assertions.assertNotNull(allTagsFromQuestion, "Question has Tags");
-//		Assertions.assertNotNull(questionRes ,"Successfully post a Question with valid Tags");
-//
-//	}
-//
-//
-//	@Test
-//	@DisplayName("Test if the tags from test before could find")
-//	public void findNewCreatedTest() {
-//
-//		Mockito.when(tagService.checkIfTagsExist(tags)).thenReturn(tags);
-//
-//		var resultFromService =  tagService.checkIfTagsExist(tags);
-//		Assertions.assertNotNull(resultFromService ,"Successfully find new created tags");
-//	}
-//
-//
-//
-//
-//
-//
-//
-//	@Test
-//	@Order(3)
-//	public void shouldGetQuestionTest() {
-//
-//		List<Tag> tags = new ArrayList<>();
-//		final Tag  tag = new Tag("Tag100");
-//		tags.add(tag);
-//
-//		final Question question = new Question("Header1", "Content1", tags, uuidForUser);
-//		Question CreatedQuestion =  questionService.postQuestion(question);
-//
-//		Optional<Question> questionRes = questionService.getQuestion(CreatedQuestion.getId());
-//
-//		Assertions.assertNotNull(questionRes);
-//		Assertions.assertTrue(questionRes.isPresent());
-//		Assertions.assertEquals("Content1", questionRes.get().getContent() );
-//		Assertions.assertEquals("Header1", questionRes.get().getHeader() );
-//	}
-//
-//	@Test
-//	@Order(4)
-//	public void shouldFindByTagTest() {
-//
-//		List<Question> questionRes = questionService.findByTag("Tag1");
-//
-//		Assertions.assertNotNull(questionRes);
-//		Assertions.assertEquals("Content1", questionRes.get(0).getContent() );
-//		Assertions.assertEquals("Header1", questionRes.get(0).getHeader() );
-//	}
-//
-//
-//
-//
-//
-//
-//}
+package de.thm.swtp.information_portal.service;
+
+import de.thm.swtp.information_portal.models.Question.Question;
+import de.thm.swtp.information_portal.models.Tag.Tag;
+import de.thm.swtp.information_portal.repositories.QuestionRepository;
+import de.thm.swtp.information_portal.repositories.TagRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
+
+import java.util.List;
+
+@ComponentScan()
+@DataMongoTest
+@ContextConfiguration
+class TagServiceTest {
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    private List<Tag> tags;
+
+    @BeforeEach
+    public void Setup() {
+        tagRepository.deleteAll();
+        questionRepository.deleteAll();
+
+        tags = List.of(new Tag("Tag1"), new Tag("Tag2"));
+
+        tagRepository.save(tags.get(0));
+        tagRepository.save(tags.get(1));
+
+        var question = new Question("Header1", "Content1", tags, "USER1", "USER1");
+        questionRepository.save(question);
+
+    }
+
+    @Test
+    public void shouldCheckIfTagsExistTest() {
+
+        var allTagsFromQuestion = tagService.checkIfTagsExist(tags);
+
+        Assertions.assertNotNull(allTagsFromQuestion);
+        Assertions.assertFalse(allTagsFromQuestion.isEmpty());
+    }
+
+
+    @Test
+    public void shouldFindAllTags() {
+
+        var tagsList = tagService.getAllTags();
+
+        Assertions.assertNotNull(tagsList, "Question has Tags");
+        Assertions.assertFalse(tagsList.isEmpty());
+    }
+
+
+    @Test
+    public void shouldFindTagByNameTest() {
+
+        ResponseEntity<Tag> tags = tagService.getTagByName("TAG1");
+
+        Assertions.assertNotNull(tags);
+        Assertions.assertEquals("TAG1", tags.getBody().getName());
+    }
+
+
+    @Test
+    @Order(3)
+    public void shouldReturnTagToUpperCaseTest() {
+
+        Tag tag = tagService.tagToUpperCase(tags.get(0));
+
+        Assertions.assertNotNull(tag);
+        Assertions.assertEquals("TAG1", tag.getName());
+    }
+
+    @Test
+    @Order(4)
+    public void shouldReturnTagsWithMostQuestionsTest() {
+
+        ResponseEntity<List<Tag>> tagsRes = tagService.getTagsWithMostQuestions();
+
+        Assertions.assertNotNull(tagsRes);
+        Assertions.assertEquals("TAG2", tagsRes.getBody().get(0).getName());
+        Assertions.assertTrue(tagsRes.hasBody());
+        Assertions.assertEquals(200, tagsRes.getStatusCodeValue());
+    }
+}

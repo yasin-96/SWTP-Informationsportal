@@ -1,61 +1,78 @@
-//package de.thm.swtp.information_portal.Services;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-//import org.springframework.context.annotation.ComponentScan;
-//
-//import de.thm.swtp.information_portal.models.Comment.Comment;
-//import de.thm.swtp.information_portal.models.Comment.Comments;
-//import de.thm.swtp.information_portal.service.CommentService;
-//
-//@ComponentScan(basePackages={"de.thm.swtp.information_portal"})
-//@DataMongoTest
-//class CommentServiceTest {
-//
-//	@Autowired
-//	private CommentService commentService;
-//
-//	@Test
-//	public void shouldPostCommentsTest() {
-//
-//		List<Comment> commentsList= new ArrayList<Comment>();
-//
-//		final Comment commentOne = new Comment("Comment1", "USER1" , 10);
-//		final Comment commentTwo = new Comment("Comment2", "USER2" , 20);
-//
-//		commentsList.add(commentOne);
-//		commentsList.add(commentTwo);
-//
-//		Comments commentsRes =  commentService.postComments(new Comments(commentsList, "1S"));
-//		Assertions.assertNotNull(commentsRes ,"Successfully Post a Comment");
-//
-//	}
-//
-//	@Test
-//	public void shouldFindAllCommentsTest() {
-//
-//		List<Comments> commentRes =  commentService.findAllComments();
-//
-//		Assertions.assertNotNull(commentRes ,"Should Successfully find all comments");
-//		Assertions.assertTrue(!commentRes.isEmpty());
-//		Assertions.assertEquals("Comment1", commentRes.get(0).getComments().get(0).getContent());
-//	}
-//
-//	@Test
-//	public void shouldFindByAnswerIdTest() {
-//
-//		Optional<Comments> commentRes = commentService.findByAnswerId("1S");
-//
-//		Assertions.assertNotNull(commentRes);
-//		Assertions.assertTrue(commentRes.isPresent());
-//		Assertions.assertEquals("Comment1", commentRes.get().getComments().get(0).getContent() );
-//		Assertions.assertEquals(10, commentRes.get().getComments().get(0).getRating() );
-//	}
-//
-//}
+package de.thm.swtp.information_portal.service;
+
+import de.thm.swtp.information_portal.models.Comment.Comment;
+import de.thm.swtp.information_portal.models.Comment.Comments;
+import de.thm.swtp.information_portal.models.Comment.UpdateComment;
+import de.thm.swtp.information_portal.repositories.CommentRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ContextConfiguration;
+
+import java.util.List;
+
+@ComponentScan()
+@DataMongoTest
+@ContextConfiguration
+class CommentServiceTest {
+
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    private Comments comments;
+
+    private List<Comment> commentsList;
+
+
+    @BeforeEach
+    public void Setup() {
+        commentRepository.deleteAll();
+
+        commentsList = List.of(
+                new Comment("Comment1", "USER1", "USER1", 10),
+                new Comment("Comment2", "USER2", "USER2", 20)
+        );
+
+        comments = new Comments(commentsList, "Answer1");
+        commentRepository.save(comments);
+    }
+
+    @Test
+    public void shouldAddCommentsTest() {
+        var commentsRes = commentService.add(comments, "USER1", "USER1");
+
+        Assertions.assertNotNull(commentsRes, "Comment added Successfully");
+        Assertions.assertNotNull(commentsRes);
+        Assertions.assertTrue(commentsRes.hasBody());
+        Assertions.assertEquals(200, commentsRes.getStatusCodeValue());
+
+    }
+
+    @Test
+    public void shouldUpdateCommentsTest() {
+
+        var updateComment = new UpdateComment("Answer1", commentsList.get(0).getId(), 120);
+        var commentsRes = commentService.update(updateComment, "USER1", "USER1");
+
+        Assertions.assertNotNull(commentsRes, "Should Successfully update comments");
+        Assertions.assertTrue(commentsRes.hasBody());
+        Assertions.assertEquals(200, commentsRes.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldFindCommentsByAnswerIdTest() {
+
+        var commentsRes = commentService.getCommentsByAnswerId("Answer1");
+
+        Assertions.assertNotNull(commentsRes);
+        Assertions.assertTrue(commentsRes.hasBody());
+        Assertions.assertEquals(200, commentsRes.getStatusCodeValue());
+
+    }
+}

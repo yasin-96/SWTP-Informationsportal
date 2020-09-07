@@ -66,11 +66,13 @@ public class UserInformationService {
     int getNumberOfAnswers(String id) {
         var allAnswers = answerRepository.findAll();
 
+        //TODO: hier wird nicht richtig gezählt
         if(!allAnswers.isEmpty()){
+
             return Math.toIntExact(
                     allAnswers.stream()
                     .map(listOfAllAnswers -> listOfAllAnswers.getListOfAnswers())
-                    .map(list-> list.stream().filter(answer -> answer.getId().equals(id)))
+                    .map(list-> list.stream().filter(answer -> answer.getUserId().equals(id)))
                     .collect(Collectors.toList())
                             .stream()
                             .count()
