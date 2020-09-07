@@ -1,4 +1,4 @@
-//package de.thm.swtp.information_portal.Controller;
+package de.thm.swtp.information_portal.controller;//package de.thm.swtp.information_portal.Controller;
 //
 //import static org.mockito.Mockito.when;
 //import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;

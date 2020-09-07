@@ -1,4 +1,4 @@
-//package de.thm.swtp.information_portal.Integration;
+package de.thm.swtp.information_portal.Integration;//package de.thm.swtp.information_portal.Integration;
 //
 ///**
 // * A Integration test : QuestionController

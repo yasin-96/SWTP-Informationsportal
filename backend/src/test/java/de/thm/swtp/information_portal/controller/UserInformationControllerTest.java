@@ -1,4 +1,4 @@
-//package de.thm.swtp.information_portal.controller;
+package de.thm.swtp.information_portal.controller;//package de.thm.swtp.information_portal.controller;
 //
 //import org.junit.jupiter.api.extension.ExtendWith;
 //import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
