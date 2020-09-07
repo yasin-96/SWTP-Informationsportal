@@ -36,20 +36,25 @@ public class Util {
             return false;
         }
 
-        if( userToCheck.getId() == null ||
-                userToCheck.getName() == null ||
-                userToCheck.getEmail() == null ||
+        if( userToCheck.getName() == null &&
+                userToCheck.getEmail() == null &&
                 userToCheck.getPreferred_username() == null
         ){
             return false;
         }
 
 
-        if(userToCheck.getId().isEmpty() ||
-                userToCheck.getName().isEmpty() ||
+        if( userToCheck.getName().isEmpty() ||
                 userToCheck.getEmail().isEmpty() ||
                 userToCheck.getPreferred_username().isEmpty()
         ){
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean checkLoggedInUserData(String id, User user){
+        if(id == null || user == null){
             return false;
         }
         return true;

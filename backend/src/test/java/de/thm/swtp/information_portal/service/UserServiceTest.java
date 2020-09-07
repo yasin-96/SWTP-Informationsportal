@@ -14,6 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.net.URISyntaxException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @ComponentScan()
 @DataMongoTest
 @ContextConfiguration
@@ -29,11 +31,13 @@ class UserServiceTest {
     private User userTwo;
     private User userThree;
     private User userNotExist;
+    private User userNotExistTwo;
     private User userWithInValidDataWithOutId;
     private User userWithInValidDataWithOutName;
     private User userWithInValidDataWithOutEmail;
     private User userWithInValidDataWithOutPrepUserName;
     private User userWithInValidDataAllNull;
+    private User userWithInValidDataIsNull;
 
     @BeforeEach
     public void Setup() {
@@ -47,11 +51,15 @@ class UserServiceTest {
 
 
         userNotExist = new User("User10", "USER10","user10@gmail.com", "usr10");
+        userNotExistTwo = new User("", "USER20","user20@gmail.com", "usr20");
+
         userWithInValidDataWithOutId = new User("", "UserInva","UserInvalidID@gmail.com", "usrinvid");
         userWithInValidDataWithOutName = new User("UserInvalidName", "","UserInvalid@gmail.com", "usrinvname");
         userWithInValidDataWithOutEmail = new User("UserInvalidEmail", "UserInvEmail","", "usrinvemail");
         userWithInValidDataWithOutPrepUserName = new User("UserInvalidPrepName", "UserInvPrepName","UserInvalid@gmail.com", "");
         userWithInValidDataAllNull = new User("", "","", "");
+        userWithInValidDataIsNull = null;
+
 
         //save in database
         userRepository.save(userOne);
@@ -71,15 +79,58 @@ class UserServiceTest {
     }
 
     @Test
+    public void shouldNotFindUserByIdTest() {
+
+        var users = userService.getUserById("");
+
+        Assertions.assertNotNull(users);
+        Assertions.assertNull(users.getBody());
+        Assertions.assertEquals(404, users.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotFindUserWithNullPointerTest() {
+
+        var users = userService.getUserById(null);
+
+        Assertions.assertNotNull(users);
+        Assertions.assertNull(users.getBody());
+        Assertions.assertEquals(400, users.getStatusCodeValue());
+    }
+
+
+    @Test
     public void shouldFindLoggedInUserTest() throws URISyntaxException {
 
         var users = userService.getLoggedInUser(userOne.getId(), userOne);
 
         Assertions.assertNotNull(users);
-        Assertions.assertEquals(userOne.getName(), users.getBody().getName());
         Assertions.assertTrue(users.hasBody());
+        Assertions.assertEquals(userOne.getName(), users.getBody().getName());
         Assertions.assertEquals(200, users.getStatusCodeValue());
     }
+
+    @Test
+    public void shouldFindLoggedInUserIfNotCreateTest() throws URISyntaxException {
+
+        var users = userService.getLoggedInUser("", userNotExistTwo);
+        Assertions.assertNotNull(users);
+        Assertions.assertNotNull(users.getBody().getId());
+        Assertions.assertTrue(users.hasBody());
+        Assertions.assertEquals(userNotExistTwo.getName(), users.getBody().getName());
+        Assertions.assertEquals(200, users.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldFindLoggedInUserHasNotInvalidDataTest() throws URISyntaxException {
+
+        var users = userService.getLoggedInUser("", null);
+        Assertions.assertNotNull(users);
+        Assertions.assertNull(users.getBody());
+        Assertions.assertEquals(400, users.getStatusCodeValue());
+    }
+
+
 
     @Test
     public void shouldSaveUserIfNotExistsTest() {
@@ -96,26 +147,31 @@ class UserServiceTest {
         var responseEntityWithoutEmail = userService.saveUserIfNotExists(userWithInValidDataWithOutEmail);
         var responseEntityWithoutPrepName = userService.saveUserIfNotExists(userWithInValidDataWithOutPrepUserName);
         var responseEntityNull = userService.saveUserIfNotExists(userWithInValidDataAllNull);
+        var responseEntityISNull = userService.saveUserIfNotExists(userWithInValidDataIsNull);
 
-        Assertions.assertNull(responseEntityWithoutId.getBody());
-        Assertions.assertNotEquals(200, responseEntityWithoutId.getStatusCode());
-        Assertions.assertEquals("203 NON_AUTHORITATIVE_INFORMATION", responseEntityWithoutId.getStatusCode().toString());
-        Assertions.assertNotEquals(200, responseEntityWithoutId.getStatusCode());
+        Assertions.assertNotNull(responseEntityWithoutId.getBody());
+        Assertions.assertNotNull(responseEntityWithoutId.getBody().getId());
+        Assertions.assertEquals("200 OK", responseEntityWithoutId.getStatusCode().toString());
 
         Assertions.assertNull(responseEntityWithoutname.getBody());
-        Assertions.assertNotEquals(200, responseEntityWithoutId.getStatusCode());
+        Assertions.assertNotEquals(200, responseEntityWithoutname.getStatusCode());
         Assertions.assertEquals("203 NON_AUTHORITATIVE_INFORMATION", responseEntityWithoutname.getStatusCode().toString());
 
         Assertions.assertNull(responseEntityWithoutEmail.getBody());
-        Assertions.assertNotEquals(200, responseEntityWithoutId.getStatusCode());
+        Assertions.assertNotEquals(200, responseEntityWithoutEmail.getStatusCode());
         Assertions.assertEquals("203 NON_AUTHORITATIVE_INFORMATION", responseEntityWithoutEmail.getStatusCode().toString());
 
         Assertions.assertNull(responseEntityWithoutPrepName.getBody());
-        Assertions.assertNotEquals(200, responseEntityWithoutId.getStatusCode());
+        Assertions.assertNotEquals(200, responseEntityWithoutPrepName.getStatusCode());
         Assertions.assertEquals("203 NON_AUTHORITATIVE_INFORMATION", responseEntityWithoutPrepName.getStatusCode().toString());
 
         Assertions.assertNull(responseEntityNull.getBody());
-        Assertions.assertNotEquals(200, responseEntityWithoutId.getStatusCode());
+        Assertions.assertNotEquals(200, responseEntityNull.getStatusCode());
         Assertions.assertEquals("203 NON_AUTHORITATIVE_INFORMATION", responseEntityNull.getStatusCode().toString());
+
+        Assertions.assertNull(responseEntityISNull.getBody());
+        Assertions.assertNotEquals(200, responseEntityISNull.getStatusCode());
+        Assertions.assertEquals("203 NON_AUTHORITATIVE_INFORMATION", responseEntityISNull.getStatusCode().toString());
+
     }
 }
