@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static de.thm.swtp.information_portal.Util.checkUserModel;
+
 @Service
 public class UserService {
 
@@ -61,7 +63,7 @@ public class UserService {
      * @return
      */
     public ResponseEntity<User> saveUserIfNotExists(User user) {
-        if (user != null) {
+        if (checkUserModel(user)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(userRepository.save(user));
