@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import de.thm.swtp.information_portal.models.Comment.Comments;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 
+import static de.thm.swtp.information_portal.Util.checkUpdateComment;
+
 @Service
 public class CommentService {
 
@@ -26,6 +28,17 @@ public class CommentService {
      * @return
      */
     public ResponseEntity<Comments> add(Comments commentList, String userId, String userName) {
+
+        if (commentList.getId().isEmpty()
+                ||userId.isEmpty()
+                ||userName.isEmpty()
+                ||commentList.getComments().isEmpty()
+        ) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         var comments = commentRepository.findById(commentList.getId());
         var existingComment = commentList.getComments().get(0);
         if (!comments.isPresent()) {
@@ -48,12 +61,12 @@ public class CommentService {
             comments.get()
                     .getComments()
                     .add(
-                        new Comment(
-                            existingComment.getContent(),
-                            userId,
-                            userName,
-                            existingComment.getRating()
-                        )
+                            new Comment(
+                                    existingComment.getContent(),
+                                    userId,
+                                    userName,
+                                    existingComment.getRating()
+                            )
                     );
 
             return ResponseEntity
@@ -68,9 +81,16 @@ public class CommentService {
      * @return
      */
     public ResponseEntity<Optional<Comments>> getCommentsByAnswerId(String answerId) {
+
+        if (answerId.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+
         var comments = commentRepository.findById(answerId);
 
-        if(comments.isEmpty()){
+        if (comments.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(null);
@@ -86,16 +106,25 @@ public class CommentService {
     }
 
     /**
-     *
      * @param updateComment
      * @param userId
      * @param userName
      * @return
      */
     public ResponseEntity<Comments> update(UpdateComment updateComment, String userId, String userName) {
+
+        if (checkUpdateComment(updateComment)
+                ||userId.isEmpty()
+                ||userName.isEmpty()
+        ) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         var commentsToBeModified = commentRepository.findById(updateComment.getId());
 
-        if(commentsToBeModified.isEmpty()){
+        if (commentsToBeModified.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_MODIFIED)
                     .body(null);

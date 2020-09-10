@@ -59,4 +59,24 @@ public class Util {
         }
         return true;
     }
+
+    public static boolean checkUpdateComment(UpdateComment updateComment){
+        if(updateComment == null){
+            return false;
+        }
+        if( updateComment.getId() == null
+                ||updateComment.getCommentId() == null
+                || updateComment.getContent() == null
+        ){
+            return false;
+        }
+
+        if( updateComment.getId().isEmpty()
+                ||updateComment.getCommentId().isEmpty()
+                || updateComment.getContent().isEmpty()
+        ){
+            return false;
+        }
+        return true;
+    }
 }
