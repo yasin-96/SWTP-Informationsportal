@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import de.thm.swtp.information_portal.models.Answer.Answers;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
+import static de.thm.swtp.information_portal.Util.checkUpdateAnswer;
 
 @Service
 public class AnswerService {
@@ -26,6 +27,18 @@ public class AnswerService {
      * @return
      */
     public ResponseEntity<Answers> add(Answers answerList, String userId, String userPreferedName) {
+
+        if (answerList.getId().isEmpty()
+                ||userId.isEmpty()
+                ||userPreferedName.isEmpty()
+                ||answerList.getListOfAnswers().isEmpty()
+        ) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
+
         var answers = answerRepository.findById(answerList.getId());
 
         if (answers.isEmpty()) {
@@ -94,6 +107,16 @@ public class AnswerService {
      * @return
      */
     public ResponseEntity<Answers> updateAnswer(UpdateAnswer updateAnswer, String userId, String userName) {
+
+        if (checkUpdateAnswer(updateAnswer)
+                ||userId.isEmpty()
+                ||userName.isEmpty()
+        ) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         var answersToBeModified = answerRepository.findById(updateAnswer.getId());
 
         if (answersToBeModified.isEmpty()) {
@@ -101,6 +124,7 @@ public class AnswerService {
                     .status(HttpStatus.NOT_MODIFIED)
                     .body(null);
         }
+
         answersToBeModified.get().getListOfAnswers()
                 .forEach(item -> {
                     if (item.getId().equals(updateAnswer.getAnswerId())) {
@@ -131,6 +155,14 @@ public class AnswerService {
      * @return
      */
     public ResponseEntity<Optional<Answers>> getAnswers(String id) {
+
+        if(id.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
+
         var answers = answerRepository.findById(id);
 
         if (answers.isEmpty()) {

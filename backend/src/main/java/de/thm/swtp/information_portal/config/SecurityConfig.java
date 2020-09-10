@@ -23,8 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                     //TODO BUG: need to set value
                     jwtAuthToken.setAuthenticated(true);
-//                    System.out.println(jwtAuthToken.toString());
-//                    System.out.println("IS AUTH: " + jwtAuthToken.isAuthenticated());
+                    System.out.println(jwtAuthToken.getToken().getTokenValue());
+                    System.out.println(jwtAuthToken.getTokenAttributes().toString());
+                    System.out.println(jwtAuthToken.getCredentials().toString());
+                    System.out.println("IS AUTH: " + jwtAuthToken.isAuthenticated());
                     return jwtAuthToken;
 
                 });

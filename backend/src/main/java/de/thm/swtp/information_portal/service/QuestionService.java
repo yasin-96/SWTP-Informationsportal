@@ -1,5 +1,6 @@
 package de.thm.swtp.information_portal.service;
 
+import de.thm.swtp.information_portal.Util;
 import de.thm.swtp.information_portal.models.Question.Question;
 import de.thm.swtp.information_portal.models.Tag.Tag;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static de.thm.swtp.information_portal.Util.checkExistQuestionModel;
+import static de.thm.swtp.information_portal.Util.checkQuestionModel;
 
 @Service
 public class QuestionService {
@@ -29,7 +33,15 @@ public class QuestionService {
     private AnswerRepository answerRepository;
 
 
-    public ResponseEntity<HashSet<Question>> findByTagName(String searchQuery) {
+    public ResponseEntity<HashSet<Question>> findByManyTagNames(String searchQuery) {
+
+        if(searchQuery.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
+
         var listQuery = Arrays.stream(searchQuery.toUpperCase().split(" "))
                 .filter(item -> !item.isEmpty())
                 .collect(Collectors.toList());
@@ -54,6 +66,11 @@ public class QuestionService {
     }
 
     public List<Question> findTag(String tagToFind) {
+
+        if(tagToFind.isEmpty()){
+            return null;
+        }
+
         var questionByTags = new ArrayList<Question>();
         var existingTag = tagRepository.findByName(tagToFind);
 
@@ -67,7 +84,8 @@ public class QuestionService {
             questionByTags = new ArrayList<>();
             for (var question : allQuestions) {
                 for (Tag tag : question.getTags()) {
-                    if (existingTag.getName().toLowerCase().equals(tag.getName().toLowerCase())) {
+                    var check = existingTag.getName().toLowerCase().contains(tag.getName().toLowerCase());
+                    if (check) {
                         questionByTags.add(question);
                     }
                 }
@@ -77,17 +95,18 @@ public class QuestionService {
         return null;
     }
 
-    public ResponseEntity<List<Question>> findAllTags(String tagToFind) {
-        var response = this.findTag(tagToFind);
+    public ResponseEntity<HashSet<Question>> findAllTags(String tagToFind) {
 
-        if (response.isEmpty()) {
+        var response = this.findByManyTagNames(tagToFind);
+
+        if (response.getBody().isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(null);
         }
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body(response.getBody());
     }
 
     /**
@@ -111,6 +130,13 @@ public class QuestionService {
      * @return
      */
     public ResponseEntity<Question> editQuestion(Question question) {
+
+        if(question == null || !checkExistQuestionModel(question)){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         var tagList = tagService.checkIfTagsExist(question.getTags());
         question.setTags(tagList);
 
@@ -125,6 +151,16 @@ public class QuestionService {
      * @return
      */
     public ResponseEntity<Question> postQuestion(Question question, String userId, String userName) {
+
+        if(!checkQuestionModel(question)
+                || userId.isEmpty()
+                || userName.isEmpty()
+        ){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         var newQuestionTags = tagService.checkIfTagsExist(question.getTags());
 
         var newQuestion = new Question(
@@ -145,17 +181,28 @@ public class QuestionService {
      * @return
      */
     public ResponseEntity<Optional<Question>> getQuestion(String id) {
+
+        if(id.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         var question = questionRepository.findById(id);
 
         if (question.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
                     .body(null);
         }
         return ResponseEntity.status(HttpStatus.OK)
                 .body(question);
     }
 
-
+    /**
+     *
+     * @return
+     */
     public ResponseEntity<List<Question>> mostActiveQuestions() {
         var allQuestions = questionRepository.findAll();
         var map = new HashMap<Question, Integer>();
@@ -206,6 +253,5 @@ public class QuestionService {
                 //take only 20 items and return as list
                 .limit(20)
                 .collect(Collectors.toList());
-
     }
 }

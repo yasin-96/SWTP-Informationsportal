@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +53,7 @@ public class QuestionController {
 	 */
 	@Async
 	@GetMapping("/question/tag/{tag}")
-	public CompletableFuture<ResponseEntity<List<Question>>> findByTag(@PathVariable String tag) {
+	public CompletableFuture<ResponseEntity<HashSet<Question>>> findByTag(@PathVariable String tag) {
 		if(tag != null){
 			return CompletableFuture.completedFuture(questionService.findAllTags(tag));
 		}
@@ -115,7 +114,7 @@ public class QuestionController {
 	public CompletableFuture<ResponseEntity<HashSet<Question>>> getDataByQuery(@Validated @RequestParam String query) {
 
 		if(query != null){
-			return CompletableFuture.completedFuture(questionService.findByTagName(query));
+			return CompletableFuture.completedFuture(questionService.findByManyTagNames(query));
 		}
 
 		return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null));

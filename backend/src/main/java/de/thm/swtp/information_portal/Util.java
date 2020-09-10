@@ -7,9 +7,57 @@ import de.thm.swtp.information_portal.models.User.User;
 
 public class Util {
     public static boolean checkQuestionModel(Question questionToCheck){
+        if(questionToCheck == null){
+            return false;
+        }
 
-        return false;
+        if(questionToCheck.getHeader() == null
+            || questionToCheck.getContent() == null
+            || questionToCheck.getUserId() == null
+            || questionToCheck.getUserName() == null
+            || questionToCheck.getTags() == null
+        ){
+            return false;
+        }
+
+        if(questionToCheck.getHeader().isEmpty()
+                || questionToCheck.getContent().isEmpty()
+                || questionToCheck.getUserId().isEmpty()
+                || questionToCheck.getUserName().isEmpty()
+                || questionToCheck.getTags().isEmpty()
+        ){
+            return false;
+        }
+        return true;
     }
+
+    public static boolean checkExistQuestionModel(Question questionToCheck){
+        if(questionToCheck == null){
+            return false;
+        }
+
+        if(questionToCheck.getId() == null
+                || questionToCheck.getHeader() == null
+                || questionToCheck.getContent() == null
+                || questionToCheck.getUserId() == null
+                || questionToCheck.getUserName() == null
+                || questionToCheck.getTags() == null
+        ){
+            return false;
+        }
+
+        if(questionToCheck.getId().isEmpty()
+                || questionToCheck.getHeader().isEmpty()
+                || questionToCheck.getContent().isEmpty()
+                || questionToCheck.getUserId().isEmpty()
+                || questionToCheck.getUserName().isEmpty()
+                || questionToCheck.getTags().isEmpty()
+        ){
+            return false;
+        }
+        return true;
+    }
+
 
     public static boolean checkUpdateAnswerModel(UpdateAnswer updateAnswer){
         if(updateAnswer != null){
@@ -74,6 +122,26 @@ public class Util {
         if( updateComment.getId().isEmpty()
                 ||updateComment.getCommentId().isEmpty()
                 || updateComment.getContent().isEmpty()
+        ){
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean checkUpdateAnswer(UpdateAnswer updateAnswer){
+        if(updateAnswer == null){
+            return false;
+        }
+        if( updateAnswer.getId() == null
+                ||updateAnswer.getAnswerId() == null
+                || updateAnswer.getContent() == null
+        ){
+            return false;
+        }
+
+        if( updateAnswer.getId().isEmpty()
+                ||updateAnswer.getAnswerId().isEmpty()
+                || updateAnswer.getContent().isEmpty()
         ){
             return false;
         }

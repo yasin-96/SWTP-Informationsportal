@@ -1,4 +1,4 @@
-//package de.thm.swtp.information_portal.Controller;
+//package de.thm.swtp.information_portal.controller;
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import de.thm.swtp.information_portal.controller.AnswerController;

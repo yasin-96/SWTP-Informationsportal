@@ -1,4 +1,9 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://swtp.pcvolkmer.de/auth/realms/master
   data:
     mongodb:
       uri: mongodb+srv://swtp-test:swtp-test@cluster0-vtmhv.mongodb.net/swtp-info-test?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=true
