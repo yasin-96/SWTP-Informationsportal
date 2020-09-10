@@ -34,7 +34,11 @@ public class TagService {
      * @return
      */
     public List<Tag> checkIfTagsExist(List<Tag> tags) {
-        List<Tag> newTagList = new ArrayList<Tag>();
+        var newTagList = new ArrayList<Tag>();
+
+        if (tags.isEmpty()) {
+            return newTagList;
+        }
 
         for (Tag tag : tags) {
             Tag newTag = tagRepository.findByName(tag.getName());
@@ -49,7 +53,6 @@ public class TagService {
             } else {
                 newTagList.add(tagToUpperCase(newTag));
             }
-
         }
         return newTagList;
     }
@@ -62,7 +65,7 @@ public class TagService {
     }
 
     public ResponseEntity<Tag> getTagByName(String tagName) {
-        var allFoundedTag = tagRepository.findByName(tagName);
+        var allFoundedTag = tagRepository.findByName(tagName.toUpperCase());
 
         if (allFoundedTag != null) {
             return ResponseEntity
@@ -88,7 +91,7 @@ public class TagService {
     public ResponseEntity<List<Tag>> getTagsWithMostQuestions() {
         var allQuestions = questionRepository.findAll();
 
-        if(allQuestions.isEmpty()){
+        if (allQuestions.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(null);
@@ -97,7 +100,7 @@ public class TagService {
 
         var allTags = tagRepository.findAll();
 
-        if(allTags.isEmpty()){
+        if (allTags.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(null);

@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ComponentScan()
@@ -56,6 +57,67 @@ class TagServiceTest {
         Assertions.assertFalse(allTagsFromQuestion.isEmpty());
     }
 
+    @Test
+    public void shouldCheckIfTagsExistHasSizeOfTwoTest() {
+
+        var allTagsFromQuestion = tagService.checkIfTagsExist(tags);
+
+        Assertions.assertNotNull(allTagsFromQuestion);
+        Assertions.assertFalse(allTagsFromQuestion.isEmpty());
+        Assertions.assertTrue(allTagsFromQuestion.size() == 2);
+    }
+
+    @Test
+    public void shouldCheckIfTagsExistHasSizeOfOneTest() {
+
+        var  oneTagInlist = List.of(new Tag("Tag1"));
+        var allTagsFromQuestion = tagService.checkIfTagsExist(oneTagInlist);
+
+        Assertions.assertNotNull(allTagsFromQuestion);
+        Assertions.assertFalse(allTagsFromQuestion.isEmpty());
+        Assertions.assertTrue(allTagsFromQuestion.size() == 1);
+    }
+
+
+    @Test
+    public void shouldCheckIfTagsExistHasRightContentTest() {
+
+        var  oneTagInlist = List.of(new Tag("Tag4"));
+        var allTagsFromQuestion = tagService.checkIfTagsExist(oneTagInlist);
+
+        Assertions.assertNotNull(allTagsFromQuestion);
+        Assertions.assertFalse(allTagsFromQuestion.isEmpty());
+        Assertions.assertTrue(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("TAG4"));
+    }
+
+    @Test
+    public void shouldCheckIfTagsExistHasUpperCaseCharacters() {
+
+        var  oneTagInlist = List.of(new Tag("tag5"));
+        var allTagsFromQuestion = tagService.checkIfTagsExist(oneTagInlist);
+
+        Assertions.assertNotNull(allTagsFromQuestion);
+        Assertions.assertFalse(allTagsFromQuestion.isEmpty());
+        Assertions.assertFalse(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("tag5"));
+        Assertions.assertFalse(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("tAg5"));
+        Assertions.assertFalse(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("Tag5"));
+        Assertions.assertFalse(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("tAG5"));
+        Assertions.assertFalse(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("TAg5"));
+        Assertions.assertFalse(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("TaG5"));
+        Assertions.assertFalse(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("taG5"));
+        Assertions.assertTrue(allTagsFromQuestion.get(allTagsFromQuestion.size()-1).getName().contains("TAG5"));
+    }
+
+
+    @Test
+    public void shouldNotCheckIfTagsExistTest() {
+
+        var allTagsFromQuestion = tagService.checkIfTagsExist(new ArrayList<Tag>());
+
+        Assertions.assertNotNull(allTagsFromQuestion);
+        Assertions.assertTrue(allTagsFromQuestion.isEmpty());
+    }
+
 
     @Test
     public void shouldFindAllTags() {
@@ -66,7 +128,6 @@ class TagServiceTest {
         Assertions.assertFalse(tagsList.isEmpty());
     }
 
-
     @Test
     public void shouldFindTagByNameTest() {
 
@@ -74,7 +135,77 @@ class TagServiceTest {
 
         Assertions.assertNotNull(tags);
         Assertions.assertEquals("TAG1", tags.getBody().getName());
+        Assertions.assertEquals(200, tags.getStatusCodeValue());
     }
+
+    @Test
+    public void shouldFindTagByNameWithLowerCaseCharacterTest() {
+
+        ResponseEntity<Tag> tags = tagService.getTagByName("tag1");
+
+        Assertions.assertNotNull(tags);
+        Assertions.assertEquals("TAG1", tags.getBody().getName());
+        Assertions.assertEquals(200, tags.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldFindTagByNameWithDifferentFormsest() {
+
+        ResponseEntity<Tag> tags1 = tagService.getTagByName("tag1");
+        ResponseEntity<Tag> tags2 = tagService.getTagByName("tAg1");
+        ResponseEntity<Tag> tags3 = tagService.getTagByName("TAg1");
+        ResponseEntity<Tag> tags4 = tagService.getTagByName("TaG1");
+        ResponseEntity<Tag> tags5 = tagService.getTagByName("taG1");
+        ResponseEntity<Tag> tags6 = tagService.getTagByName("tAG1");
+        ResponseEntity<Tag> tags7 = tagService.getTagByName("TAG1");
+
+        Assertions.assertNotNull(tags1);
+        Assertions.assertEquals("TAG1", tags1.getBody().getName());
+        Assertions.assertEquals(200, tags1.getStatusCodeValue());
+
+
+        Assertions.assertNotNull(tags2);
+        Assertions.assertEquals("TAG1", tags2.getBody().getName());
+        Assertions.assertEquals(200, tags2.getStatusCodeValue());
+
+
+        Assertions.assertNotNull(tags3);
+        Assertions.assertEquals("TAG1", tags3.getBody().getName());
+        Assertions.assertEquals(200, tags3.getStatusCodeValue());
+
+
+        Assertions.assertNotNull(tags4);
+        Assertions.assertEquals("TAG1", tags4.getBody().getName());
+        Assertions.assertEquals(200, tags4.getStatusCodeValue());
+
+
+        Assertions.assertNotNull(tags5);
+        Assertions.assertEquals("TAG1", tags5.getBody().getName());
+        Assertions.assertEquals(200, tags5.getStatusCodeValue());
+
+
+        Assertions.assertNotNull(tags6);
+        Assertions.assertEquals("TAG1", tags6.getBody().getName());
+        Assertions.assertEquals(200, tags6.getStatusCodeValue());
+
+
+        Assertions.assertNotNull(tags7);
+        Assertions.assertEquals("TAG1", tags7.getBody().getName());
+        Assertions.assertEquals(200, tags7.getStatusCodeValue());
+
+    }
+
+
+    @Test
+    public void shouldNotFindTagByNameTest() {
+
+        ResponseEntity<Tag> tags = tagService.getTagByName("");
+
+        Assertions.assertNotNull(tags);
+        Assertions.assertNull(tags.getBody());
+        Assertions.assertEquals(404, tags.getStatusCodeValue());
+    }
+
 
 
     @Test
@@ -97,5 +228,40 @@ class TagServiceTest {
         Assertions.assertEquals("TAG2", tagsRes.getBody().get(0).getName());
         Assertions.assertTrue(tagsRes.hasBody());
         Assertions.assertEquals(200, tagsRes.getStatusCodeValue());
+    }
+
+
+    @Test
+    @Order(5)
+    public void shouldFindAllEmptyListOfTags() {
+        tagRepository.deleteAll();
+        var tagsList = tagService.getAllTags();
+
+        Assertions.assertNotNull(tagsList, "Question has Tags");
+        Assertions.assertTrue(tagsList.isEmpty());
+    }
+
+    @Test
+    @Order(6)
+    public void shouldReturnNotFoundQuestionsAreEmpty() {
+
+        questionRepository.deleteAll();
+        ResponseEntity<List<Tag>> tagsRes = tagService.getTagsWithMostQuestions();
+
+        Assertions.assertNotNull(tagsRes);
+        Assertions.assertNull(tagsRes.getBody());
+        Assertions.assertEquals(404, tagsRes.getStatusCodeValue());
+    }
+
+    @Test
+    @Order(7)
+    public void shouldReturnNotFoundTagsAreEmptyTest() {
+
+        tagRepository.deleteAll();
+        ResponseEntity<List<Tag>> tagsRes = tagService.getTagsWithMostQuestions();
+
+        Assertions.assertNotNull(tagsRes);
+        Assertions.assertNull(tagsRes.getBody());
+        Assertions.assertEquals(404, tagsRes.getStatusCodeValue());
     }
 }

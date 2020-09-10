@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static de.thm.swtp.information_portal.Util.checkUserModel;
+import static de.thm.swtp.information_portal.Util.checkLoggedInUserData;
 
 @Service
 public class UserService {
@@ -28,6 +29,13 @@ public class UserService {
      * @throws URISyntaxException
      */
     public ResponseEntity<User> getLoggedInUser(String userId, User user) throws URISyntaxException {
+
+        if(!checkLoggedInUserData(userId, user)){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         if (userRepository.existsById(userId)) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -42,6 +50,12 @@ public class UserService {
      * @return
      */
     public ResponseEntity<ResponseUser> getUserById(String id) {
+        if(id == null){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         var user = userRepository.findById(id);
 
         if (user.isEmpty()) {

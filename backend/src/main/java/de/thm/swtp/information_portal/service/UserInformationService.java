@@ -73,7 +73,6 @@ public class UserInformationService {
     int getNumberOfAnswers(String id) {
         var allAnswers = answerRepository.findAll();
 
-        //TODO: hier wird nicht richtig gezählt
         if(!allAnswers.isEmpty()){
 
             return Math.toIntExact(
