@@ -45,9 +45,11 @@ class SocketServiceTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    Question question;
-
-    Answers answers;
+    private Question question;
+    private Answers answers;
+    private String qId;
+    private String aId;
+    private String cId;
 
     @BeforeEach
     public void Setup() {
@@ -60,7 +62,7 @@ class SocketServiceTest {
         var tags = List.of(new Tag("Tag1"), new Tag("Tag2"));
 
         question = new Question("Header1", "Content1", tags, "USER1", "USER1");
-        questionRepository.save(question);
+        qId = questionRepository.save(question).getId();
 
         final List<Answer> answersList = List.of(
                 new Answer("Answer1", 10, "user1", "user1"),
@@ -69,7 +71,7 @@ class SocketServiceTest {
 
 
         answers = new Answers(answersList, question.getId());
-        answerRepository.save(answers);
+        aId = answerRepository.save(answers).getId();
 
         User userTwo = new User("User2", "USER2", "user2@gmail.com", "usr2");
         User userThree = new User("User3", "USER3", "user3@gmail.com", "usr3");
@@ -82,7 +84,7 @@ class SocketServiceTest {
         );
 
         var comments = new Comments(commentsList, "Answer1");
-        commentRepository.save(comments);
+        cId = commentRepository.save(comments).getId();
 
     }
 
@@ -105,6 +107,51 @@ class SocketServiceTest {
         Assertions.assertNotNull(socketResponse);
         Assertions.assertTrue(socketResponse.hasBody());
         Assertions.assertEquals(200, socketResponse.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotReturnMessageNoQuestionFound() {
+        var newMessage = new SocketReceived("", "", false, false, null);
+        var socketResponse = socketService.createMessage(asJsonString(newMessage));
+        Assertions.assertNotNull(socketResponse);
+        Assertions.assertNull(socketResponse.getBody());
+        Assertions.assertEquals(404, socketResponse.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldReturnMessageForAnswer() {
+        var newMessage = new SocketReceived(qId, "", true, false, null);
+        var socketResponse = socketService.createMessage(asJsonString(newMessage));
+        Assertions.assertNotNull(socketResponse);
+        Assertions.assertEquals(qId, socketResponse.getBody().getQuestionId());
+        Assertions.assertEquals(200, socketResponse.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotReturnMessageWithOutQuestionIdButAnswerId() {
+        var newMessage = new SocketReceived("", aId, true, false, null);
+        var socketResponse = socketService.createMessage(asJsonString(newMessage));
+        Assertions.assertNotNull(socketResponse);
+        Assertions.assertNull(socketResponse.getBody());
+        Assertions.assertEquals(404, socketResponse.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotReturnMessageWithOutFlag() {
+        var newMessage = new SocketReceived(qId, aId, false, false, null);
+        var socketResponse = socketService.createMessage(asJsonString(newMessage));
+        Assertions.assertNotNull(socketResponse);
+        Assertions.assertNull(socketResponse.getBody());
+        Assertions.assertEquals(404, socketResponse.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotReturnMessageWithOutAnswerIdButFlagForComment() {
+        var newMessage = new SocketReceived(qId, "", false, true, null);
+        var socketResponse = socketService.createMessage(asJsonString(newMessage));
+        Assertions.assertNotNull(socketResponse);
+        Assertions.assertNull(socketResponse.getBody());
+        Assertions.assertEquals(404, socketResponse.getStatusCodeValue());
     }
 
     public static String asJsonString(final Object obj) {
