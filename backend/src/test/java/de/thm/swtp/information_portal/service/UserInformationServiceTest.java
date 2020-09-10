@@ -107,12 +107,30 @@ class UserInformationServiceTest {
         Assertions.assertEquals(200, userInformationTwo.getStatusCodeValue());
 
         //TODO hier müssen wir noch mal drüber schauen
-        Assertions.assertNull(userInformationUnknown);
+        Assertions.assertNotNull(userInformationUnknown);
         Assertions.assertEquals("User4", userInformationUnknown.getBody().getId());
         Assertions.assertTrue(userInformationUnknown.hasBody());
         Assertions.assertEquals(0, userInformationUnknown.getBody().getNumberOfAnswers());
         Assertions.assertEquals(0, userInformationUnknown.getBody().getNumberOfQuestions());
         Assertions.assertEquals(200, userInformationUnknown.getStatusCodeValue());
 
+    }
+
+    @Test
+    public void shouldNotFindUserInfoTest() throws URISyntaxException {
+        var userInformation = userInformationService.getUserInfo("");
+
+        Assertions.assertNotNull(userInformation);
+        Assertions.assertNull(userInformation.getBody());
+        Assertions.assertEquals(400, userInformation.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotFindUserWithNullPointerInfoTest() throws URISyntaxException {
+        var userInformationTwo = userInformationService.getUserInfo(null);
+
+        Assertions.assertNotNull(userInformationTwo);
+        Assertions.assertNull(userInformationTwo.getBody());
+        Assertions.assertEquals(400, userInformationTwo.getStatusCodeValue());
     }
 }

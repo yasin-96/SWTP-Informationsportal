@@ -32,6 +32,13 @@ public class UserInformationService {
      */
     public ResponseEntity<UserInformation> getUserInfo(String userId) throws URISyntaxException {
 
+        if(userId == null || userId.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
+
         var allQuestions = questionRepository.findAll();
         int numberOfQuestions = 0;
         int numberOfAnswers = 0;
@@ -72,10 +79,11 @@ public class UserInformationService {
             return Math.toIntExact(
                     allAnswers.stream()
                     .map(listOfAllAnswers -> listOfAllAnswers.getListOfAnswers())
-                    .map(list-> list.stream().filter(answer -> answer.getUserId().equals(id)))
-                    .collect(Collectors.toList())
-                            .stream()
-                            .count()
+                    .flatMap(Collection::stream)
+                    .map( answer -> answer.getUserId())
+                    .filter( aId -> aId.contains(id))
+                    .map(x -> x.contains(id))
+                    .count()
             );
         }
         return 0;
