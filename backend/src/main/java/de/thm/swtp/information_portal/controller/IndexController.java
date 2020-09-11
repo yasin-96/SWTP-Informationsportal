@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class IndexController {
 
+    /*
     public ResponseEntity<Void> index() {
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, "index")
                 .build();
-    }
+    }*/
 
-    /*@RequestMapping("/")
+    @RequestMapping(value = {"/", "/info-portal/**" })
     @ResponseBody
     public String index() {
         return "index";
-    }*/
+    }
 
 }
