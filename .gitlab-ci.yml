@@ -1,6 +1,5 @@
 stages:
   - build-frontend
-#- test-backend
   - build-backend
   - deliver
   - deploy
