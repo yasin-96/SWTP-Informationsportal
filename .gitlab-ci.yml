@@ -1,5 +1,6 @@
 stages:
   - build-frontend
+# - test-backend 
   - build-backend
   - deliver
   - deploy
@@ -18,13 +19,13 @@ build-frontend:
     when: always
     expire_in: 2 hours
 
-test-backend: 
-  image: maven:latest
-  stage: test-backend
-  before_script:
-    - cd backend
-  script:
-    - mvn clean test
+#test-backend: 
+#  image: maven:latest
+#  stage: test-backend
+#  before_script:
+#    - cd backend
+#  script:
+#    - mvn clean test
     
 build-backend: 
   image: maven:latest
