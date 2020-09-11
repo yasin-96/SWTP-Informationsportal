@@ -1,6 +1,5 @@
 package de.thm.swtp.information_portal.service;
 
-import de.thm.swtp.information_portal.Util;
 import de.thm.swtp.information_portal.models.Question.Question;
 import de.thm.swtp.information_portal.models.Tag.Tag;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
@@ -15,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.thm.swtp.information_portal.Util.checkExistQuestionModel;
-import static de.thm.swtp.information_portal.Util.checkQuestionModel;
+import static de.thm.swtp.information_portal.Util.isNewQuestionValid;
 
 @Service
 public class QuestionService {
@@ -131,7 +130,7 @@ public class QuestionService {
      */
     public ResponseEntity<Question> editQuestion(Question question) {
 
-        if(question == null || !checkExistQuestionModel(question)){
+        if(!checkExistQuestionModel(question)){
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
@@ -152,7 +151,7 @@ public class QuestionService {
      */
     public ResponseEntity<Question> postQuestion(Question question, String userId, String userName) {
 
-        if(!checkQuestionModel(question)
+        if(!isNewQuestionValid(question)
                 || userId.isEmpty()
                 || userName.isEmpty()
         ){

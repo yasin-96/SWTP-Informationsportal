@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.event.annotation.AfterTestClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -204,6 +205,19 @@ class CommentServiceTest {
     public void shouldNotFindCommentsByAnswerIdTest() {
 
         var commentsRes = commentService.getCommentsByAnswerId("");
+
+        Assertions.assertNotNull(commentsRes);
+        Assertions.assertNull(commentsRes.getBody());
+        Assertions.assertEquals(400, commentsRes.getStatusCodeValue());
+
+    }
+
+    @Test
+    @AfterTestClass
+    public void shouldNotFindCommentsByAnswerIdEmptyListTest() {
+
+        commentRepository.deleteAll();
+        var commentsRes = commentService.getCommentsByAnswerId("Answer1");
 
         Assertions.assertNotNull(commentsRes);
         Assertions.assertNull(commentsRes.getBody());

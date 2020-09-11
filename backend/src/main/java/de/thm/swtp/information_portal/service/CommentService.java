@@ -1,7 +1,5 @@
 package de.thm.swtp.information_portal.service;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 
 import de.thm.swtp.information_portal.models.Comment.Comment;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import de.thm.swtp.information_portal.models.Comment.Comments;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 
+import static de.thm.swtp.information_portal.Util.isNewCommentValid;
 import static de.thm.swtp.information_portal.Util.checkUpdateComment;
 
 @Service
@@ -29,10 +28,9 @@ public class CommentService {
      */
     public ResponseEntity<Comments> add(Comments commentList, String userId, String userName) {
 
-        if (commentList.getId().isEmpty()
-                ||userId.isEmpty()
-                ||userName.isEmpty()
-                ||commentList.getComments().isEmpty()
+        if (!isNewCommentValid(commentList)
+                || userId.isEmpty()
+                || userName.isEmpty()
         ) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -84,7 +82,7 @@ public class CommentService {
 
         if (answerId.isEmpty()) {
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+                    .status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
 
@@ -114,8 +112,8 @@ public class CommentService {
     public ResponseEntity<Comments> update(UpdateComment updateComment, String userId, String userName) {
 
         if (checkUpdateComment(updateComment)
-                ||userId.isEmpty()
-                ||userName.isEmpty()
+                || userId.isEmpty()
+                || userName.isEmpty()
         ) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)

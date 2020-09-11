@@ -46,7 +46,6 @@ public class AnswerController {
             );
         }
 
-        //TODO anserlist prüfen
         var userId = jwt.getClaimAsString("sub");
         var userPreferedName = jwt.getClaimAsString("preferred_username");
         return CompletableFuture.completedFuture(answerService.add(answerList, userId, userPreferedName));

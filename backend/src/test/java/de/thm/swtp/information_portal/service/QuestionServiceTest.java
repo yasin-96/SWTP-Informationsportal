@@ -172,6 +172,40 @@ class QuestionServiceTest {
     }
 
     @Test
+    public void shouldNotEditQuestionWithoutUserIDTest() {
+        var copy = question;
+        copy.setUserId("");
+        ResponseEntity<Question> questionRes = questionService.editQuestion(question);
+
+        Assertions.assertNotNull(questionRes);
+        Assertions.assertNull(questionRes.getBody());
+        Assertions.assertEquals(400, questionRes.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotEditQuestionWithoutUserNameTest() {
+        var copy = question;
+        copy.setUserName("");
+        ResponseEntity<Question> questionRes = questionService.editQuestion(question);
+
+        Assertions.assertNotNull(questionRes);
+        Assertions.assertNull(questionRes.getBody());
+        Assertions.assertEquals(400, questionRes.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotEditQuestionWithoutOnePropIsEmptyTest() {
+        var copy = question;
+        copy.setHeader("");
+        ResponseEntity<Question> questionRes = questionService.editQuestion(question);
+
+        Assertions.assertNotNull(questionRes);
+        Assertions.assertNull(questionRes.getBody());
+        Assertions.assertEquals(400, questionRes.getStatusCodeValue());
+    }
+
+
+    @Test
     @Order(6)
     public void shouldPostQuestionTest() {
 
@@ -180,6 +214,37 @@ class QuestionServiceTest {
         Assertions.assertNotNull(questionRes);
         Assertions.assertEquals("USER1", questionRes.getBody().getUserId());
         Assertions.assertEquals("Header1", questionRes.getBody().getHeader());
+    }
+
+    @Test
+    public void shouldNotPostQuestionWithOutUserIdTest() {
+
+        ResponseEntity<Question> questionRes = questionService.postQuestion(question, "", "USER1");
+
+        Assertions.assertNotNull(questionRes);
+        Assertions.assertNull(questionRes.getBody());
+        Assertions.assertEquals(400, questionRes.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotPostQuestionWithOutUserNameTest() {
+
+        ResponseEntity<Question> questionRes = questionService.postQuestion(question, "USER1", "");
+
+        Assertions.assertNotNull(questionRes);
+        Assertions.assertNull(questionRes.getBody());
+        Assertions.assertEquals(400, questionRes.getStatusCodeValue());
+    }
+
+    @Test
+    public void shouldNotPostQuestionWithOneEmptyPropTest() {
+        var copy = question;
+        copy.setHeader("");
+        ResponseEntity<Question> questionRes = questionService.postQuestion(question, "USER1", "");
+
+        Assertions.assertNotNull(questionRes);
+        Assertions.assertNull(questionRes.getBody());
+        Assertions.assertEquals(400, questionRes.getStatusCodeValue());
     }
 
     @Test

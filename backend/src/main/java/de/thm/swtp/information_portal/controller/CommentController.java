@@ -92,7 +92,6 @@ public class CommentController {
             );
         }
 
-        //TODO liste prüfen?
         var userId = jwt.getClaimAsString("sub");
         var userName = jwt.getClaimAsString("preferred_username");
         return CompletableFuture.completedFuture(commentService.add(commentList, userId, userName));

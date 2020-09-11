@@ -1,7 +1,5 @@
 package de.thm.swtp.information_portal.service;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 
 import de.thm.swtp.information_portal.models.Answer.Answer;
@@ -12,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import de.thm.swtp.information_portal.models.Answer.Answers;
 import de.thm.swtp.information_portal.repositories.AnswerRepository;
-import static de.thm.swtp.information_portal.Util.checkUpdateAnswer;
+
+import static de.thm.swtp.information_portal.Util.isNewAnswerValid;
+import static de.thm.swtp.information_portal.Util.isUpdateAnswerValid;
 
 @Service
 public class AnswerService {
@@ -28,10 +28,9 @@ public class AnswerService {
      */
     public ResponseEntity<Answers> add(Answers answerList, String userId, String userPreferedName) {
 
-        if (answerList.getId().isEmpty()
+        if(!isNewAnswerValid(answerList)
                 ||userId.isEmpty()
                 ||userPreferedName.isEmpty()
-                ||answerList.getListOfAnswers().isEmpty()
         ) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -80,6 +79,14 @@ public class AnswerService {
      * @return
      */
     public ResponseEntity<Optional<Answer>> getAnswerToEdit(String questionId, String answerId) {
+
+        if(questionId.isEmpty() || answerId.isEmpty())
+        {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
         var answers = answerRepository.findById(questionId);
 
         if (answers.isEmpty()) {
@@ -108,7 +115,7 @@ public class AnswerService {
      */
     public ResponseEntity<Answers> updateAnswer(UpdateAnswer updateAnswer, String userId, String userName) {
 
-        if (checkUpdateAnswer(updateAnswer)
+        if (!isUpdateAnswerValid(updateAnswer)
                 ||userId.isEmpty()
                 ||userName.isEmpty()
         ) {
