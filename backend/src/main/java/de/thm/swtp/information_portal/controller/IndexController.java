@@ -4,20 +4,16 @@ import com.google.common.net.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@RequestMapping(value = "info-portal")
+@RequestMapping(value = "/info-portal")
 public class IndexController {
 
-    @GetMapping
-    public ResponseEntity<Void> index() {
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, "/index.html")
-                .build();
+    @RequestMapping("/")
+    @ResponseBody
+    public String index() {
+        return "index";
     }
-//    @RequestMapping(value = "/")
-//    public String index() {
-//        return "index";
-//    }
-
 }
