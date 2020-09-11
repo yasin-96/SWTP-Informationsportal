@@ -18,7 +18,7 @@ public class IndexController {
                 .build();
     }*/
 
-    @RequestMapping(value = {"/", "/info-portal/question/**" })
+    @RequestMapping(value = {"/", "/question/**", "/answer/**" })
     @ResponseBody
     public String index() {
         return "index";
