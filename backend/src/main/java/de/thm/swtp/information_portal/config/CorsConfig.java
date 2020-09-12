@@ -13,7 +13,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry){
         registry
         .addMapping("/**")
-        .allowedOrigins("http://localhost:8001", "https://swtp.pcvolkmer.de")
+        .allowedOrigins("http://localhost:8001", "https://swtp.pcvolkmer.de", "https://swtp.pcvolkmer.de:8080")
         .allowedHeaders("*")
         .allowedMethods("GET", "POST", "PUT", "PATCH");
     }
