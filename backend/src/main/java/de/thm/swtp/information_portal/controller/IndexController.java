@@ -11,17 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class IndexController {
 
-    /*
     public ResponseEntity<Void> index() {
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header(HttpHeaders.LOCATION, "index")
                 .build();
-    }*/
-
-    @RequestMapping(value = {"/", "/question/**", "/answer/**" })
-    @ResponseBody
-    public String index() {
-        return "index";
     }
-
 }
