@@ -58,17 +58,6 @@ class AnswerServiceTest {
     }
 
     @Test
-    public void shouldNotAddAnswerWithMissingId() {
-
-        var copyAnswers = answers;
-        copyAnswers.setId("");
-        ResponseEntity<Answers> answersRes = answerService.add(copyAnswers, "user1", "user1");
-
-        Assertions.assertNotNull(answersRes);
-        Assertions.assertNull(answersRes.getBody());
-        Assertions.assertEquals(400, answersRes.getStatusCodeValue());
-    }
-    @Test
     public void shouldNotAddAnswerWithMissingUserId() {
 
         ResponseEntity<Answers> answersRes = answerService.add(answers, "", "user1");
