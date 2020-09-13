@@ -58,8 +58,8 @@ public class UserController {
      * @return
      */
     @Async
-    @PostMapping("/user/name")
-    CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody UUID id) {
+    @GetMapping("/user/name/{id}")
+    CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@PathVariable UUID id) {
         return CompletableFuture.completedFuture(userService.getUserById(id.toString()));
     }
 }
