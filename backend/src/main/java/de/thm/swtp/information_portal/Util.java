@@ -15,8 +15,6 @@ public class Util {
 
         if (questionToCheck.getHeader() == null
                 || questionToCheck.getContent() == null
-                || questionToCheck.getUserId() == null
-                || questionToCheck.getUserName() == null
                 || questionToCheck.getTags() == null
         ) {
             return false;
@@ -24,8 +22,6 @@ public class Util {
 
         if (questionToCheck.getHeader().isEmpty()
                 || questionToCheck.getContent().isEmpty()
-                || questionToCheck.getUserId().isEmpty()
-                || questionToCheck.getUserName().isEmpty()
                 || questionToCheck.getTags().isEmpty()
         ) {
             return false;
@@ -156,12 +152,11 @@ public class Util {
             return false;
         }
 
-        if (answers.getId() == null || answers.getListOfAnswers() == null) {
+        if (answers.getListOfAnswers() == null) {
             return false;
         }
 
-        if (answers.getId().isEmpty()
-                || answers.getListOfAnswers().isEmpty()) {
+        if ( answers.getListOfAnswers().isEmpty()) {
             return false;
         }
         return true;
