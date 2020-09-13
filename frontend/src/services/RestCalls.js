@@ -410,7 +410,7 @@ export default {
    */
   async getUserNameFromId(id) {
     return await client
-      .post(`${routes.user}/name`, id)
+      .get(`${routes.user}/name`, { params: { id: id }})
       .then((response) => {
         console.log('Name from id all:', response);
         console.log('Name from id:', response.data);

@@ -30,6 +30,9 @@ export default {
       searchInput: '',
     };
   },
+  beforeDestroy() {
+    this.searchInput = '';
+  },
   methods: {
     /**
      * The search query is sent to the backend to get a result
@@ -44,8 +47,12 @@ export default {
         })
         .catch((err) => {});
     },
-    
   },
+  watch: {
+    searchInput() {
+      this.searchData();
+    }
+  }
 };
 </script>
 

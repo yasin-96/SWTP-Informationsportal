@@ -170,6 +170,7 @@ export default {
       const changeAnswerObject = {
         id: this.nId,
         answerId: this.cId,
+        content: this.aContent,
         rating: Number(this.aRating) + 1,
       }
 

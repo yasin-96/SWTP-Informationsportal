@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     /**
-     *
+     * Find question based on search query that is one or more topics(tags)
      */
     async sendQuery() {
       //if (!!this.query && this.query.length > 0) {
@@ -96,5 +96,10 @@ export default {
     ...mapActions(['act_getAllDataByQuery']),
     ...mapGetters(['getQueryData']) 
   },
+  watch: {
+    query(){
+      this.sendQuery()
+    }
+  }
 };
 </script>

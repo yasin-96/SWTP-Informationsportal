@@ -363,11 +363,13 @@ export default new Vuex.Store({
      * Create and save new question 
      * @param {Object} newQuestion Question to add
      */
-    async act_createNewQuestion({}, newQuestion) {
+    async act_createNewQuestion({commit}, newQuestion) {
       console.log('act_createNewQuestion()', newQuestion);
       return await RestCalls.addNewQuestion(newQuestion)
         .then((response) => {
-          if(response != null){
+          if(response != null) {
+            commit('SET_ALL_ANSWERS', null);
+            commit('SET_ALL_COMMENTS', null)
             console.log(response)
             return response.id
           }
