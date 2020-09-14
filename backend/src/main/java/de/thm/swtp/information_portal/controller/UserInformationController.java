@@ -20,8 +20,8 @@ public class UserInformationController {
     private UserInformationService userInformationService;
 
     /**
-     *
-     * @param userId
+     * Returns a user's data showing how many questions and answers were asked and answered
+     * @param userId Id of User
      * @return
      * @throws URISyntaxException
      */

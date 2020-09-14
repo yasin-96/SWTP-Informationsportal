@@ -27,10 +27,10 @@ public class AnswerController {
     private AnswerService answerService;
 
     /**
-     *
-     * @param answerList
-     * @param jwt
-     * @return
+     * Creates an answer to a question based on the transferred data
+     * @param answerList New Answer
+     * @param jwt User access credentials
+     * @return List of all Answers for a question
      */
     @Async
     @PostMapping("/answer/new")
@@ -52,9 +52,9 @@ public class AnswerController {
     }
 
     /**
-     *
-     * @param qId
-     * @param aId
+     * Find the one answer to edit the information
+     * @param qId Id from Question
+     * @param aId Id from Answer
      * @return
      */
     @Async
@@ -67,9 +67,9 @@ public class AnswerController {
     }
 
     /**
-     *
-     * @param updateAnswer
-     * @param jwt
+     * The transferred data of the answer are renewed
+     * @param updateAnswer Answer with new data
+     * @param jwt User access credentials
      * @return
      */
     @PatchMapping("/answer/update")
@@ -99,9 +99,9 @@ public class AnswerController {
     }
 
     /**
-     *
-     * @param id
-     * @return
+     * Find all answers based on the question id
+     * @param id Id of question
+     * @return All answer to the question or null
      */
     @Async
     @GetMapping("/answer/question/{id}")

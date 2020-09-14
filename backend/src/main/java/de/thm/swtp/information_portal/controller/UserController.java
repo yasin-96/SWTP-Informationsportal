@@ -24,8 +24,8 @@ public class UserController {
     private UserService userService;
 
     /**
-     *
-     * @param jwt
+     * Returns the data of a user. First and last name, email and the personal username
+     * @param jwt User access credentials
      * @return
      * @throws URISyntaxException
      */
@@ -53,8 +53,8 @@ public class UserController {
     }
 
     /**
-     *
-     * @param id
+     * Returns the username based on the UserId
+     * @param id Id of User
      * @return
      */
     @Async

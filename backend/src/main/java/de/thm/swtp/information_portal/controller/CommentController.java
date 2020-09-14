@@ -30,9 +30,9 @@ public class CommentController {
     private CommentService commentService;
 
     /**
-     *
-     * @param id
-     * @return
+     * Find all comments by answer id
+     * @param id Id of answer
+     * @return found comments or null
      */
     @Async
     @GetMapping("/comment/answer/{id}")
@@ -41,10 +41,10 @@ public class CommentController {
     }
 
     /**
-     *
+     * The transferred data of the comment are renewed
      * @param updateComment
-     * @param jwt
-     * @return
+     * @param jwt User access credentials
+     * @return all comments
      */
     @Async
     @PatchMapping("/comment/update")
@@ -73,10 +73,10 @@ public class CommentController {
     }
 
     /**
-     *
-     * @param commentList
-     * @param jwt
-     * @return
+     * Create new comment to a specific answer
+     * @param commentList The new comment
+     * @param jwt User access credentials
+     * @return all comments for a specific answer
      */
     @Async
     @PostMapping("/comment/new")

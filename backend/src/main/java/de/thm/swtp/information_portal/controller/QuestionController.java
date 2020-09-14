@@ -26,9 +26,9 @@ public class QuestionController {
 	private QuestionService questionService;
 
 	/**
-	 *
-	 * @param id
-	 * @return
+	 * Find one question based on the id
+	 * @param id Id of question
+	 * @return founded question or null
 	 */
 	@Async
 	@GetMapping("/question/id/{id}")
@@ -37,8 +37,8 @@ public class QuestionController {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Find all question
+	 * @return list of all founded question
 	 */
 	@Async
 	@GetMapping("/question/all")
@@ -47,8 +47,8 @@ public class QuestionController {
 	}
 
 	/**
-	 * 
-	 * @param tag
+	 * Searches all questions about a topic
+	 * @param tag The tag for searching
 	 * @return CompletableFuture<ResponseEntity<List<Question>>>
 	 */
 	@Async
@@ -65,9 +65,9 @@ public class QuestionController {
 	}
 
 	/**
-	 * 
-	 * @param questionBody
-	 * @return CompletableFuture<ResponseEntity<Question>>
+	 * Creates a new question based on the submitted data
+	 * @param questionBody The new Question
+	 * @return created Question
 	 */
 	@Async
 	@PostMapping("/question/new")
@@ -92,7 +92,7 @@ public class QuestionController {
 	}
 
 	/**
-	 *
+	 * The transferred data of the question are renewed
 	 * @param questionBody  the question which will be modified
 	 * @return returns the modified question
 	 */
@@ -105,7 +105,7 @@ public class QuestionController {
 	}
 
 	/**
-	 *
+	 * All questions are searched anhander the search query
 	 * @param query       Our entered search query from our frontend
 	 * @return 					returns all questions for the search
 	 */
@@ -121,14 +121,12 @@ public class QuestionController {
 	}
 
 	/**
-	 *
-	 * @return returns the most active questions as a list
+	 * All questions that contain many answers are searched
+	 * @return the most active questions as a list
 	 */
 	@Async
 	@GetMapping("/question/active")
 	public CompletableFuture<ResponseEntity<List<Question>>> getMostActiveQuestions() {
 		return CompletableFuture.completedFuture(questionService.mostActiveQuestions());
 	}
-
-
 }

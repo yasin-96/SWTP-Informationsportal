@@ -22,9 +22,9 @@ public class TagController {
 	private TagService tagService;
 
 	/**
-	 * 
-	 * @param tagsToBeChecked
-	 * @return
+	 * Search a tag
+	 * @param tagsToBeChecked The tag
+	 * @return founded tag or null
 	 */
 	@Async
 	@GetMapping("/tag/check/{tagsToBeChecked}")
@@ -39,12 +39,11 @@ public class TagController {
 						.status(HttpStatus.BAD_REQUEST)
 						.body(null)
 		);
-
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Find all tags from database
+	 * @return All Tags from Database
 	 * @throws InterruptedException
 	 */
 	@Async
@@ -54,8 +53,8 @@ public class TagController {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Find all question that has the most used tags
+	 * @return List of mosted used tags
 	 */
 	@Async
 	@GetMapping("/tag/questions")
