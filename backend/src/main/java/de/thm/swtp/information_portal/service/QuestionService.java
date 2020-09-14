@@ -40,7 +40,6 @@ public class QuestionService {
                     .body(null);
         }
 
-
         var listQuery = Arrays.stream(searchQuery.toUpperCase().split(" "))
                 .filter(item -> !item.isEmpty())
                 .collect(Collectors.toList());

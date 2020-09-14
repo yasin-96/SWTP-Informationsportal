@@ -58,13 +58,19 @@ public class Util {
 
 
     public static boolean checkUpdateAnswerModel(UpdateAnswer updateAnswer) {
-        if (updateAnswer != null) {
-            if (updateAnswer.getId() != null &&
-                    updateAnswer.getAnswerId() != null) {
-                return true;
-            }
+        if (updateAnswer == null) {
+            return false;
         }
-        return false;
+
+        if (updateAnswer.getId() == null || updateAnswer.getAnswerId() == null) {
+            return false;
+        }
+
+        if (updateAnswer.getId().isEmpty() ||  updateAnswer.getAnswerId().isEmpty()) {
+            return false;
+        }
+
+        return true;
     }
 
     public static boolean checkUpdateCommentModel(UpdateComment updateComment) {
