@@ -54,6 +54,7 @@ class QuestionServiceTest {
                 "USER1",
                 "USER1"
         );
+
         questionRepository.save(question);
 
         final List<Answer> answersList = List.of(
@@ -99,20 +100,20 @@ class QuestionServiceTest {
 
     @Test
     public void shouldFindByTagNameWithManySearchqueryTest() {
-        tagRepository.saveAll(List.of(new Tag("Tag300"), new Tag("asdfghjkl")));
-        ResponseEntity<HashSet<Question>> questionRes = questionService.findByManyTagNames("Tag300 Tag200");
+        var newQuestion = new Question(
+                "Header1",
+                "Content1",
+                List.of(new Tag("Movie"), new Tag("Tag2")),
+                "USER1",
+                "USER1"
+        );
 
+        questionRepository.saveAll(List.of(question, newQuestion));
+        var questionRes = questionService.findByManyTagNames("Tag1 Movie");
 
         Assertions.assertNotNull(questionRes);
         Assertions.assertTrue(questionRes.hasBody());
-        var resp = questionRes.getBody();
-        Assertions.assertTrue(resp.size() == 2);
-        //var t1 = resp.gegetTags().get(0).getName());
-        //var t2 = questionRes.getBody().stream().map(t -> t.getTags().get(1).getName()).toString();
-        //Assertions.assertEquals("TAG1", t1.toString());
-        //Assertions.assertEquals("TAG2", t2);
         Assertions.assertEquals(200, questionRes.getStatusCodeValue());
-
     }
 
     @Test
