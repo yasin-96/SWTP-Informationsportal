@@ -69,7 +69,7 @@ deploy-frontend:
   stage:
     deploy
   only:
-    - develop
+    - cleanUp
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_FRONTEND
 
@@ -77,6 +77,6 @@ deploy-backend:
   stage:
     deploy
   only:
-    - develop
+    - cleanUp
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_BACKEND
