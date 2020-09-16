@@ -3,7 +3,7 @@
 ///**
 // * A Integration test  : AnswerController
 // * Integration tests for Spring rest controller apis using @SpringBootTest and Junit5.
-// */
+//**/
 //import java.net.URI;
 //import java.util.Arrays;
 //import java.util.List;
@@ -14,23 +14,29 @@
 //import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.api.TestMethodOrder;
 //import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.boot.test.web.client.TestRestTemplate;
 //import org.springframework.boot.web.server.LocalServerPort;
+//import org.springframework.context.annotation.ComponentScan;
 //import org.springframework.http.HttpEntity;
 //import org.springframework.http.HttpHeaders;
 //import org.springframework.http.HttpMethod;
 //import org.springframework.http.ResponseEntity;
+//import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.util.LinkedMultiValueMap;
 //import org.springframework.util.MultiValueMap;
 //import org.springframework.web.client.HttpClientErrorException;
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import de.thm.swtp.information_portal.models.Answer;
-//import de.thm.swtp.information_portal.models.Answers;
+//import de.thm.swtp.information_portal.models.Answer.Answer;
+//import de.thm.swtp.information_portal.models.Answer.Answers;
 //import de.thm.swtp.information_portal.repositories.AnswerRepository;
 //
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@TestMethodOrder(OrderAnnotation.class)
+//@ComponentScan()
+//@DataMongoTest
+//@ContextConfiguration
 //class AnswerControllerIntegrationTest {
 //
 //	@LocalServerPort

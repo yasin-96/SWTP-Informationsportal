@@ -25,9 +25,9 @@
 
 
         <!-- Display all available Answers  -->
-        <b-container v-if="isDataLoaded.answers &&!!allAnswers.listOfAnswers">
-          <b-container v-for="(answer, index) in allAnswers.listOfAnswers" :key="index" class="pb-3">
-            <AnswerCard
+        <b-container v-if="!!allAnswers && !!getListWithAnswers">
+          <b-container v-for="(answer, index) in getListWithAnswers" :key="index" class="pb-3">
+            <AnswerCard 
               :nId="oneQuestion.id"
               :aContent="answer.content"
               :aRating="answer.rating"
@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     ...mapActions(['act_getAllAnswers', 'act_getOneQuestion']),
-    ...mapGetters(['getUserId']),
+    ...mapGetters(['getUserId', 'getListWithAnswers']),
     ...mapState(['oneQuestion', 'allAnswers']),
   },
   methods: {
@@ -89,7 +89,7 @@ export default {
      * All data for displaying the question and answer is requested asynchronously.
      */
     async loadData() {
-      if (this.id) {
+      if (!!this.id) {
         console.info('THIS ID:', this.id);
         await this.$store.dispatch('act_getOneQuestion', this.id);
         await this.$store.dispatch('act_getAllAnswers', this.id);
@@ -105,7 +105,7 @@ export default {
       }
     },
     allAnswers() {
-      if (this.allAnswers && this.allAnswers.listOfAnswers) {
+      if (this.allAnswers) {
         this.isDataLoaded.answers = true;
       } else {
         this.isDataLoaded.answers = false;

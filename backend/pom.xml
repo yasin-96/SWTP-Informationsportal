@@ -97,18 +97,6 @@
             <version>2.9.2</version>
         </dependency>
 
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb-log4j</artifactId>
-            <version>1.10.23.RELEASE</version>
-        </dependency>
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -135,7 +123,11 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>5.2.8.RELEASE</version>
+        </dependency>
 
 
     </dependencies>

@@ -1,34 +1,49 @@
 stages:
-  - build
+  - build-frontend
+  - test-backend 
+  - build-backend
   - deliver
   - deploy
   
 build-frontend:
   image: node:12
-  stage: build
+  stage: build-frontend
   before_script:
     - cd frontend
     - npm i
   script:
     - npm run build:dev
+    - cp ./nginx/* ./dist/
   artifacts:
-    paths: 
+    paths:
       - frontend/dist/**
     when: always
     expire_in: 2 hours
 
+test-backend: 
+  image: maven:latest
+  stage: test-backend
+  before_script:
+    - cd backend
+  script:
+    - mvn clean test
+    
 build-backend: 
   image: maven:latest
-  stage: build
+  dependencies:
+    - build-frontend
+  stage: build-backend
   before_script:
+    - mkdir -p backend/src/main/resources/templates/
+    - mv frontend/dist/index.html backend/src/main/resources/templates/
     - cd backend
   script:
     - mvn clean install -DskipTests
   artifacts:
     paths: 
       - backend/target/**
-    when: always
-    expire_in: 2 hours
+#    when: always
+#    expire_in: 2 hours
       
 deliver-frontend:
   image: gitlab/dind
@@ -54,7 +69,7 @@ deploy-frontend:
   stage:
     deploy
   only:
-    - develop
+    - cleanUp
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_FRONTEND
 
@@ -62,7 +77,6 @@ deploy-backend:
   stage:
     deploy
   only:
-    - develop
+    - cleanUp
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_BACKEND
-

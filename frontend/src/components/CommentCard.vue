@@ -26,7 +26,7 @@
               <template v-slot:footer>
                 <div class="d-flex justify-content-between">
                   <b-button-group>
-                    <b-button size="sm" variant="info" @click="increaseRating(c)">
+                    <b-button size="sm" variant="info" @click="updateComment(c)">
                       <fai icon="thumbs-up" />
                     </b-button>
                     <b-button size="sm" disabled variant="info">
@@ -116,29 +116,18 @@ export default {
      * Changes the current comment by increasing the counter. 
      * After that it is adjusted in the store
      */
-    async increaseRating(comment, cardId) {
-      const newRating = Number(comment.rating) + 1;
-
+    async updateComment(comment, cardId) {
       console.warn('OBJ', comment);
-
       const newComment = {
         id: this.cId,
-        comments: [
-          {
-            id: comment.id,
-            content: comment.content,
-            userName: comment.userName,
-            rating: newRating,
-            timestamp: Date.parse(new Date()),
-          },
-        ],
-        timestamp: Date.parse(new Date()),
+        commentId: comment.id, 
+        rating: Number(comment.rating) + 1
       };
-      await this.$store.dispatch('act_increaseCommentRating', newComment);
+      await this.$store.dispatch('act_updateComment', newComment);
     },
   },
   computed: {
-    ...mapActions(['act_increaseCommentRating']),
+    ...mapActions(['act_updateComment']),
     hasComments() {
       return Object.keys(this.cComments).length > 0 ? true : false;
     },

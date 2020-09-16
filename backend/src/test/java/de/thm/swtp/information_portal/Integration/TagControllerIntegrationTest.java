@@ -1,10 +1,10 @@
-//package de.thm.swtp.information_portal.Integration;
+//package de.thm.swtp.information_portal.Integration;//package de.thm.swtp.information_portal.Integration;
 //
 //import static org.mockito.Mockito.when;
 //
-///**
-// * A Integration test : TagController
-// */
+/////**
+//// * A Integration test : TagController
+//// */
 //import java.net.URI;
 //import java.util.Arrays;
 //
@@ -15,20 +15,26 @@
 //import org.junit.jupiter.api.Test;
 //import org.junit.jupiter.api.TestMethodOrder;
 //import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.boot.test.web.client.TestRestTemplate;
 //import org.springframework.boot.web.server.LocalServerPort;
 //
-//import de.thm.swtp.information_portal.models.Answer;
-//import de.thm.swtp.information_portal.models.Answers;
-//import de.thm.swtp.information_portal.models.Question;
-//import de.thm.swtp.information_portal.models.Tag;
+//import de.thm.swtp.information_portal.models.Answer.Answer;
+//import de.thm.swtp.information_portal.models.Answer.Answers;
+//import de.thm.swtp.information_portal.models.Question.Question;
+//import de.thm.swtp.information_portal.models.Tag.Tag;
 //import de.thm.swtp.information_portal.repositories.AnswerRepository;
 //import de.thm.swtp.information_portal.repositories.QuestionRepository;
 //import de.thm.swtp.information_portal.repositories.TagRepository;
+//import org.springframework.context.annotation.ComponentScan;
+//import org.springframework.test.context.ContextConfiguration;
 //
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@TestMethodOrder(OrderAnnotation.class)
+//@ComponentScan()
+//@DataMongoTest
+//@ContextConfiguration
 //class TagControllerIntegrationTest {
 //
 //	@LocalServerPort

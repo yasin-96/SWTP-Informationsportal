@@ -1,4 +1,4 @@
-//package de.thm.swtp.information_portal.Integration;
+package de.thm.swtp.information_portal.Integration;//package de.thm.swtp.information_portal.Integration;
 //
 ///**
 // * A Integration test : OneAnswerController
@@ -14,7 +14,7 @@
 //import org.springframework.boot.test.web.client.TestRestTemplate;
 //import org.springframework.boot.web.server.LocalServerPort;
 //
-//import de.thm.swtp.information_portal.models.Answer;
+//import de.thm.swtp.information_portal.models.Answer.Answer;
 //import de.thm.swtp.information_portal.repositories.OneAnswerRepository;
 //
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

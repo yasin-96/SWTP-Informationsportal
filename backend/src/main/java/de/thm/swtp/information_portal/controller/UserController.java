@@ -1,7 +1,7 @@
 package de.thm.swtp.information_portal.controller;
 
-import de.thm.swtp.information_portal.models.ResponseUser;
-import de.thm.swtp.information_portal.models.User;
+import de.thm.swtp.information_portal.models.User.ResponseUser;
+import de.thm.swtp.information_portal.models.User.User;
 import de.thm.swtp.information_portal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,9 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -25,59 +24,42 @@ public class UserController {
     private UserService userService;
 
     /**
-     *
-     * @param jwt
+     * Returns the data of a user. First and last name, email and the personal username
+     * @param jwt User access credentials
      * @return
      * @throws URISyntaxException
      */
     @Async
-    @GetMapping("/user")
-    CompletableFuture<ResponseEntity<User>> getUser(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
-        Optional<User> user = userService.getUser(jwt.getClaimAsString("sub"));
-        if (user.isPresent()) {
-            ResponseEntity<User> reqUser = user.map(response -> ResponseEntity.ok().body(response))
-                    .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-            return CompletableFuture.completedFuture(reqUser);
-        } else {
-            return saveUserIfNotExists(jwt);
+    @GetMapping("/user/info")
+    CompletableFuture<ResponseEntity<User>> getLoggedInUser(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
+
+        if(jwt == null) {
+            return CompletableFuture.completedFuture(
+                    ResponseEntity
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .body(null)
+            );
         }
+
+        var user = new User(
+            jwt.getClaimAsString("sub"),
+            jwt.getClaimAsString("name"),
+            jwt.getClaimAsString("email"),
+            jwt.getClaimAsString("preferred_username")
+        );
+
+        return CompletableFuture.completedFuture(userService.getLoggedInUser(user.getId(), user));
+
     }
 
     /**
-     *
-     * @param id
+     * Returns the username based on the UserId
+     * @param id Id of User
      * @return
      */
     @Async
-    @PostMapping("/userNameFromId")
-    CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@RequestBody String id) {
-        Optional<User> user = userService.getUser(id);
-        if (user.isPresent()) {
-            ResponseUser responseUser = new ResponseUser(user.get().getPreferred_username());
-            return CompletableFuture.completedFuture(new ResponseEntity<ResponseUser>(responseUser, HttpStatus.OK));
-        }
-        return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.NO_CONTENT).body(null));
+    @GetMapping("/user/name/{id}")
+    CompletableFuture<ResponseEntity<ResponseUser>> getNameFromId(@PathVariable UUID id) {
+        return CompletableFuture.completedFuture(userService.getUserById(id.toString()));
     }
-
-
-    /**
-     *
-     * @param jwt
-     * @return
-     * @throws URISyntaxException
-     */
-    @Async
-    CompletableFuture<ResponseEntity<User>> saveUserIfNotExists(@AuthenticationPrincipal Jwt jwt) throws URISyntaxException {
-        if(jwt != null){
-            String userId = jwt.getClaimAsString("sub");
-
-            User newUser = new User(userId, jwt.getClaimAsString("name"), jwt.getClaimAsString("email"), jwt.getClaimAsString("preferred_username"));
-            userService.addUser(newUser);
-            return CompletableFuture
-                    .completedFuture(ResponseEntity.created(new URI("/api/user" + newUser.getId())).body(newUser));
-        }
-        return CompletableFuture
-                .completedFuture(ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).body(null));
-    }
-
 }

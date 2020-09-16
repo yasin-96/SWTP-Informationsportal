@@ -20,7 +20,7 @@
                   <b-button size="sm" disabled variant="white"></b-button>
                   <b-button size="sm" disabled variant="white">
                     <strong>Frage</strong>
-                    vom {{ oneQuestion.userId }}
+                    vom {{ oneQuestion.userName }}
                     <small class="ml-3"></small>
                   </b-button>
                 </b-button-group>
@@ -108,6 +108,8 @@ export default {
         id: '',
         header: '',
         content: '',
+        userId: this.getUserId,
+        userName: this.getUsersPreferedName,
         tags: [],
       },
 
@@ -138,7 +140,7 @@ export default {
      * Leave current page and go to the view of a question
      */
     goToDetailView() {
-      this.$router.push(`/question/${this.$props.qId}`).catch((err) => {});
+      this.$router.push(`/question/${this.$props.id}`).catch((err) => {});
     },
 
     /**
@@ -146,13 +148,17 @@ export default {
      */
     async sendUpdatedQuestion() {
       console.warn('QID in EDIT', this.question);
-      let response = await this.$store.dispatch('act_updateCurrentQuestion', this.question);
-      this.$router
-        .go({
-          path: `/question/${response.id}`,
-          props: response.id,
-        })
-        .catch((err) => {});
+      await this.$store.dispatch('act_updateCurrentQuestion', this.question);
+      
+      this.goToDetailView();
+      
+      
+      // this.$router
+      //   .go({
+      //     path: `/question/${response.id}`,
+      //     props: response.id,
+      //   })
+      //   .catch((err) => {});
     },
 
     /**
@@ -167,7 +173,7 @@ export default {
   computed: {
     ...mapActions(['act_getOneQuestion', 'act_getAllTags', 'act_updateCurrentQuestion']),
     ...mapState(['oneQuestion', 'allTags']),
-    ...mapGetters(['getAllTagName']),
+    ...mapGetters(['getAllTagName' , 'getUserId', 'getUsersPreferedName']),
     
     /**
      * The tag selection is filtered by the already selected and the still available ones. 

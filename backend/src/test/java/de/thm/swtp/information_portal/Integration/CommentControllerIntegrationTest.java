@@ -1,4 +1,4 @@
-//package de.thm.swtp.information_portal.Integration;
+package de.thm.swtp.information_portal.Integration;//package de.thm.swtp.information_portal.Integration;
 //
 ///**
 // * A Integration test : CommentController
@@ -19,8 +19,8 @@
 //import org.springframework.boot.web.server.LocalServerPort;
 //import org.springframework.http.ResponseEntity;
 //
-//import de.thm.swtp.information_portal.models.Comment;
-//import de.thm.swtp.information_portal.models.Comments;
+//import de.thm.swtp.information_portal.models.Comment.Comment;
+//import de.thm.swtp.information_portal.models.Comment.Comments;
 //import de.thm.swtp.information_portal.repositories.CommentRepository;
 //
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

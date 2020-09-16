@@ -1,15 +1,9 @@
 spring:
-#  security:
-#    oauth2:
-#      client:
-#        provider:
-#          swtp:
-#            issuer-uri: https://dev-295846.okta.com/oauth2/auspuar2bHLiOIaBa4x6
-#        registration:
-#          swtp:
-#            client-id: 0oapuauhcAKRIWLdH4x6
-#            client-secret: FAWuof3eEowGQ6usoITiLky3JYsJcSGXZB6K8bQh
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://swtp.pcvolkmer.de/auth/realms/master
   data:
     mongodb:
       uri: mongodb+srv://swtp-test:swtp-test@cluster0-vtmhv.mongodb.net/swtp-info-test?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=true
@@ -21,6 +15,5 @@ spring:
     password: guest
 
 server:
-  # port: 8082
   port: 9000
   forward-headers-strategy: native

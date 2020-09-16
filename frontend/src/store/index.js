@@ -40,9 +40,9 @@ export default new Vuex.Store({
     //questions
     allQuestions: {},
     oneQuestion: {},
-    questionsBasedOnTopics: [],
+    questionsBasedOnTopics: new Array(),
     activeQuestions: [],
-    allQueryData: [],
+    allQueryData: new Array(),
     reloadQuestions: false,
 
     //anwser
@@ -88,9 +88,9 @@ export default new Vuex.Store({
       },
 
       /**
-       * 
-       * @param {Object} state 
-       * @param {Obejct} data 
+       * Set one question in the store
+       * @param {Object} state The vuex store
+       * @param {Obejct} data One Question
        */
       SET_ONE_QUESTION(state, data) {
         console.debug('SET_ONE_QUESTION');
@@ -101,9 +101,9 @@ export default new Vuex.Store({
       },
 
       /**
-       * 
-       * @param {Object} state 
-       * @param {*} data 
+       * Set all question based on the topic in the store
+       * @param {Object} state The vuex store
+       * @param {*} data Question based on topic
        */
       SET_QUESTIONS_BASED_ON_TOPICS(state, data) {
         if (data) {
@@ -115,9 +115,9 @@ export default new Vuex.Store({
       },
 
       /**
-       * 
-       * @param {Object} state 
-       * @param {Object} data 
+       * Set the questions with the most answers are prefered in store
+       * @param {Object} state The vuex store
+       * @param {Object} data Question with prefered answers
        */
       SET_MOST_ACTIV_QUESTIONS(state, data) {
         if (data) {
@@ -130,9 +130,9 @@ export default new Vuex.Store({
       },
 
       /**
-       * 
-       * @param {Object} state 
-       * @param {Object} data 
+       * Set question based on the search input
+       * @param {Object} state The vuex store
+       * @param {Object} data Questions based on query
        */
       SET_ALL_QUERY_DATA(state, data) {
         console.debug('SET_ALL_QUERY_DATA');
@@ -150,23 +150,29 @@ export default new Vuex.Store({
       //all mutation for answers
       
       /**
-       * 
-       * @param {Obejct} state 
-       * @param {Obejct} data 
+       * Set all answers to one questions in store
+       * @param {Obejct} state The vuex store
+       * @param {Obejct} data All answers
        */
       SET_ALL_ANSWERS(state, data) {
+
+        state.allAnswers = new Object();
+
         console.debug('SET_ALL_ANSWERS');
         state.allAnswers = data;
       },
 
       /**
-       * 
-       * @param {Object} state 
-       * @param {Object} data 
+       * Set one answer to one question
+       * @param {Object} state The vuex store
+       * @param {Object} data Answer to question
        */
       SET_ONE_ANSWER_TO_QUESTION(state, data) {
         console.debug('SET_ONE_ANSWER_TO_QUESTION');
         if (data) {
+
+          data.timeStamp = convertUnixTimeStampToString(data.timeStamp);
+
           state.oneAnswer = data;
         }
       },
@@ -174,7 +180,13 @@ export default new Vuex.Store({
 
     //#region comments
       //all mutation for comments
+      /**
+       * Set all comments from one answer in store
+       * @param {Object} state vuex store
+       * @param {Object} data Comments to set
+       */
       SET_ALL_COMMENTS(state, data) {
+        state.allComments = new Array();
         if (data) {
           console.debug('SET_ALL_COMMENTS');
           console.debug('SET', data);
@@ -198,10 +210,17 @@ export default new Vuex.Store({
     //#region tags
 
     //all tags -> topics
+
+    /**
+     * Set all topic/tags in store
+     * @param {*} state vuex store
+     * @param {*} data topcis to set
+     */
     SET_ALL_TAGS(state, data) {
       console.debug('SET_ALL_TAGS');
       state.allTags = data;
     },
+
 
     SET_TOPICS(state, data) {
       if (data) {
@@ -214,10 +233,20 @@ export default new Vuex.Store({
 
     //#endregion tags
 
+    /**
+     * Set user information in store
+     * @param {Object} state vuex store
+     * @param {Object} data user information to set
+     */
     SET_USER_INFO(state, data) {
       state.currentUser = data;
     },
 
+    /**
+     * Set new message from websocket/stomp to localstorage
+     * @param {Object} state  vuex store
+     * @param {Object} wsReponse message to set
+     */
     ADD_WS_MESSAGE(state, wsReponse) {
 
       if(wsReponse){
@@ -227,6 +256,11 @@ export default new Vuex.Store({
 
     },
 
+    /**
+     * Remove ws-message from store
+     * @param {Object} state vuex store
+     * @param {Int} index Position from message 
+     */
     REMOVE_WS_MESSAGE(state, index) {
       if(state.wsMessages) {
         state.wsMessages.pop(index);
@@ -235,13 +269,19 @@ export default new Vuex.Store({
         //   // ws.pop(index);
         // })
       }
+    },
+
+    CHECK_WS_MESSAGE_AND_QUESTION(state){
+      if(state.allQuestions.length <=0){
+          state.wsMessages = new Array();
+      }
     }
   },
   actions: {
     //#region question
 
     //questions
-    async act_getAllQuestions({ commit, dispatch }) {
+    async act_getAllQuestions({ commit }) {
       console.log('act_getAllQuestions');
       await RestCalls.getAllQuestions()
         .then((response) => {
@@ -252,6 +292,10 @@ export default new Vuex.Store({
         });
     },
 
+    /**
+     * Request one question base on the id
+     * @param {String} questionId Id of question
+     */
     async act_getOneQuestion({ commit }, questionId) {
       console.log('act_getOneQuestion()', questionId);
       await RestCalls.getOneQuestion(questionId)
@@ -265,48 +309,71 @@ export default new Vuex.Store({
         });
     },
 
+    /**
+     * Request all question based on the topic
+     * @param {String} topic Topic as query
+     */
     async act_getQuestionsBasedOnTopic({ commit }, topic) {
       console.log('act_getQuestionsBasedOnTopic()');
       await RestCalls.getQuestionBasedOnTopic(topic)
         .then((response) => {
-          commit('SET_QUESTIONS_BASED_ON_TOPICS', response);
+          console.info("getQuestionBasedOnTopic -> state -> res ", response);
+            commit('SET_QUESTIONS_BASED_ON_TOPICS', response);
         })
         .catch((error) => {
           console.error(error);
         });
     },
 
+    /**
+     * Request the question with most 
+     */
     async act_getMostActiveQuestions({ commit }) {
       console.log('act_getMostActiveQuestions()');
       await RestCalls.getMostActiveQuestions()
         .then((response) => {
-          commit('SET_MOST_ACTIV_QUESTIONS', response);
+          if (response != null) {
+            commit('SET_MOST_ACTIV_QUESTIONS', response);
+          }
         })
         .catch((error) => {
           console.error(error);
         });
     },
 
+    /**
+     * Request all data by query from searchbox
+     * @param {String} query Search input
+     */
     async act_getAllDataByQuery({ commit }, query) {
       console.log('act_getAllQuestionsByQuery', query);
       await RestCalls.getAllDataByQuery(query)
         .then((response) => {
-          // console.warn('getAllDataByQuery', response);
-          // if (response != null) {
-          commit('SET_ALL_QUERY_DATA', response);
-
-          // }
+          console.warn('getAllDataByQuery', response);
+          if (response != null) {
+            commit('SET_ALL_QUERY_DATA', response);
+          }
         })
         .catch((error) => {
           console.error('act_getAllDataByQuery: ', error);
         });
     },
 
-    async act_creatNewQuestion({}, newQuestion) {
-      console.log('act_creatNewQuestion()', newQuestion);
+    /**
+     * Create and save new question 
+     * @param {Object} newQuestion Question to add
+     */
+    async act_createNewQuestion({commit}, newQuestion) {
+      console.log('act_createNewQuestion()', newQuestion);
       return await RestCalls.addNewQuestion(newQuestion)
         .then((response) => {
-          return response;
+          if(response != null) {
+            commit('SET_ALL_ANSWERS', null);
+            commit('SET_ALL_COMMENTS', null)
+            console.log(response)
+            return response.id
+          }
+          //return response;
         })
         .catch((error) => {
           console.error(error);
@@ -314,6 +381,10 @@ export default new Vuex.Store({
         });
     },
 
+    /**
+     * Update the informationen to one question 
+     * @param {Object} questionWithNewData Question to update
+     */
     async act_updateCurrentQuestion({}, questionWithNewData) {
       console.log('act_updateCurrentQuestion()', questionWithNewData);
       return await RestCalls.updateCurrentQuestion(questionWithNewData)
@@ -331,7 +402,11 @@ export default new Vuex.Store({
     //#region answer
 
     //answers
-    async act_getAllAnswers({ commit, dispatch }, questionId) {
+    /**
+     * Request all answers to one question
+     * @param {String} questionId Id of the list of answer
+     */
+    async act_getAllAnswers({ commit }, questionId) {
       console.log('act_getAllAnswers', questionId);
       await RestCalls.getAllAnswersToQuestions(questionId)
         .then((response) => {
@@ -349,10 +424,15 @@ export default new Vuex.Store({
         });
     },
 
+    /**
+     * Requestion one answer for one question
+     * @param {String} id Ids to find the answer to question
+     */
     async act_getOneAnswerToQuestion({ commit }, id) {
       console.log('act_getOneAnswerToQuestion', id);
       await RestCalls.getOneAnswerToQuestion(id)
         .then((response) => {
+          console.info("GOATO", response)
           if (response != null) {
             commit('SET_ONE_ANSWER_TO_QUESTION', response);
           }
@@ -362,23 +442,44 @@ export default new Vuex.Store({
         });
     },
 
-    async act_updateAnswerFromQuestion({}, updatedAnswerToQuestion) {
+    /**act_updateAnswerFromQuestion
+     * Update answer information for one question
+     * @param {Object} updatedAnswerToQuestion Answer to update
+     */
+    async act_updateAnswerFromQuestion({commit}, updatedAnswerToQuestion) {
       console.log('act_updateAnswerFromQuestion');
-      return await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
+      await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
         .then((response) => {
-          return response;
+          if (response) {
+            response.listOfAnswers.forEach((d) => {
+              console.debug('ANSWERS', d);
+              d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
+            });
+            
+            commit('SET_ALL_ANSWERS', response);
+          }
         })
         .catch((error) => {
           console.error('act_updateAnswerFromQuestion: ', error);
         });
     },
 
-    async act_addNewAnswer({ dispatch }, newAnswer) {
+    /**
+     * Add new answer for one question and the reload all answer for this question
+     * @param {Object} newAnswer Answer to add 
+     */
+    async act_addNewAnswer({ commit }, newAnswer) {
       console.log('act_addNewAnswer', newAnswer);
       await RestCalls.addNewAnswer(newAnswer)
         .then(async (response) => {
-          // return response;
-          await dispatch('act_getAllAnswers', newAnswer.id);
+          if (response) {
+            response.listOfAnswers.forEach((d) => {
+              console.debug('ANSWERS', d);
+              d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
+            });
+            
+            commit('SET_ALL_ANSWERS', response);
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -386,24 +487,7 @@ export default new Vuex.Store({
         });
     },
 
-    /**
-     * 
-     * @param {*} param0 
-     * @param {*} answer 
-     */
-    async increaseRatingForAnswer({ state, dispatch }, answer) {
-      console.log('increaseAnswerRating', answer);
-
-      await RestCalls.increaseAnswerRating(answer)
-        .then(async () => {
-          state.allAnswers = [];
-          await dispatch('act_getAllAnswers', answer.id);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-
+    
     //#endregion answer
 
     //#region comment
@@ -433,13 +517,17 @@ export default new Vuex.Store({
      * 
      * @param {*} newComment 
      */
-    async act_addNewComment({ state, dispatch }, newComment) {
+    async act_addNewComment({ commit }, newComment) {
       console.log('act_addNewComment', newComment);
       await RestCalls.addNewComment(newComment)
         .then(async (response) => {
-          console.log('response', response);
-          state.allComments = [];
-          await dispatch('act_getAllComments', newComment.id);
+          if (response && response.comments) {
+            response.comments.forEach((dd) => {
+              console.debug(dd);
+              dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
+            });
+          }
+          commit('SET_ALL_COMMENTS', response);
         })
         .catch((error) => {
           console.error(error);
@@ -450,13 +538,17 @@ export default new Vuex.Store({
      * TODO
      * @param {*} comment 
      */
-    async act_increaseCommentRating({ state, dispatch }, comment) {
-      console.log('act_increaseCommentRating', comment);
-      await RestCalls.increaseCommentRating(comment)
-        .then(async () => {
-          //reset all comments
-          state.allComments = [];
-          await dispatch('act_getAllComments', comment.id);
+    async act_updateComment({ state, commit }, comment) {
+      console.log('act_updateComment', comment);
+      await RestCalls.updateComment(comment)
+        .then((response) => {
+          if (response && response.comments) {
+            response.comments.forEach((dd) => {
+              console.debug(dd);
+              dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
+            });
+          }
+          commit('SET_ALL_COMMENTS', response);
         })
         .catch((error) => {
           console.error(error);
@@ -500,7 +592,8 @@ export default new Vuex.Store({
      * TODO
      */
     async act_getUserInfo({ commit }) {
-      await RestCalls.getUserInfo().then((response) => {
+      await RestCalls.getUserInfo()
+      .then((response) => {
         commit('SET_USER_INFO', response);
       });
     },
@@ -508,7 +601,7 @@ export default new Vuex.Store({
     /**
      * TODO
      */
-    act_createConnectSocketAndStompClient({ state, commit, dispatch }) {
+    act_createConnectSocketAndStompClient({ state, commit }) {
       // commit('CREATE_NEW_SOCKET', websocketURL);
       // commit('CREATE_NEW_STOMP_CLIENT');
 
@@ -598,6 +691,10 @@ export default new Vuex.Store({
      */
     act_removeOneWSMessage({commit}, index){
       commit('REMOVE_WS_MESSAGE', index);
+    },
+
+    act_checkWSMessageWithQuestion({commit}){
+      commit("CHECK_WS_MESSAGE_AND_QUESTION");
     }
   },
 
@@ -648,6 +745,27 @@ export default new Vuex.Store({
     getUsersPreferedName: (state) => {
       return state.currentUser.preferred_username;
     },
+
+    getQuestionsBasedOnTopics: (state) =>{
+      return state.questionsBasedOnTopics;
+    },
+
+    getTopicsBasedOnTags: (state) => {
+      return state.topicsBasedOnTags;
+    },
+    
+    getAllQuestions: (state) => {
+      return state.allQuestions;
+    },
+
+    getActiveQuestions: (state) => {
+      return state.activeQuestions;
+    },
+
+    getQueryData: (state) => {
+      return state.allQueryData
+    } 
+
   },
 
   modules: {},
