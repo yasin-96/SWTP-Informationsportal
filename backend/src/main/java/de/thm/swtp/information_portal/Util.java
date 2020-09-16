@@ -74,13 +74,19 @@ public class Util {
     }
 
     public static boolean checkUpdateCommentModel(UpdateComment updateComment) {
-        if (updateComment != null) {
-            if (updateComment.getId() != null &&
-                    updateComment.getCommentId() != null) {
-                return true;
-            }
+        if (updateComment == null) {
+            return false;
         }
-        return false;
+
+        if (updateComment.getId() == null || updateComment.getCommentId() == null) {
+            return false;
+        }
+
+        if (updateComment.getId().isEmpty() ||  updateComment.getCommentId().isEmpty()) {
+            return false;
+        }
+
+        return true;
     }
 
     public static boolean checkUserModel(User userToCheck) {
@@ -112,20 +118,22 @@ public class Util {
         return true;
     }
 
-    public static boolean checkUpdateComment(UpdateComment updateComment) {
+    public static boolean isCommentValid(UpdateComment updateComment) {
         if (updateComment == null) {
             return false;
         }
         if (updateComment.getId() == null
                 || updateComment.getCommentId() == null
-                || updateComment.getContent() == null
+                //|| updateComment.getContent() == null
+                //|| updateComment.getRating() == 0
         ) {
             return false;
         }
 
         if (updateComment.getId().isEmpty()
                 || updateComment.getCommentId().isEmpty()
-                || updateComment.getContent().isEmpty()
+                //|| updateComment.getContent().isEmpty()
+                //|| updateComment.getRating() <= 0
         ) {
             return false;
         }
@@ -138,14 +146,16 @@ public class Util {
         }
         if (updateAnswer.getId() == null
                 || updateAnswer.getAnswerId() == null
-                || updateAnswer.getContent() == null
+                //|| updateAnswer.getContent() == null
+                //|| updateAnswer.getRating() == 0
         ) {
             return false;
         }
 
         if (updateAnswer.getId().isEmpty()
                 || updateAnswer.getAnswerId().isEmpty()
-                || updateAnswer.getContent().isEmpty()
+                //|| updateAnswer.getContent().isEmpty()
+                //|| updateAnswer.getRating() <= 0
         ) {
             return false;
         }
