@@ -27,7 +27,7 @@
         <!-- Display all available Answers  -->
         <b-container v-if="!!allAnswers && !!getListWithAnswers">
           <b-container v-for="(answer, index) in getListWithAnswers" :key="index" class="pb-3">
-            <AnswerCard 
+            <AnswerCard v-if="answer.id"
               :nId="oneQuestion.id"
               :aContent="answer.content"
               :aRating="answer.rating"
@@ -78,6 +78,11 @@ export default {
   },
   mounted() {
     this.loadData();
+  },
+  beforeMount(){
+    setTimeout(
+      this.loadData(), 2000
+    )
   },
   computed: {
     ...mapActions(['act_getAllAnswers', 'act_getOneQuestion']),
