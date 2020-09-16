@@ -446,7 +446,7 @@ export default new Vuex.Store({
      * Update answer information for one question
      * @param {Object} updatedAnswerToQuestion Answer to update
      */
-    async act_updateAnswerFromQuestion({commit}, updatedAnswerToQuestion) {
+    async act_updateAnswerFromQuestion({commit, dispatch}, updatedAnswerToQuestion) {
       console.log('act_updateAnswerFromQuestion');
       await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
         .then((response) => {
@@ -455,8 +455,8 @@ export default new Vuex.Store({
               console.debug('ANSWERS', d);
               d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
             });
-            
             commit('SET_ALL_ANSWERS', response);
+            dispatch('act_getAllComments', updatedAnswerToQuestion.id);
           }
         })
         .catch((error) => {

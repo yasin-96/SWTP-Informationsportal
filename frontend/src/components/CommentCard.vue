@@ -121,6 +121,7 @@ export default {
       const newComment = {
         id: this.cId,
         commentId: comment.id, 
+        content: comment.content,
         rating: Number(comment.rating) + 1
       };
       await this.$store.dispatch('act_updateComment', newComment);
