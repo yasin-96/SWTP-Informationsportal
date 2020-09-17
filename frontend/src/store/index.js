@@ -280,7 +280,10 @@ export default new Vuex.Store({
      */
     REMOVE_WS_MESSAGE(state, index) {
       if(state.wsMessages) {
-        state.wsMessages.pop(index);
+        let newWsMsg = state.wsMessages.filter((item, pos) => pos != index);
+
+        state.wsMessages = new Array();
+        state.wsMessages = newWsMsg;
         // state.wsMessages.forEach(ws => {
         //   console.warn(ws)
         //   // ws.pop(index);
