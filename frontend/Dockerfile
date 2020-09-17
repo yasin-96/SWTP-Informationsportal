@@ -6,6 +6,8 @@ COPY ./dist/ /usr/share/nginx/html/info-portal/
 #check copied files
 RUN ls /usr/share/nginx/html/info-portal/
 
+RUN ls /var/wwww/html
+
 #loggin as root
 RUN su
 
