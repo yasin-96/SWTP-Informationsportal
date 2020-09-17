@@ -12,7 +12,7 @@ RUN su
 #create new file
 RUN mkdir /etc/nginx/sites-available
 RUN touch /etc/nginx/sites-available/info-portal
-RUN cat /dist/vue-server.conf >  /etc/nginx/sites-available/info-portal
+RUN cat /usr/share/nginx/html/info-portal/vue-server.conf >  /etc/nginx/sites-available/info-portal
 
 #check syntax 
 RUN nginx -t
