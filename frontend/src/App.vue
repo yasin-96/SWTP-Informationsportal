@@ -45,20 +45,20 @@ export default {
 
     //TODO check if ws connection is not died
 
-    //reload data each 5 min
+    //reload data each 4 min
     pullUserWithIntervall() {
       this.initUserData = setInterval(async () => {
         console.log('pullUserWithIntervall()');
         await this.refreshUser();
-      }, 300000);
+      }, 240000);
     },
 
-    //reload data each 10 min
+    //reload data each 2 min
     pullAllDataWithIntervall() {
       this.initAllData = setInterval(async () => {
         console.log('pullAllDataWithIntervall()');
         await this.reloadAllData();
-      }, 600000);
+      }, 150000);
     },
 
     async reloadAllData() {

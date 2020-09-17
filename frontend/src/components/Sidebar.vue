@@ -10,7 +10,7 @@
       <div v-if="wsMessages.length">
         <div v-for="(msg, i) in wsMessages" :key="i">
           <!-- <span>{{i}} {{msg}}</span> -->
-          <NotificationCard
+          <NotificationCard :key="`${msg}_${i}`"
             :questionId="msg.questionId"
             :question="msg.headerOfQuestion"
             :user="msg.minimalUser"

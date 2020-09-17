@@ -13,7 +13,7 @@ import de.thm.swtp.information_portal.models.Comment.Comments;
 import de.thm.swtp.information_portal.repositories.CommentRepository;
 
 import static de.thm.swtp.information_portal.Util.isNewCommentValid;
-import static de.thm.swtp.information_portal.Util.checkUpdateComment;
+import static de.thm.swtp.information_portal.Util.isCommentValid;
 
 @Service
 public class CommentService {
@@ -111,7 +111,7 @@ public class CommentService {
      */
     public ResponseEntity<Comments> update(UpdateComment updateComment, String userId, String userName) {
 
-        if (checkUpdateComment(updateComment)
+        if (!isCommentValid(updateComment)
                 || userId.isEmpty()
                 || userName.isEmpty()
         ) {

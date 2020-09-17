@@ -46,7 +46,7 @@ export default new Vuex.Store({
     reloadQuestions: false,
 
     //anwser
-    allAnswers: {},
+    allAnswers: [],
     oneAnswer: {},
 
     //comments
@@ -156,7 +156,7 @@ export default new Vuex.Store({
        */
       SET_ALL_ANSWERS(state, data) {
 
-        state.allAnswers = new Object();
+        state.allAnswers = new Array();
 
         console.debug('SET_ALL_ANSWERS');
         state.allAnswers = data;
@@ -186,7 +186,8 @@ export default new Vuex.Store({
        * @param {Object} data Comments to set
        */
       SET_ALL_COMMENTS(state, data) {
-        state.allComments = new Array();
+        console.info("SET_ALL_COMMENTS", data);
+        // state.allComments = new Array();
         if (data) {
           console.debug('SET_ALL_COMMENTS');
           console.debug('SET', data);
@@ -195,12 +196,28 @@ export default new Vuex.Store({
             console.debug(dd);
             dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
           });
-
-          if (!state.allComments) {
+          
+          if (state.allComments.length <= 0) {
             state.allComments = new Array();
-            state.allComments = data;
-          } else {
             state.allComments.push(data);
+          } else {
+            console.info("state.allComments", state.allComments)
+            let idFound = state.allComments.filter(item => item.id === data.id);
+
+            console.log("idFOund", idFound);
+            
+            if(idFound.length <= 0){
+              state.allComments.push(data);
+            } else {
+              console.info("Map all comments")
+              state.allComments.map(rm => {
+                if(rm.id === data.id){
+                  console.warn("id found rm id: ", rm.id, " == data.id: ",data.id)
+                  console.warn("Vorher: ",rm.comments, " Nachher: ", data.comments)
+                  rm.comments = data.comments;
+                }
+              });
+            }
           }
         }
       },
@@ -263,7 +280,10 @@ export default new Vuex.Store({
      */
     REMOVE_WS_MESSAGE(state, index) {
       if(state.wsMessages) {
-        state.wsMessages.pop(index);
+        let newWsMsg = state.wsMessages.filter((item, pos) => pos != index);
+
+        state.wsMessages = new Array();
+        state.wsMessages = newWsMsg;
         // state.wsMessages.forEach(ws => {
         //   console.warn(ws)
         //   // ws.pop(index);
@@ -446,7 +466,7 @@ export default new Vuex.Store({
      * Update answer information for one question
      * @param {Object} updatedAnswerToQuestion Answer to update
      */
-    async act_updateAnswerFromQuestion({commit}, updatedAnswerToQuestion) {
+    async act_updateAnswerFromQuestion({commit, dispatch}, updatedAnswerToQuestion) {
       console.log('act_updateAnswerFromQuestion');
       await RestCalls.setOneAnswerToQuestion(updatedAnswerToQuestion)
         .then((response) => {
@@ -455,8 +475,8 @@ export default new Vuex.Store({
               console.debug('ANSWERS', d);
               d.timeStamp = convertUnixTimeStampToString(d.timeStamp);
             });
-            
             commit('SET_ALL_ANSWERS', response);
+            dispatch('act_getAllComments', updatedAnswerToQuestion.id);
           }
         })
         .catch((error) => {
@@ -499,14 +519,16 @@ export default new Vuex.Store({
       console.log('act_getAllComments');
       await RestCalls.getAllCommentsToAnswers(answerId)
         .then((response) => {
+          console.info("act_getAllComments", response)
           if (response && response.comments) {
-            response.comments.forEach((dd) => {
+            /*response.comments.forEach((dd) => {
               console.debug(dd);
               dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
-            });
+            });*/
+            commit('SET_ALL_COMMENTS', response);
           }
 
-          commit('SET_ALL_COMMENTS', response);
+          
         })
         .catch((error) => {
           console.error('act_getAllComments: ', error);
@@ -526,8 +548,9 @@ export default new Vuex.Store({
               console.debug(dd);
               dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
             });
+            commit('SET_ALL_COMMENTS', response);
           }
-          commit('SET_ALL_COMMENTS', response);
+          
         })
         .catch((error) => {
           console.error(error);
@@ -547,8 +570,9 @@ export default new Vuex.Store({
               console.debug(dd);
               dd.timestamp = convertUnixTimeStampToString(dd.timestamp);
             });
+            commit('SET_ALL_COMMENTS', response);
           }
-          commit('SET_ALL_COMMENTS', response);
+          
         })
         .catch((error) => {
           console.error(error);

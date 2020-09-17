@@ -4,3 +4,6 @@
 [submodule "docs"]
 	path = docs
 	url = git@git.thm.de:ajjz90/swtp-info-portal.wiki.git
+[submodule "swtp-sose2020-gateway"]
+	path = swtp-sose2020-gateway
+	url = ./swtp-sose2020-gateway/

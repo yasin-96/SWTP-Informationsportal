@@ -65,6 +65,7 @@ public class CommentController {
             var userName = jwt.getClaimAsString("preferred_username");
             return CompletableFuture.completedFuture(commentService.update(updateComment, userId, userName));
         }
+
         return CompletableFuture.completedFuture(
                 ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)

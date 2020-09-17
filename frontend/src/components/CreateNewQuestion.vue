@@ -17,9 +17,9 @@
                   <b-col xs="12" sm="12" md="12" lg="12">
                     <!-- <div class="form-group"> -->
                     <h2>
-                      <label for="questionHeader">Der Titel ihrer Frage</label>
+                      <label for="questionHeader">The title of your question</label>
                     </h2>
-                    <b-form-input v-model="newQuestion.header" type="text" class="form-control" id="questionHeader" size="lg" center placeholder="Fragetitel"></b-form-input>
+                    <b-form-input v-model="newQuestion.header" type="text" class="form-control" id="questionHeader" size="lg" center placeholder="Title"></b-form-input>
                   </b-col>
                 </b-row>
                 <b-row class="justify-content-center pt-4">
@@ -76,7 +76,7 @@ export default {
 
       //config for markdown editor
       mdeConfig: {
-        placeholder: "Beschreibung ihrer Frage ...",
+        placeholder: "Description of your question ...",
         spellChecker: false
       },
     };

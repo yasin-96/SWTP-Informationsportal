@@ -27,7 +27,7 @@
         <!-- Display all available Answers  -->
         <b-container v-if="!!allAnswers && !!getListWithAnswers">
           <b-container v-for="(answer, index) in getListWithAnswers" :key="index" class="pb-3">
-            <AnswerCard 
+            <AnswerCard :key="answer.id"
               :nId="oneQuestion.id"
               :aContent="answer.content"
               :aRating="answer.rating"
@@ -74,10 +74,19 @@ export default {
         question: false,
         answers: false,
       },
+      reloadData: null,
     };
   },
   mounted() {
     this.loadData();
+  },
+  created() {
+    //request each minute the data for this question
+    this.pullNewDataWithIntervall();
+  },
+  beforeDestroy() {
+    console.warn('VUE INSTANCE beforeDestroy()');
+    clearInterval(this.reloadData);
   },
   computed: {
     ...mapActions(['act_getAllAnswers', 'act_getOneQuestion']),
@@ -85,6 +94,13 @@ export default {
     ...mapState(['oneQuestion', 'allAnswers']),
   },
   methods: {
+
+    pullNewDataWithIntervall(){
+      this.reloadData = setTimeout(async ()=>{
+        await this.loadData()
+      }, 60000);
+    },
+
     /**
      * All data for displaying the question and answer is requested asynchronously.
      */

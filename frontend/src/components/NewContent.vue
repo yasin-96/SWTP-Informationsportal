@@ -218,7 +218,7 @@ export default {
     },
   },
   computed: {
-    ...mapActions(['act_addNewAnswer', 'act_addNewComment', 'act_getAllAnswers', 'act_getAllComments']),
+    ...mapActions(['act_addNewAnswer', 'act_addNewComment']),
     ...mapGetters(['getUsersPreferedName', 'getUserId']),
   },
 };
