@@ -26,7 +26,7 @@ build-backend:
   stage: build-backend
   before_script:
     - mkdir -p backend/src/main/resources/templates/
-    - mv frontend/dist/index.html backend/src/main/resources/templates/
+    - cp frontend/dist/index.html backend/src/main/resources/templates/
     - cd backend
   script:
     - mvn clean test
