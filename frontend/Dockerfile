@@ -10,6 +10,7 @@ RUN ls /usr/share/nginx/html/info-portal/
 RUN su
 
 #create new file
+RUN mkdir /etc/nginx/sites-available
 RUN touch /etc/nginx/sites-available/info-portal
 RUN cat /dist/vue-server.conf >  /etc/nginx/sites-available/info-portal
 
