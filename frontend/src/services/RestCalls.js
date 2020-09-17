@@ -53,6 +53,31 @@ const client = new axios.create({
   // timeout: 20000,
 });
 
+
+export function printErrorMessage(errorResponse){
+  if(errorResponse != null){
+    switch(errorResponse.status){
+      case 401: 
+        console.info(errorResponse.statusText);
+        break;
+      case 404: 
+        console.log(errorResponse.statusText);
+        break;
+      case 400:
+        console.warn(errorResponse.statusText);
+        break;
+      case 500:
+        console.error(errorResponse.statusText, errorResponse);
+        break;
+      default:
+        console.warn(errorResponse.statusText);
+        break;
+    }
+  }
+  
+}
+
+
 /*
  * Returns the information under which address the backend is to be delivered.
  * Depending on the start process. These are different under dev and prod.
@@ -100,7 +125,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -116,7 +141,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -134,7 +159,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -151,7 +176,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -168,7 +193,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -186,7 +211,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return new Array();
       });
   },
@@ -202,7 +227,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -220,7 +245,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('addNewAnswer():', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -238,7 +263,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -255,7 +280,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -272,7 +297,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error(error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -290,12 +315,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
-        if (axios.isCancel(error)) {
-          console.log(error.message);
-        } else {
-          console.error('No Data: ', error);
-        }
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -312,7 +332,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -331,7 +351,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('No Data: ', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -348,7 +368,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('updateComment():', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -365,7 +385,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error(error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -383,7 +403,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error('increaseCommentRating():', error);
+        printErrorMessage(error.response);
         return null;
       });
   },
@@ -400,7 +420,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error(error);
+        printErrorMessage(error.response);
       });
   },
 
@@ -417,7 +437,7 @@ export default {
         return response.data;
       })
       .catch((error) => {
-        console.error(error);
+        printErrorMessage(error.response);
         return id;
       });
   },
