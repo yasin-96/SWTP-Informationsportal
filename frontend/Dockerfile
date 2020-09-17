@@ -1,5 +1,6 @@
 FROM nginx:1.18-alpine
 #copy site config
+RUN ls
 RUN ls ./dist/
 RUN cat ./dist/vue-server.conf
 RUN su cat ./dist/vue-server.conf > /etc/nginx/conf.d/default.conf
