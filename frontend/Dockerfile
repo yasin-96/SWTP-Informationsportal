@@ -1,11 +1,25 @@
 FROM nginx:1.18-alpine
+
 #copy site config
 COPY ./dist/ /usr/share/nginx/html/info-portal/
+
+#check copied files
 RUN ls /usr/share/nginx/html/info-portal/
 
+#loggin as root
 RUN su
-RUN rm -r /etc/nginx/conf.d/default.conf
-RUN ln -s /dist/vue-server.conf /etc/nginx/conf.d/default.conf
+
+#create new file
+RUN touch /etc/nginx/sites-available/info-portal
+RUN cat /dist/vue-server.conf >  /etc/nginx/sites-available/info-portal
+
+# delete old config file
+RUN rm /etc/nginx/conf.d/default.conf
+
+# create own config file link
+RUN ln -s /etc/nginx/sites-available/info-portal /etc/nginx/sites-enabled/info-portal
+
+#logout as root
 RUN exit
 
 EXPOSE 80
