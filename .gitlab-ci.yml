@@ -1,17 +1,8 @@
 stages:
-  - test-backend 
   - build-frontend
   - build-backend
   - deliver
   - deploy
-
-test-backend: 
-  image: maven:latest
-  stage: test-backend
-  before_script:
-    - cd backend
-  script:
-    - mvn clean test
       
 build-frontend:
   image: node:12
@@ -38,6 +29,7 @@ build-backend:
     - mv frontend/dist/index.html backend/src/main/resources/templates/
     - cd backend
   script:
+    - mvn clean test
     - mvn clean install -DskipTests
   artifacts:
     paths: 
