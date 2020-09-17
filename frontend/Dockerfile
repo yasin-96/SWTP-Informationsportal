@@ -9,8 +9,11 @@ RUN ls /usr/share/nginx/html/info-portal/
 #loggin as root
 RUN su
 
-#create new file
+#create folder
 RUN mkdir /etc/nginx/sites-available
+RUN mkdir /etc/nginx/sites-enabled
+
+#create new file
 RUN touch /etc/nginx/sites-available/info-portal
 RUN cat /usr/share/nginx/html/info-portal/vue-server.conf >  /etc/nginx/sites-available/info-portal
 
