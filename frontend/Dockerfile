@@ -2,11 +2,10 @@ FROM nginx:1.18-alpine
 
 #copy site config
 COPY ./dist/ /usr/share/nginx/html/info-portal/
+COPY ./dist/ /usr/share/nginx/html/
 
 #check copied files
 RUN ls /usr/share/nginx/html/info-portal/
-
-RUN ls /var/wwww/html
 
 #loggin as root
 RUN su
