@@ -1,7 +1,7 @@
 stages:
-  - build-frontend
   - test-backend 
   - build-backend
+  - build-frontend
   - deliver
   - deploy
   
