@@ -1,6 +1,8 @@
 FROM nginx:1.18-alpine
 #copy site config
 RUN su
+RUN ls /etc/nginx/
+RUN ls /etc/nginx/config.d
 RUN touch /etc/nginx/config.d/default.conf
 RUN cat ./dist/vue-server.conf > /etc/nginx/config.d/default.conf
 RUN exit
