@@ -118,7 +118,7 @@ class CommentServiceTest {
 
         Assertions.assertNotNull(commentsRes);
         Assertions.assertNull(commentsRes.getBody());
-        Assertions.assertEquals(304, commentsRes.getStatusCodeValue());
+        Assertions.assertEquals(400, commentsRes.getStatusCodeValue());
     }
 
     @Test
