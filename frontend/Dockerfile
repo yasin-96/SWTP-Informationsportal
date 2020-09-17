@@ -26,8 +26,6 @@ RUN nginx -t
 # create own config file link
 RUN ln -s /etc/nginx/sites-available/info-portal /etc/nginx/sites-enabled/info-portal
 
-RUN systemctl restart nginx
-
 #logout as root
 RUN exit
 
