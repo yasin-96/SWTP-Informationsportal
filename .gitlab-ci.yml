@@ -11,7 +11,7 @@ build-frontend:
     - cd frontend
     - npm i
   script:
-    - npm run build:dev
+    - npm run build:prod
     - cp ./nginx/* ./dist/
   artifacts:
     paths:
@@ -62,7 +62,7 @@ deploy-frontend:
   stage:
     deploy
   only:
-    - cleanUp
+    - master
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_FRONTEND
 
@@ -70,6 +70,6 @@ deploy-backend:
   stage:
     deploy
   only:
-    - cleanUp
+    - master
   script:
     - wget --post-data '' $DEPLOY_WEBHOOK_BACKEND
