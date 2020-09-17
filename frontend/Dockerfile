@@ -14,11 +14,16 @@ RUN mkdir /etc/nginx/sites-available
 RUN touch /etc/nginx/sites-available/info-portal
 RUN cat /dist/vue-server.conf >  /etc/nginx/sites-available/info-portal
 
+#check syntax 
+RUN nginx -t
+
 # delete old config file
-RUN rm /etc/nginx/conf.d/default.conf
+#RUN rm /etc/nginx/conf.d/default.conf
 
 # create own config file link
 RUN ln -s /etc/nginx/sites-available/info-portal /etc/nginx/sites-enabled/info-portal
+
+RUN systemctl restart nginx
 
 #logout as root
 RUN exit
